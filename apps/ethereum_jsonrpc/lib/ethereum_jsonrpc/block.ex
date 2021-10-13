@@ -11,32 +11,32 @@ defmodule EthereumJSONRPC.Block do
 
   @type elixir :: %{String.t() => non_neg_integer | DateTime.t() | String.t() | nil}
   @type params :: %{
-          difficulty: pos_integer(),
-          extra_data: EthereumJSONRPC.hash(),
-          gas_limit: non_neg_integer(),
-          gas_used: non_neg_integer(),
-          hash: EthereumJSONRPC.hash(),
-          commit_hash: EthereumJSONRPC.hash(),
-          validator_hash: EthereumJSONRPC.hash(),
-          next_validator_hash: EthereumJSONRPC.hash(),
-          consensus_hash: EthereumJSONRPC.hash(),
-          logs_bloom: EthereumJSONRPC.hash(),
-          miner_hash: EthereumJSONRPC.hash(),
-          mix_hash: EthereumJSONRPC.hash(),
-          nonce: EthereumJSONRPC.hash(),
-          number: non_neg_integer(),
-          num_txs: non_neg_integer(),
-          parent_hash: EthereumJSONRPC.hash(),
-          receipts_root: EthereumJSONRPC.hash(),
-          sha3_uncles: EthereumJSONRPC.hash(),
-          size: non_neg_integer(),
-          state_root: EthereumJSONRPC.hash(),
-          timestamp: DateTime.t(),
-          total_difficulty: non_neg_integer(),
-          transactions_root: EthereumJSONRPC.hash(),
-          uncles: [EthereumJSONRPC.hash()],
-          base_fee_per_gas: non_neg_integer()
-        }
+                    difficulty: pos_integer(),
+                    extra_data: EthereumJSONRPC.hash(),
+                    gas_limit: non_neg_integer(),
+                    gas_used: non_neg_integer(),
+                    hash: EthereumJSONRPC.hash(),
+                    commit_hash: EthereumJSONRPC.hash(),
+                    validator_hash: EthereumJSONRPC.hash(),
+                    next_validator_hash: EthereumJSONRPC.hash(),
+                    consensus_hash: EthereumJSONRPC.hash(),
+                    logs_bloom: EthereumJSONRPC.hash(),
+                    miner_hash: EthereumJSONRPC.hash(),
+                    mix_hash: EthereumJSONRPC.hash(),
+                    nonce: EthereumJSONRPC.hash(),
+                    number: non_neg_integer(),
+                    num_txs: non_neg_integer(),
+                    parent_hash: EthereumJSONRPC.hash(),
+                    receipts_root: EthereumJSONRPC.hash(),
+                    sha3_uncles: EthereumJSONRPC.hash(),
+                    size: non_neg_integer(),
+                    state_root: EthereumJSONRPC.hash(),
+                    timestamp: DateTime.t(),
+                    total_difficulty: non_neg_integer(),
+                    transactions_root: EthereumJSONRPC.hash(),
+                    uncles: [EthereumJSONRPC.hash()],
+                    base_fee_per_gas: non_neg_integer()
+                  }
 
   @typedoc """
    * `"author"` - `t:EthereumJSONRPC.address/0` that created the block.  Aliased by `"miner"`.
@@ -206,9 +206,6 @@ defmodule EthereumJSONRPC.Block do
           "gasLimit" => gas_limit,
           "gasUsed" => gas_used,
           "hash" => hash,
-          "commitHash" => commit_hash,
-          "nextValidatorHash" => next_validator_hash,
-          "validatorHash" => validator_hash,
           "logsBloom" => logs_bloom,
           "miner" => miner_hash,
           "number" => number,
@@ -230,9 +227,6 @@ defmodule EthereumJSONRPC.Block do
       gas_limit: gas_limit,
       gas_used: gas_used,
       hash: hash,
-      commit_hash: commit_hash,
-      next_validator_hash: next_validator_hash,
-      validator_hash: validator_hash,
       logs_bloom: logs_bloom,
       miner_hash: miner_hash,
       mix_hash: Map.get(elixir, "mixHash", "0x0"),
@@ -258,9 +252,6 @@ defmodule EthereumJSONRPC.Block do
           "gasLimit" => gas_limit,
           "gasUsed" => gas_used,
           "hash" => hash,
-          "commitHash" => commit_hash,
-          "nextValidatorHash" => next_validator_hash,
-          "validatorHash" => validator_hash,
           "logsBloom" => logs_bloom,
           "miner" => miner_hash,
           "number" => number,
@@ -281,9 +272,6 @@ defmodule EthereumJSONRPC.Block do
       gas_limit: gas_limit,
       gas_used: gas_used,
       hash: hash,
-      commit_hash: commit_hash,
-      next_validator_hash: next_validator_hash,
-      validator_hash: validator_hash,
       logs_bloom: logs_bloom,
       miner_hash: miner_hash,
       mix_hash: Map.get(elixir, "mixHash", "0x0"),
@@ -308,9 +296,6 @@ defmodule EthereumJSONRPC.Block do
           "gasLimit" => gas_limit,
           "gasUsed" => gas_used,
           "hash" => hash,
-          "commitHash" => commit_hash,
-          "nextValidatorHash" => next_validator_hash,
-          "validatorHash" => validator_hash,
           "logsBloom" => logs_bloom,
           "miner" => miner_hash,
           "number" => number,
@@ -331,9 +316,6 @@ defmodule EthereumJSONRPC.Block do
       gas_limit: gas_limit,
       gas_used: gas_used,
       hash: hash,
-      commit_hash: commit_hash,
-      next_validator_hash: next_validator_hash,
-      validator_hash: validator_hash,
       logs_bloom: logs_bloom,
       miner_hash: miner_hash,
       mix_hash: Map.get(elixir, "mixHash", "0x0"),
@@ -359,8 +341,8 @@ defmodule EthereumJSONRPC.Block do
           "gasLimit" => gas_limit,
           "gasUsed" => gas_used,
           "hash" => hash,
-          "evidenceHash" => evidence_hash,
           "commitHash" => commit_hash,
+          "evidenceHash" => evidence_hash,
           "nextValidatorHash" => next_validator_hash,
           "validatorHash" => validator_hash,
           "logsBloom" => logs_bloom,
@@ -382,8 +364,8 @@ defmodule EthereumJSONRPC.Block do
       gas_limit: gas_limit,
       gas_used: gas_used,
       hash: hash,
-      evidence_hash: evidence_hash,
       commit_hash: commit_hash,
+      evidence_hash: evidence_hash,
       next_validator_hash: next_validator_hash,
       validator_hash: validator_hash,
       logs_bloom: logs_bloom,
@@ -415,19 +397,19 @@ defmodule EthereumJSONRPC.Block do
           "hash" => hash,
           "logsBloom" => logs_bloom,
           "miner" => miner_hash,
-          #//"mixHash" => mix_hash,
+          "mixHash" => mix_hash,
           "nextValidatorHash" => next_validator_hash,
-          "validatorHash" => validator_hash,
-          #//"nonce" => nonce,
+          "nonce" => nonce,
           "numTxs" => num_txs,
           "number" => number,
           "parentHash" => parent_hash,
           "receiptsRoot" => receipts_root,
-          #//"rewards" => rewards,
+          "rewards" => rewards,
           "size" => size,
           "stateRoot" => state_root,
           "timestamp" => timestamp,
           "transactionsRoot" => transactions_root,
+          "validatorHash" => validator_hash,
         } = elixir
       ) do
     %{
@@ -443,7 +425,6 @@ defmodule EthereumJSONRPC.Block do
       miner_hash: miner_hash,
       mix_hash: Map.get(elixir, "mixHash", "0x0"),
       next_validator_hash: next_validator_hash,
-      validator_hash: validator_hash,
       nonce: Map.get(elixir, "nonce", 0),
       num_txs: num_txs,
       number: number,
@@ -452,7 +433,8 @@ defmodule EthereumJSONRPC.Block do
       size: size,
       state_root: state_root,
       timestamp: timestamp,
-      transactions_root: transactions_root
+      transactions_root: transactions_root,
+      validator_hash: validator_hash
     }
   end
 
@@ -658,8 +640,9 @@ defmodule EthereumJSONRPC.Block do
   end
 
   defp entry_to_elixir({key, quantity})
-       when key in ~w(difficulty gasLimit gasUsed minimumGasPrice baseFeePerGas number rewards numTxs size cumulativeDifficulty totalDifficulty paidFees) and
-              not is_nil(quantity) do
+       when
+         key in ~w(difficulty gasLimit gasUsed minimumGasPrice baseFeePerGas number rewards numTxs size cumulativeDifficulty totalDifficulty paidFees) and
+         not is_nil(quantity) do
     {key, quantity_to_integer(quantity)}
   end
 
