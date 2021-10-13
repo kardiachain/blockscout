@@ -399,7 +399,7 @@ defmodule EthereumJSONRPC.Block do
           "miner" => miner_hash,
           #"mixHash" => mix_hash,
           "nextValidatorHash" => next_validator_hash,
-          #"nonce" => nonce,
+          "nonce" => nonce,
           "numTxs" => num_txs,
           "number" => number,
           "parentHash" => parent_hash,
@@ -410,7 +410,7 @@ defmodule EthereumJSONRPC.Block do
           "timestamp" => timestamp,
           "transactionsRoot" => transactions_root,
           "validatorHash" => validator_hash,
-        } = _elixir
+        } = elixir
       ) do
     %{
       commit_hash: commit_hash,
@@ -425,7 +425,7 @@ defmodule EthereumJSONRPC.Block do
       miner_hash: miner_hash,
       #mix_hash: Map.get(elixir, "mixHash", "0x0"),
       next_validator_hash: next_validator_hash,
-      #nonce: Map.get(elixir, "nonce", 0),
+      nonce: Map.get(elixir, "nonce", 0),
       num_txs: num_txs,
       number: number,
       parent_hash: parent_hash,
