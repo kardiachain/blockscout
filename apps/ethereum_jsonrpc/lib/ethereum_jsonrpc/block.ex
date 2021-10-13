@@ -410,7 +410,7 @@ defmodule EthereumJSONRPC.Block do
           "timestamp" => timestamp,
           "transactionsRoot" => transactions_root,
           "validatorHash" => validator_hash,
-        } = elixir
+        } = _elixir
       ) do
     %{
       commit_hash: commit_hash,
