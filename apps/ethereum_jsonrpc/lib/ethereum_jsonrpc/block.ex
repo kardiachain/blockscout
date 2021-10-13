@@ -399,7 +399,7 @@ defmodule EthereumJSONRPC.Block do
           "miner" => miner_hash,
           #"mixHash" => mix_hash,
           "nextValidatorHash" => next_validator_hash,
-          "nonce" => nonce,
+          #"nonce" => nonce,
           "numTxs" => num_txs,
           "number" => number,
           "parentHash" => parent_hash,
