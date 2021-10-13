@@ -72,6 +72,9 @@ defmodule Explorer.Chain.Block do
 
   @primary_key {:hash, Hash.Full, autogenerate: false}
   schema "blocks" do
+    field(:commit_hash, Hash.Full)
+    field(:validator_hash, Hash.Full)
+    field(:next_validator_hash, Hash.Full)
     field(:consensus, :boolean)
     field(:difficulty, :decimal)
     field(:gas_limit, :decimal)

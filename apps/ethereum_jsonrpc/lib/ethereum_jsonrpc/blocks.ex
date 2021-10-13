@@ -50,9 +50,6 @@ defmodule EthereumJSONRPC.Blocks do
     #block_second_degree_relations_params = Uncles.elixir_to_params(elixir_uncles)
     transactions_params = Transactions.elixir_to_params(elixir_transactions)
     blocks_params = elixir_to_params(elixir_blocks)
-    blocks_params
-    |> inspect()
-    |> Logger.info()
 
     %__MODULE__{
       errors: errors,
