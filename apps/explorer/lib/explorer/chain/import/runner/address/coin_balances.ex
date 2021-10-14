@@ -2,7 +2,7 @@ defmodule Explorer.Chain.Import.Runner.Address.CoinBalances do
   @moduledoc """
   Bulk imports `t:Explorer.Chain.Address.CoinBalance.t/0`.
   """
-
+  require Logger
   require Ecto.Query
 
   import Ecto.Query, only: [from: 2]
@@ -74,6 +74,10 @@ defmodule Explorer.Chain.Import.Runner.Address.CoinBalances do
     # Enforce CoinBalance ShareLocks order (see docs: sharelocks.md)
     ordered_changes_list = Enum.sort_by(changes_list, &{&1.address_hash, &1.block_number})
                            |> Enum.uniq
+
+    ordered_changes_list
+    |> inspect()
+    |> Logger.info()
 
     {:ok, _} =
       Import.insert_changes_list(
