@@ -121,15 +121,32 @@ defmodule Indexer.Fetcher.InternalTransaction do
       {:ok, internal_transactions_params} ->
         import_internal_transaction(internal_transactions_params, unique_numbers)
 
-      {:error, reason} ->
-        Logger.error(
-          fn ->
-            block_numbers = unique_numbers |> inspect(charlists: :as_lists)
+         {:error, :block_not_indexed_properly = reason} ->
+           Logger.debug(
+             fn ->
+               block_numbers = unique_numbers
+                               |> inspect(charlists: :as_lists)
 
-            [
-              "failed to fetch internal transactions for #{unique_numbers_count} blocks: #{block_numbers} reason: ",
-              inspect(reason)
-            ]
+               [
+                 "failed to fetch internal transactions for #{unique_numbers_count} blocks: #{block_numbers} reason: ",
+                 inspect(reason)
+               ]
+             end,
+             error_count: unique_numbers_count
+           )
+
+           :ok
+
+         {:error, reason} ->
+           Logger.error(
+             fn ->
+               block_numbers = unique_numbers
+                               |> inspect(charlists: :as_lists)
+
+               [
+                 "failed to fetch internal transactions for #{unique_numbers_count} blocks: #{block_numbers} reason: ",
+                 inspect(reason)
+               ]
           end,
           error_count: unique_numbers_count
         )
