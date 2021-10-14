@@ -140,6 +140,7 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
 
   defp sort_changes_list(changes_list) do
     Enum.sort_by(changes_list, & &1.hash)
+    |> Enum.uniq
   end
 
   defp update_transactions(repo, addresses, %{timeout: timeout, timestamps: timestamps}) do
