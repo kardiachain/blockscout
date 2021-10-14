@@ -78,14 +78,21 @@ defmodule Explorer.Chain.Import.Runner.Address.CoinBalancesDaily do
           [change | acc]
         else
           target_item =
-            Enum.find(acc, fn item ->
-              item.day == change.day && item.address_hash == change.address_hash
-            end)
+            Enum.find(
+              acc,
+              fn item ->
+                item.day == change.day && item.address_hash == change.address_hash
+              end
+            )
 
-          if target_item do
-            if change.value > target_item.value do
-              acc_updated = List.delete(acc, target_item)
-              [change | acc_updated]
+          if target_item  do
+            if Map.has_key?(target_item, :value) do
+              if change.value > target_item.value do
+                acc_updated = List.delete(acc, target_item)
+                [change | acc_updated]
+              else
+                acc
+              end
             else
               acc
             end
