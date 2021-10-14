@@ -81,7 +81,7 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
             required(:timestamps) => Import.timestamps()
           }
         ) :: {:ok, [Address.t()]}
-  defp insert(repo, changes_list, %{timeout: timeout, timestamps: timestamps} = _options) when is_list(changes_list) do
+  defp insert(repo, changes_list, %{timeout: timeout, timestamps: timestamps} = options) when is_list(changes_list) do
     _on_conflict = Map.get_lazy(options, :on_conflict, &default_on_conflict/0)
 
     # Enforce Address ShareLocks order (see docs: sharelocks.md)
