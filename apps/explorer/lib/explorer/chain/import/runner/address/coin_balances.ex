@@ -73,6 +73,7 @@ defmodule Explorer.Chain.Import.Runner.Address.CoinBalances do
 
     # Enforce CoinBalance ShareLocks order (see docs: sharelocks.md)
     ordered_changes_list = Enum.sort_by(changes_list, &{&1.address_hash, &1.block_number})
+                           |> Enum.uniq
 
     {:ok, _} =
       Import.insert_changes_list(
