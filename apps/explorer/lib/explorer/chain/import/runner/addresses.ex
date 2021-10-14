@@ -72,13 +72,17 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
 
   ## Private Functions
 
-  @spec insert(Repo.t(), [%{hash: Hash.Address.t()}], %{
-          optional(:on_conflict) => Import.Runner.on_conflict(),
-          required(:timeout) => timeout,
-          required(:timestamps) => Import.timestamps()
-        }) :: {:ok, [Address.t()]}
-  defp insert(repo, changes_list, %{timeout: timeout, timestamps: timestamps} = options) when is_list(changes_list) do
-    #on_conflict = Map.get_lazy(options, :on_conflict, &default_on_conflict/0)
+  @spec insert(
+          Repo.t(),
+          [%{hash: Hash.Address.t()}],
+          %{
+            optional(:on_conflict) => Import.Runner.on_conflict(),
+            required(:timeout) => timeout,
+            required(:timestamps) => Import.timestamps()
+          }
+        ) :: {:ok, [Address.t()]}
+  defp insert(repo, changes_list, %{timeout: timeout, timestamps: timestamps} = _options) when is_list(changes_list) do
+    _on_conflict = Map.get_lazy(options, :on_conflict, &default_on_conflict/0)
 
     # Enforce Address ShareLocks order (see docs: sharelocks.md)
     ordered_changes_list = sort_changes_list(changes_list)
