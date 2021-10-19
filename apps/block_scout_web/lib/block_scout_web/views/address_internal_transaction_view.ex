@@ -7,7 +7,7 @@ defmodule BlockScoutWeb.AddressInternalTransactionView do
   def format_current_filter(filter) do
     case filter do
       "to" -> gettext("To")
-      "from" -> gettext("From")
+      "from" -> gettext("z")
       _ -> gettext("All")
     end
   end

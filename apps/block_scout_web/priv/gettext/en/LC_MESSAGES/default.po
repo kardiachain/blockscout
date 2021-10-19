@@ -72,12 +72,12 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/layout/_default_title.html.eex:2
-msgid "%{subnetwork} Explorer - BlockScout"
+msgid "KardiaChain %{subnetwork} Explorer"
 msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/stakes/_metatags.html.eex:2
-msgid "%{subnetwork} Staking DApp - BlockScout"
+msgid "KardiaChain %{subnetwork} Staking DApp"
 msgstr ""
 
 #, elixir-format
@@ -151,7 +151,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/api_docs/_metatags.html.eex:2
-msgid "API for the %{subnetwork} - BlockScout"
+msgid "API for the %{subnetwork}"
 msgstr ""
 
 #, elixir-format
@@ -197,7 +197,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/address/overview.html.eex:166
-msgid "Address balance in xDAI (doesn't include ERC20, ERC721, ERC1155 tokens)."
+msgid "Address balance."
 msgstr ""
 
 #, elixir-format
@@ -427,7 +427,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/layout/_footer.html.eex:20
-msgid "Blockscout is a tool for inspecting and analyzing EVM based blockchains. Blockchain explorer for Ethereum Networks."
+msgid "KardiaChain Network explorer."
 msgstr ""
 
 #, elixir-format
@@ -560,7 +560,7 @@ msgstr ""
 #, elixir-format
 #: lib/block_scout_web/templates/address/_tabs.html.eex:34
 #: lib/block_scout_web/views/address_view.ex:355
-msgid "Coin Balance History"
+msgid "Balance History"
 msgstr ""
 
 #, elixir-format
@@ -1088,7 +1088,7 @@ msgstr ""
 #: lib/block_scout_web/templates/layout/app.html.eex:45 lib/block_scout_web/templates/transaction/_pending_tile.html.eex:20
 #: lib/block_scout_web/templates/transaction/_tile.html.eex:37 lib/block_scout_web/templates/transaction/overview.html.eex:399
 #: lib/block_scout_web/views/wei_helpers.ex:78
-msgid "Ether"
+msgid "KAI"
 msgstr ""
 
 #, elixir-format
@@ -2206,7 +2206,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/smart_contract/_functions.html.eex:37
-msgid "The fallback function is executed on a call to the contract if none of the other functions match the given function signature, or if no data was supplied at all and there is no receive Ether function. The fallback function always receives data, but in order to also receive Ether it must be marked payable."
+msgid "The fallback function is executed on a call to the contract if none of the other functions match the given function signature, or if no data was supplied at all and there is no receive KAI function. The fallback function always receives data, but in order to also receive KAI it must be marked payable."
 msgstr ""
 
 #, elixir-format
@@ -2256,7 +2256,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/smart_contract/_functions.html.eex:39
-msgid "The receive function is executed on a call to the contract with empty calldata. This is the function that is executed on plain Ether transfers (e.g. via .send() or .transfer()). If no such function exists, but a payable fallback function exists, the fallback function will be called on a plain Ether transfer. If neither a receive Ether nor a payable fallback function is present, the contract cannot receive Ether through regular transactions and throws an exception."
+msgid "The receive function is executed on a call to the contract with empty calldata. This is the function that is executed on plain KAI transfers (e.g. via .send() or .transfer()). If no such function exists, but a payable fallback function exists, the fallback function will be called on a plain KAI transfer. If neither a receive KAI nor a payable fallback function is present, the contract cannot receive KAI through regular transactions and throws an exception."
 msgstr ""
 
 #, elixir-format
@@ -2393,12 +2393,12 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/api_docs/index.html.eex:6
-msgid "This API is provided for developers transitioning their applications from Etherscan to BlockScout. It supports GET and POST requests."
+msgid "This API is provided for developers transitioning their applications. It supports GET and POST requests."
 msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/api_docs/eth_rpc.html.eex:7
-msgid "This API is provided to support some rpc methods in the exact format specified for ethereum nodes, which can be found "
+msgid "This API is provided to support some rpc methods in the exact format specified for KardiaChain nodes, which can be found "
 msgstr ""
 
 #, elixir-format
