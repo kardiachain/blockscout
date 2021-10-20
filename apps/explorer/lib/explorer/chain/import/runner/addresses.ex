@@ -62,9 +62,10 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
       insert(repo, changes_list_with_defaults, insert_options)
     end)
     |> Multi.run(:created_address_code_indexed_at_transactions, fn repo, %{addresses: addresses}
-                                                                   when is_list(addresses) ->
+    when is_list(addresses) ->
       update_transactions(repo, addresses, update_transactions_options)
-    end)
+    end
+       )
   end
 
   @impl Import.Runner
@@ -82,7 +83,7 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
           }
         ) :: {:ok, [Address.t()]}
   defp insert(repo, changes_list, %{timeout: timeout, timestamps: timestamps} = options) when is_list(changes_list) do
-    _on_conflict = Map.get_lazy(options, :on_conflict, &default_on_conflict/0)
+    on_conflict = Map.get_lazy(options, :on_conflict, &default_on_conflict/0)
 
     # Enforce Address ShareLocks order (see docs: sharelocks.md)
     ordered_changes_list = sort_changes_list(changes_list)
@@ -91,7 +92,7 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
       repo,
       ordered_changes_list,
       conflict_target: :hash,
-      on_conflict: :nothing,
+      on_conflict: on_conflict,
       for: Address,
       returning: true,
       timeout: timeout,
@@ -144,7 +145,6 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
 
   defp sort_changes_list(changes_list) do
     Enum.sort_by(changes_list, & &1.hash)
-    |> Enum.uniq
   end
 
   defp update_transactions(repo, addresses, %{timeout: timeout, timestamps: timestamps}) do
