@@ -85,14 +85,10 @@ defmodule Explorer.Chain.Import.Runner.Address.CoinBalancesDaily do
               end
             )
 
-          if target_item  do
-            if Map.has_key?(target_item, :value) do
-              if change.value > target_item.value do
-                acc_updated = List.delete(acc, target_item)
-                [change | acc_updated]
-              else
-                acc
-              end
+          if target_item do
+            if change.value > target_item.value do
+              acc_updated = List.delete(acc, target_item)
+              [change | acc_updated]
             else
               acc
             end
