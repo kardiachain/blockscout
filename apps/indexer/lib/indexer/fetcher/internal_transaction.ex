@@ -20,15 +20,17 @@ defmodule Indexer.Fetcher.InternalTransaction do
 
   @behaviour BufferedTask
 
-  @max_batch_size 10
-  @max_concurrency 4
+  @max_batch_size 5
+  @max_concurrency 2
   @defaults [
     flush_interval: :timer.seconds(3),
     max_concurrency: @max_concurrency,
     max_batch_size: @max_batch_size,
     poll: true,
     task_supervisor: Indexer.Fetcher.InternalTransaction.TaskSupervisor,
-    metadata: [fetcher: :internal_transaction]
+    metadata: [
+      fetcher: :internal_transaction
+    ]
   ]
 
   @doc """
@@ -181,17 +183,24 @@ defmodule Indexer.Fetcher.InternalTransaction do
   end
 
   defp fetch_block_internal_transactions_by_transactions(unique_numbers, json_rpc_named_arguments) do
-    Enum.reduce(unique_numbers, {:ok, []}, fn
-      block_number, {:ok, acc_list} ->
-        Logger.info("Fetch internal transaction of block: #{block_number}")
-        block_number
-        |> Chain.get_transactions_of_block_number()
-        |> Enum.map(&params(&1))
-        |> case do
-          [] ->
-            {:ok, []}
+    Logger.info("List unique_numbers")
+    unique_numbers
+    |> inspect()
+    |> Logger.info()
+    Enum.reduce(
+      unique_numbers,
+      {:ok, []},
+      fn
+        block_number, {:ok, acc_list} ->
+          Logger.info("Get all transaction of block: #{block_number} from db")
+          block_number
+          |> Chain.get_transactions_of_block_number()
+          |> Enum.map(&params(&1))
+          |> case do
+               [] ->
+                 {:ok, []}
 
-          transactions ->
+               transactions ->
             try do
               EthereumJSONRPC.fetch_internal_transactions(transactions, json_rpc_named_arguments)
             catch

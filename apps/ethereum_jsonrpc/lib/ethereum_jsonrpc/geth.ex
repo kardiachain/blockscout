@@ -82,6 +82,7 @@ defmodule EthereumJSONRPC.Geth do
 
   defp debug_trace_transaction_requests(id_to_params) when is_map(id_to_params) do
     Enum.map(id_to_params, fn {id, %{hash_data: hash_data}} ->
+      Logger.info("Trace transaction from network with #{hash_data}")
       debug_trace_transaction_request(%{id: id, hash_data: hash_data})
     end)
   end
