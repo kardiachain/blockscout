@@ -80,6 +80,8 @@ defmodule Indexer.Block.Catchup.Fetcher do
           {:ok, number}
       end
 
+    Logger.info("----------Run catch up block with latest number: #{latest_block_number} ----------------")
+
     case latest_block_number do
       # let realtime indexer get the genesis block
       0 ->
@@ -188,7 +190,7 @@ defmodule Indexer.Block.Catchup.Fetcher do
          sequence
        ) do
     Logger.metadata(fetcher: :block_catchup, first_block_number: first, last_block_number: last)
-
+    Logger.info("fetch_and_import_range_from_sequence #{first}, #{last}}")
     case fetch_and_import_range(block_fetcher, range) do
       {:ok, %{inserted: inserted, errors: errors}} ->
         errors = cap_seq(sequence, errors)

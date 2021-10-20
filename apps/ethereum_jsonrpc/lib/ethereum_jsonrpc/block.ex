@@ -19,6 +19,7 @@ defmodule EthereumJSONRPC.Block do
                     commit_hash: EthereumJSONRPC.hash(),
                     validator_hash: EthereumJSONRPC.hash(),
                     next_validator_hash: EthereumJSONRPC.hash(),
+                    transactions_root: EthereumJSONRPC.hash(),
                     consensus_hash: EthereumJSONRPC.hash(),
                     logs_bloom: EthereumJSONRPC.hash(),
                     miner_hash: EthereumJSONRPC.hash(),

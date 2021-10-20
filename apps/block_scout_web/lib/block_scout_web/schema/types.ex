@@ -58,6 +58,7 @@ defmodule BlockScoutWeb.Schema.Types do
     field(:commit_hash, :full_hash)
     field(:validator_hash, :full_hash)
     field(:next_validator_hash, :full_hash)
+    field(:transactions_root, :full_hash)
     field(:consensus, :boolean)
     field(:difficulty, :decimal)
     field(:gas_limit, :decimal)

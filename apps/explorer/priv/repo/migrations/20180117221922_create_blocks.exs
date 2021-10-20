@@ -11,6 +11,7 @@ defmodule Explorer.Repo.Migrations.CreateBlocks do
       add(:commit_hash, :bytea, null: false)
       add(:validator_hash, :bytea, null: false)
       add(:next_validator_hash, :bytea, null: false)
+      add(:transactions_root, :bytea, null: false)
       add(:miner_hash, references(:addresses, column: :hash, type: :bytea), null: false)
       add(:nonce, :bytea, null: false)
       add(:number, :bigint, null: false)
