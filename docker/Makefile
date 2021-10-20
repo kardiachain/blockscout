@@ -10,7 +10,6 @@ ifeq ($(SYSTEM), Linux)
 	HOST=localhost
 endif
 
-DB_URL = postgresql://postgres:@$(HOST):5432/explorer?ssl=false
 BLOCKSCOUT_CONTAINER_PARAMS = -e 'MIX_ENV=prod' \
 															 -e 'DATABASE_URL=$(DB_URL)'
 ifeq ($(SYSTEM), Linux)
@@ -335,6 +334,7 @@ build:
 	@echo "==> Checking for blockscout image $(DOCKER_IMAGE)"
 ifdef HAS_BLOCKSCOUT_IMAGE
 	@echo "==> Image exist. Using $(DOCKER_IMAGE)"
+	@docker build --build-arg COIN="$(COIN)" -f ./Dockerfile -t $(DOCKER_IMAGE) ../
 else
 	@echo "==> No image found trying to build one..."
 	@docker build --build-arg COIN="$(COIN)" -f ./Dockerfile -t $(DOCKER_IMAGE) ../
@@ -359,25 +359,25 @@ ifdef PG_STARTED
 	@echo "==> PostgreSQL Already started"
 	@$(MAKE) -f $(THIS_FILE) migrate_only
 else
-	@echo "==> Starting PostgreSQL container"
-	@docker start $(PG_CONTAINER_NAME)
+	#@echo "==> Starting PostgreSQL container"
+	#@docker start $(PG_CONTAINER_NAME)
 	@$(MAKE) -f $(THIS_FILE) migrate_only
 endif
 else
-	@echo "==> Creating new PostgreSQL container"
-	@docker run -d --name $(PG_CONTAINER_NAME) \
-					-e POSTGRES_PASSWORD="" \
-					-e POSTGRES_USER="postgres" \
-					-e POSTGRES_HOST_AUTH_METHOD="trust" \
-					-p 5432:5432 \
-					$(PG_CONTAINER_IMAGE)
+	#@echo "==> Creating new PostgreSQL container"
+	#@docker run -d --name $(PG_CONTAINER_NAME) \
+        #				-e POSTGRES_PASSWORD="" \
+	#				-e POSTGRES_USER="postgres" \
+	#				-e POSTGRES_HOST_AUTH_METHOD="trust" \
+	#				-p 5432:5432 \
+	#				$(PG_CONTAINER_IMAGE)
 	@sleep 1
 	@$(MAKE) -f $(THIS_FILE) migrate_only
 endif
 
 start: build postgres 
 	@echo "==> Starting blockscout"
-	@docker run --rm --name $(BS_CONTAINER_NAME) \
+	@docker run -d --rm -v /home/ec2-user/logs:/opt/app/logs --name $(BS_CONTAINER_NAME) \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					-p 4000:4000 \
 					$(DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
