@@ -21,10 +21,12 @@ defmodule Indexer.Fetcher.CoinBalance do
 
   @defaults [
     flush_interval: :timer.seconds(3),
-    max_batch_size: 500,
-    max_concurrency: 4,
+    max_batch_size: 250,
+    max_concurrency: 2,
     task_supervisor: Indexer.Fetcher.CoinBalance.TaskSupervisor,
-    metadata: [fetcher: :coin_balance]
+    metadata: [
+      fetcher: :coin_balance
+    ]
   ]
 
   @doc """
