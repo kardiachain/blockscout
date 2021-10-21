@@ -63,6 +63,7 @@ defmodule BlockScoutWeb.Schema.Types do
     field(:difficulty, :decimal)
     field(:gas_limit, :decimal)
     field(:gas_used, :decimal)
+    field(:block_rewards, :decimal)
     field(:nonce, :nonce_hash)
     field(:number, :integer)
     field(:size, :integer)

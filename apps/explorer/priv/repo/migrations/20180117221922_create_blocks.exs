@@ -7,6 +7,7 @@ defmodule Explorer.Repo.Migrations.CreateBlocks do
       add(:difficulty, :numeric, precision: 50)
       add(:gas_limit, :numeric, precision: 100, null: false)
       add(:gas_used, :numeric, precision: 100, null: false)
+      add(:block_rewards, :numeric, precision: 100, null: false)
       add(:hash, :bytea, null: false, primary_key: true)
       add(:commit_hash, :bytea, null: false)
       add(:validator_hash, :bytea, null: false)

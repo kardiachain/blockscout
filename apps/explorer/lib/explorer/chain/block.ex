@@ -12,7 +12,7 @@ defmodule Explorer.Chain.Block do
 
   @optional_attrs ~w(size refetch_needed total_difficulty difficulty base_fee_per_gas nonce)a
 
-  @required_attrs ~w(consensus gas_limit gas_used hash commit_hash validator_hash next_validator_hash transactions_root miner_hash number parent_hash timestamp)a
+  @required_attrs ~w(consensus gas_limit gas_used hash commit_hash validator_hash block_rewards next_validator_hash transactions_root miner_hash number parent_hash timestamp)a
 
   @typedoc """
   How much work is required to find a hash with some number of leading 0s.  It is measured in hashes for PoW
@@ -53,6 +53,7 @@ defmodule Explorer.Chain.Block do
                difficulty: difficulty(),
                gas_limit: Gas.t(),
                gas_used: Gas.t(),
+               block_rewards: Gas.t(),
                hash: Hash.Full.t(),
                commit_hash: Hash.Full.t(),
                validator_hash: Hash.Full.t(),
@@ -80,6 +81,7 @@ defmodule Explorer.Chain.Block do
     field(:consensus, :boolean)
     field(:difficulty, :decimal)
     field(:gas_limit, :decimal)
+    field(:block_rewards, :decimal)
     field(:gas_used, :decimal)
     field(:nonce, Hash.Nonce)
     field(:number, :integer)
