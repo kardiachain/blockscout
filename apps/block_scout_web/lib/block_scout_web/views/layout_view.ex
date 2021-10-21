@@ -27,7 +27,7 @@ defmodule BlockScoutWeb.LayoutView do
   end
 
   def subnetwork_title do
-    Keyword.get(application_config(), :subnetwork) || "Aris Mainnet 1.0"
+    Keyword.get(application_config(), :subnetwork) || "Aris Mainnet"
   end
 
   def network_title do
