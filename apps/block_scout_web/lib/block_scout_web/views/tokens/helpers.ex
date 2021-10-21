@@ -20,19 +20,19 @@ defmodule BlockScoutWeb.Tokens.Helpers do
     do_token_transfer_amount(token, amount, token_id)
   end
 
-  defp do_token_transfer_amount(%Token{type: "ERC-20"}, nil, _token_id) do
+  defp do_token_transfer_amount(%Token{type: "KRC-20"}, nil, _token_id) do
     {:ok, "--"}
   end
 
-  defp do_token_transfer_amount(%Token{type: "ERC-20", decimals: nil}, amount, _token_id) do
+  defp do_token_transfer_amount(%Token{type: "KRC-20", decimals: nil}, amount, _token_id) do
     {:ok, CurrencyHelpers.format_according_to_decimals(amount, Decimal.new(0))}
   end
 
-  defp do_token_transfer_amount(%Token{type: "ERC-20", decimals: decimals}, amount, _token_id) do
+  defp do_token_transfer_amount(%Token{type: "KRC-20", decimals: decimals}, amount, _token_id) do
     {:ok, CurrencyHelpers.format_according_to_decimals(amount, decimals)}
   end
 
-  defp do_token_transfer_amount(%Token{type: "ERC-721"}, _amount, _token_id) do
+  defp do_token_transfer_amount(%Token{type: "KRC-721"}, _amount, _token_id) do
     {:ok, :erc721_instance}
   end
 
