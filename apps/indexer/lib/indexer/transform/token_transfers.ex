@@ -72,12 +72,12 @@ defmodule Indexer.Transform.TokenTransfers do
       to_address_hash: truncate_address_hash(log.third_topic),
       token_contract_address_hash: log.address_hash,
       transaction_hash: log.transaction_hash,
-      token_type: "ERC-20"
+      token_type: "KRC-20"
     }
 
     token = %{
       contract_address_hash: log.address_hash,
-      type: "ERC-20"
+      type: "KRC-20"
     }
 
     {token, token_transfer}
@@ -97,12 +97,12 @@ defmodule Indexer.Transform.TokenTransfers do
       token_contract_address_hash: log.address_hash,
       token_id: token_id || 0,
       transaction_hash: log.transaction_hash,
-      token_type: "ERC-721"
+      token_type: "KRC-721"
     }
 
     token = %{
       contract_address_hash: log.address_hash,
-      type: "ERC-721"
+      type: "KRC-721"
     }
 
     {token, token_transfer}
@@ -122,12 +122,12 @@ defmodule Indexer.Transform.TokenTransfers do
       token_contract_address_hash: log.address_hash,
       token_id: token_id,
       transaction_hash: log.transaction_hash,
-      token_type: "ERC-721"
+      token_type: "KRC-721"
     }
 
     token = %{
       contract_address_hash: log.address_hash,
-      type: "ERC-721"
+      type: "KRC-721"
     }
 
     {token, token_transfer}
