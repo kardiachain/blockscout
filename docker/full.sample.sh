@@ -14,13 +14,13 @@ export ETHEREUM_JSONRPC_HTTP_URL=https://dev-1.kardiachain.io
 export ETHEREUM_JSONRPC_WS_URL=
 
 ############# DATABASE ################
-export DATABASE_URL=postgresql://postgres:123456@localhost:5432/explorer
-export DB_URL=postgresql://postgres:123456@localhost:5432/explorer
 export PGHOST=localhost
 export PGPORT=5432
 export PGDATABASE=explorer
 export PGUSER=postgres
 export PGPASSWORD=123456
+export DATABASE_URL=postgresql://$PGUSER:$PGPASSWORD@$PGHOST:$PGPORT/$PGDATABASE
+export DB_URL=$DATABASE_URL
 export ECTO_USE_SSL=false
 export POOL_SIZE=20
 

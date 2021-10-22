@@ -382,10 +382,19 @@ endif
 
 
 migrate_only:
-	@echo "==> Running migrations"
+ifdef FULLSTACK
+	@echo "==> Running fullstack migrations"
 	@docker run --rm \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					$(DOCKER_IMAGE) /bin/sh -c "echo $$MIX_ENV && mix do ecto.create, ecto.migrate"
+
+else
+	@echo "==> Running indexer migrations"
+	@docker run --rm \
+					$(BLOCKSCOUT_CONTAINER_PARAMS) \
+					$(INDEX_DOCKER_IMAGE) /bin/sh -c "echo $$MIX_ENV && mix do ecto.create, ecto.migrate"
+
+endif
 
 migrate: build postgres
 	@$(MAKE) -f $(THIS_FILE) migrate_only
@@ -422,7 +431,7 @@ start: build postgres
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					$(DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 
-index: build_index postgres
+index: build_index
 	@echo "==> Starting blockscout indexer"
 	@docker run -d -v /Users/longnd/workplace/kardiachain/blockscout/docker/logs:/opt/app/logs --name $(BS_INDEXER_CONTAINER_NAME) \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
