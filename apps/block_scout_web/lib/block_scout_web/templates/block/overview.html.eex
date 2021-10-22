@@ -97,7 +97,7 @@
                   clipboard_text: @block.miner,
                   aria_label: gettext("Copy Address"),
                   title: gettext("Copy Address") %>
-                </dd>
+              </dd>
             </dl>
           <% end %>
           <!-- Hash -->

@@ -182,12 +182,12 @@
               <%= gettext "From" %></dt>
             <dd class="col-sm-9 col-lg-10">
               <%= link(
-                from_address_hash,
+                Address.checksum(from_address_hash),
                 to: address_path(@conn, :show, from_address_hash)
               ) %>
               <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
                 additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
-                clipboard_text: from_address_hash,
+                clipboard_text: Address.checksum(from_address_hash),
                 aria_label: gettext("Copy From Address"),
                 title: gettext("Copy From Address") %>
             </dd>
@@ -210,23 +210,23 @@
                 <% created_address_hash -> %>
                   [<%= gettext("Contract") %>&nbsp;
                   <%= link(
-                    recipient_address_hash,
+                    Address.checksum(recipient_address_hash),
                     to: address_path(@conn, :show, recipient_address_hash)
                   ) %>
                   &nbsp;<%= gettext("created") %>]
                   <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
                     additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
-                    clipboard_text: recipient_address_hash,
+                    clipboard_text: Address.checksum(recipient_address_hash),
                     aria_label: gettext("Copy To Address"),
                     title: gettext("Copy To Address") %>
                 <% recipient_address_hash -> %>
                   <%= link(
-                    recipient_address_hash,
+                    Address.checksum(recipient_address_hash),
                     to: address_path(@conn, :show, recipient_address_hash)
                   ) %>
                   <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
                     additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
-                    clipboard_text: recipient_address_hash,
+                    clipboard_text: Address.checksum(recipient_address_hash),
                     aria_label: gettext("Copy To Address"),
                     title: gettext("Copy To Address") %>
                 <% true -> %>
@@ -244,7 +244,7 @@
                       text: gettext("List of token transferred in the transaction.") %>
                     <%= gettext "Tokens Transferred" %></dt>
                   <dd class="col-sm-9 col-lg-10 transfers-list-mobile-container">
-                    <table cellpadding="3" cellspacing="0">
+                    <table cellpadding="1" cellspacing="1">
                       <%= for transfer <- transfers do %>
                         <%= render BlockScoutWeb.TransactionView, "_total_transfers_from_to.html", Map.put(assigns, :transfer, transfer) %>
                       <% end %>
@@ -261,7 +261,7 @@
                     <%= gettext "Tokens Minted" %>
                   </dt>
                   <dd class="col-sm-9 col-lg-10 transfers-list-mobile-container">
-                    <table cellpadding="3" cellspacing="0">
+                    <table cellpadding="1" cellspacing="1">
                       <%= for minting <- mintings do %>
                         <%= render BlockScoutWeb.TransactionView, "_total_transfers_from_to.html", Map.put(assigns, :transfer, minting) %>
                       <% end %>
@@ -278,7 +278,7 @@
                     <%= gettext "Tokens Burnt" %></dt>
                   <dd class="col-sm-9 col-lg-10 transfers-list-mobile-container">
                   <%= for burning  <- burnings do %>
-                    <table cellpadding="3" cellspacing="0">
+                    <table cellpadding="1" cellspacing="1">
                       <%= render BlockScoutWeb.TransactionView, "_total_transfers_from_to.html", Map.put(assigns, :transfer, burning) %>
                     </table>
                   <% end %>
@@ -294,7 +294,7 @@
                     <%= gettext "Tokens Created" %></dt>
                   <dd class="col-sm-9 col-lg-10 transfers-list-mobile-container">
                   <%= for creation  <- creations do %>
-                    <table cellpadding="3" cellspacing="0">
+                    <table cellpadding="1" cellspacing="1">
                       <%= render BlockScoutWeb.TransactionView, "_total_transfers_from_to.html", Map.put(assigns, :transfer, creation) %>
                     </table>
                   <% end %>
