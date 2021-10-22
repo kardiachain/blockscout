@@ -1,8 +1,14 @@
 SYSTEM = $(shell uname -s)
 HOST = host.docker.internal
+# Add new var for fullstack build
 DOCKER_IMAGE = blockscout_prod
 BS_CONTAINER_NAME = blockscout
+# Split build
+INDEX_DOCKER_IMAGE = blockscout_index_prod
+BS_INDEXER_CONTAINER_NAME = blockscout_indexer
+WEB_DOCKER_IMAGE = blockscout_web_prod
 BS_WEB_CONTAINER_NAME = blockscout_web
+
 PG_CONTAINER_NAME = postgres
 PG_CONTAINER_IMAGE = postgres:12.5
 THIS_FILE = $(lastword $(MAKEFILE_LIST))
@@ -342,16 +348,38 @@ ifdef DISPLAY_TOKEN_ICONS
 	BLOCKSCOUT_CONTAINER_PARAMS += -e 'DISPLAY_TOKEN_ICONS=$(DISPLAY_TOKEN_ICONS)'
 endif
 
+ifdef FULLSTACK
 HAS_BLOCKSCOUT_IMAGE := $(shell docker images | grep -sw ${DOCKER_IMAGE})
 build:
 	@echo "==> Checking for blockscout image $(DOCKER_IMAGE)"
-ifdef HAS_BLOCKSCOUT_IMAGE
+ifdef HAS_BLOCKSCOUT_INDEX_IMAGE
 	@echo "==> Image exist. Using $(DOCKER_IMAGE)"
-	@docker build --build-arg COIN="$(COIN)" -f ./Dockerfile -t $(DOCKER_IMAGE) ../
 else
 	@echo "==> No image found trying to build one..."
 	@docker build --build-arg COIN="$(COIN)" -f ./Dockerfile -t $(DOCKER_IMAGE) ../
 endif
+else
+HAS_BLOCKSCOUT_INDEX_IMAGE := $(shell docker images | grep -sw ${INDEX_DOCKER_IMAGE})
+build_index:
+	@echo "==> Checking for blockscout image $(INDEX_DOCKER_IMAGE)"
+ifdef HAS_BLOCKSCOUT_INDEX_IMAGE
+	@echo "==> Image exist. Using $(INDEX_DOCKER_IMAGE)"
+else
+	@echo "==> No image found trying to build one..."
+	@docker build --build-arg COIN="$(COIN)" -f ./index.Dockerfile -t $(INDEX_DOCKER_IMAGE) ../
+endif
+
+HAS_BLOCKSCOUT_WEB_IMAGE := $(shell docker images | grep -sw ${WEB_DOCKER_IMAGE})
+build_web:
+	@echo "==> Checking for blockscout image $(WEB_DOCKER_IMAGE)"
+ifdef HAS_BLOCKSCOUT_WEB_IMAGE
+	@echo "==> Image exist. Using $(WEB_DOCKER_IMAGE)"
+else
+	@echo "==> No image found trying to build one..."
+	@docker build --build-arg COIN="$(COIN)" -f ./web.Dockerfile -t $(WEB_DOCKER_IMAGE) ../
+endif
+endif
+
 
 migrate_only:
 	@echo "==> Running migrations"
@@ -390,15 +418,22 @@ endif
 
 start: build postgres
 	@echo "==> Starting blockscout"
-	@docker run -d -v /Users/longnd/workplace/kardiachain/blockscout/docker/logs:/opt/app/logs --name $(BS_CONTAINER_NAME) \
+	@docker run -d -v /home/ec2-user/bs/logs:/opt/app/logs --name $(BS_CONTAINER_NAME) \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					$(DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 
-web:
+index: build_index postgres
+	@echo "==> Starting blockscout indexer"
+	@docker run -d -v /Users/longnd/workplace/kardiachain/blockscout/docker/logs:/opt/app/logs --name $(BS_INDEXER_CONTAINER_NAME) \
+					$(BLOCKSCOUT_CONTAINER_PARAMS) \
+					$(INDEX_DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
+
+web: build_web
+	@echo "==> Starting blockscout web"
 	@docker run -d --name $(BS_WEB_CONTAINER_NAME) \
                                         $(BLOCKSCOUT_CONTAINER_PARAMS) \
                                         -p 4000:4000 \
-                                        $(DOCKER_IMAGE) \
+                                        $(WEB_DOCKER_IMAGE) \
 					/bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 run: start
 
