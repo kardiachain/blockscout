@@ -6,15 +6,15 @@ defmodule Explorer.Chain.Token do
 
   The following types of tokens are indexed:
 
-  * ERC-20
-  * ERC-721
+  * KRC-20
+  * KRC-721
 
   ## Token Specifications
 
-  * [ERC-20](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md)
-  * [ERC-721](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md)
-  * [ERC-777](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-777.md)
-  * [ERC-1155](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md)
+  * [KRC-20](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md)
+  * [KRC-721](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md)
+  * [KRC-777](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-777.md)
+  * [KRC-1155](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md)
   """
 
   use Explorer.Schema

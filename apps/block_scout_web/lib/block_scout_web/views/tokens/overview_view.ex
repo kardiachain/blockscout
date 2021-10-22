@@ -43,7 +43,7 @@ defmodule BlockScoutWeb.Tokens.OverviewView do
   defp tab_name(["read-contract"]), do: gettext("Read Contract")
   defp tab_name(["inventory"]), do: gettext("Inventory")
 
-  def display_inventory?(%Token{type: "ERC-721"}), do: true
+  def display_inventory?(%Token{type: "KRC-721"}), do: true
   def display_inventory?(_), do: false
 
   def smart_contract_with_read_only_functions?(

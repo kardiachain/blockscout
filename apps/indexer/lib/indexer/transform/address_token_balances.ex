@@ -41,7 +41,7 @@ defmodule Indexer.Transform.AddressTokenBalances do
     })
   end
 
-  def do_filter_burn_address(%{to_address_hash: unquote(@burn_address), token_type: "ERC-721"}) do
+  def do_filter_burn_address(%{to_address_hash: unquote(@burn_address), token_type: "KRC-721"}) do
     false
   end
 
