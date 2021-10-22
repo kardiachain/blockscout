@@ -19,24 +19,14 @@
               <span class="nav-link-icon">
                 <%= render BlockScoutWeb.IconsView, "_block_icon.html" %>
               </span>
-              <%= gettext("Blocks") %>
+              <%= gettext("Blockchain") %>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarBlocksDropdown">
               <%= link to: blocks_path(@conn, :index), class: "dropdown-item #{tab_status("blocks", @conn.request_path)}" do %>
-                <%= gettext("Blocks") %>
+                <%= gettext("View Blocks") %>
               <% end %>
-            </div>
-          </li>
-          <li class="nav-item dropdown">            <li class="nav-item dropdown" id="activeTransactions">
-            <a href="#" role="button" id="navbarTransactionsDropdown" class="nav-link topnav-nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span class="nav-link-icon">
-                <%= render BlockScoutWeb.IconsView, "_transaction_icon.html" %>
-              </span>
-              <%= gettext("Transactions") %>
-            </a>
-            <div class="dropdown-menu" aria-labeledby="navbarTransactionsDropdown">
               <%= link(
-                    gettext("Validated"),
+                    gettext("View Validated Txs"),
                     class: "dropdown-item #{tab_status("txs", @conn.request_path)}",
                     to: transaction_path(@conn, :index)
                   ) %>
@@ -44,7 +34,7 @@
               <% variant = Keyword.fetch!(json_rpc_named_arguments, :variant) %>
               <%= if variant !== EthereumJSONRPC.Besu do %>
                 <%= link(
-                      gettext("Pending"),
+                      gettext("View Pending Txs"),
                       class: "dropdown-item #{tab_status("pending-transactions", @conn.request_path)}",
                       "data-test": "pending_transactions_link",
                       to: pending_transaction_path(@conn, :index)
