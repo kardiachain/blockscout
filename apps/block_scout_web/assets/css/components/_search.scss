@@ -33,7 +33,7 @@
     border: none !important;
     border-radius: 0 !important;
     background-color: #f5f6fa !important;
-    @include media-breakpoint-down(lg) {
+    @include media-breakpoint-down(md) {
         height: auto !important;
     }
 }

@@ -2,15 +2,15 @@
         {:ok, to_address} <- Chain.hash_to_address(@transfer.to_address_hash) do %>
 <tr>
         <td class="address-mobile" style="word-break: break-all; width: 1%; white-space: nowrap;">
-                <b>From </b>
+                <b>From&nbsp;</b>
                 <%= render BlockScoutWeb.AddressView, "_link.html", address: from_address, contract: BlockScoutWeb.AddressView.contract?(from_address), use_custom_tooltip: false, trimmed: false, truncate: true %>
         </td>
         <td class="address-mobile" style="word-break: break-all; width: 1%; white-space: nowrap;">
-                <b>To </b>
+                <b>To&nbsp;</b>
                 <%= render BlockScoutWeb.AddressView, "_link.html", address: to_address, contract: BlockScoutWeb.AddressView.contract?(to_address), use_custom_tooltip: false, trimmed: false, truncate: true %>
         </td>
         <td class="address-mobile" style="word-break: break-all; white-space: nowrap;">
-                <b>For </b>
+                <b>For&nbsp;</b>
                 <%= render BlockScoutWeb.TransactionView, "_total_transfers.html", transfer: @transfer %>
         </td>
 </tr>
