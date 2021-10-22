@@ -13,7 +13,7 @@
 
     <div class="col-12 col-md-8 col-lg-10 d-flex flex-column text-nowrap">
       <span class="text-nowrap">
-        <b>Hash </b>
+        <b>Hash&nbsp;</b>
         <%= render BlockScoutWeb.TransactionView, "_link.html", transaction_hash: @token_transfer.transaction_hash %>
       </span>
       <span class="text-nowrap">
