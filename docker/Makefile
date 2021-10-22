@@ -2,16 +2,29 @@ SYSTEM = $(shell uname -s)
 HOST = host.docker.internal
 DOCKER_IMAGE = blockscout_prod
 BS_CONTAINER_NAME = blockscout
+BS_WEB_CONTAINER_NAME = blockscout_web
 PG_CONTAINER_NAME = postgres
 PG_CONTAINER_IMAGE = postgres:12.5
 THIS_FILE = $(lastword $(MAKEFILE_LIST))
 
-ifeq ($(SYSTEM), Linux)
-	HOST=localhost
-endif
-
 BLOCKSCOUT_CONTAINER_PARAMS = -e 'MIX_ENV=prod' \
-															 -e 'DATABASE_URL=$(DB_URL)'
+										 -e 'DATABASE_URL=$(DB_URL)'
+
+ifdef PGHOST
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'PGHOST=$(PGHOST)'
+endif
+ifdef PGPORT
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'PGPORT=$(PGPORT)'
+endif
+ifdef PGDATABASE
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'PGDATABASE=$(PGDATABASE)'
+endif
+ifdef PGUSER
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'PGUSER=$(PGUSER)'
+endif
+ifdef PGPASSWORD
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'PGPASSWORD=$(PGPASSWORD)'
+endif
 ifeq ($(SYSTEM), Linux)
 	BLOCKSCOUT_CONTAINER_PARAMS += --network=host
 endif
@@ -330,7 +343,7 @@ ifdef DISPLAY_TOKEN_ICONS
 endif
 
 HAS_BLOCKSCOUT_IMAGE := $(shell docker images | grep -sw ${DOCKER_IMAGE})
-build: 
+build:
 	@echo "==> Checking for blockscout image $(DOCKER_IMAGE)"
 ifdef HAS_BLOCKSCOUT_IMAGE
 	@echo "==> Image exist. Using $(DOCKER_IMAGE)"
@@ -375,17 +388,22 @@ else
 	@$(MAKE) -f $(THIS_FILE) migrate_only
 endif
 
-start: build postgres 
+start: build postgres
 	@echo "==> Starting blockscout"
-	@docker run -d --rm -v /home/ec2-user/logs:/opt/app/logs --name $(BS_CONTAINER_NAME) \
+	@docker run -d -v /Users/longnd/workplace/kardiachain/blockscout/docker/logs:/opt/app/logs --name $(BS_CONTAINER_NAME) \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
-					-p 4000:4000 \
 					$(DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 
+web:
+	@docker run -d --name $(BS_WEB_CONTAINER_NAME) \
+                                        $(BLOCKSCOUT_CONTAINER_PARAMS) \
+                                        -p 4000:4000 \
+                                        $(DOCKER_IMAGE) \
+					/bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 run: start
 
 .PHONY: build \
 				migrate \
 				start \
 				postgres \
-				run 
+				run

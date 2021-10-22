@@ -21,8 +21,6 @@ defmodule Explorer.Chain.Events.Listener do
 
     db_url = explorer_repo[:url]
 
-    Logger.info("DATABASE URL : #{db_url}}")
-
     {:ok, pid} =
       explorer_repo
       |> Keyword.put(:database, extract_db_name(db_url))
