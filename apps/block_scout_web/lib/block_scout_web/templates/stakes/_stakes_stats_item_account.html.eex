@@ -12,7 +12,7 @@
         </svg>
       </div>
     <% else %>
-      <a href="https://metamask.io" target="_blank" data-selector="login-button" class="stakes-top-stats-login">Login</a> with MetaMask
+      <a href="https://chrome.google.com/webstore/detail/kardiachain-wallet/pdadjkfkgcafgbceimcpbkalnfnepbnk" target="_blank" data-selector="login-button" class="stakes-top-stats-login">Login</a> with KardiaChain Wallet
     <% end %>
   </span>
   <span class="stakes-top-stats-label">
@@ -23,7 +23,7 @@
       else
         "-"
       end
-      
+
       stake_amount = format_token_amount(@account[:stake_amount], @token, digits: 5, no_tooltip: true, symbol: true)
       stake_amount_full = if @account[:stake_amount] do
         "#{from_wei(@account[:stake_amount], @token)} #{@token.symbol}"

@@ -5,23 +5,23 @@ import { compareChainIDs, formatError, formatTitleAndError, getContractABI, getC
 
 export const walletEnabled = () => {
   return new Promise((resolve) => {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
-      window.ethereum._metamask.isUnlocked()
+    if (window.kardiachain) {
+      window.web3 = new Web3(window.kardiachain)
+      window.kardiachain._metamask.isUnlocked()
         .then(isUnlocked => {
-          if (isUnlocked && window.ethereum.isNiftyWallet) { // Nifty Wallet
+          if (isUnlocked && window.kardiachain.isNiftyWallet) { // Nifty Wallet
             window.web3 = new Web3(window.web3.currentProvider)
             resolve(true)
-          } else if (isUnlocked === false && window.ethereum.isNiftyWallet) { // Nifty Wallet
-            window.ethereum.enable()
+          } else if (isUnlocked === false && window.kardiachain.isNiftyWallet) { // Nifty Wallet
+            window.kardiachain.enable()
             resolve(false)
           } else {
-            if (window.ethereum.isNiftyWallet) {
-              window.ethereum.enable()
+            if (window.kardiachain.isNiftyWallet) {
+              window.kardiachain.enable()
               window.web3 = new Web3(window.web3.currentProvider)
               resolve(true)
             } else {
-              return window.ethereum.request({ method: 'eth_requestAccounts' })
+              return window.kardiachain.request({ method: 'eth_requestAccounts' })
                 .then((_res) => {
                   window.web3 = new Web3(window.web3.currentProvider)
                   resolve(true)
@@ -45,23 +45,23 @@ export const walletEnabled = () => {
 }
 
 export const connectToWallet = () => {
-  if (window.ethereum) {
-    if (window.ethereum.isNiftyWallet) {
-      window.ethereum.enable()
+  if (window.kardiachain) {
+    if (window.kardiachain.isNiftyWallet) {
+      window.kardiachain.enable()
     } else {
-      window.ethereum.request({ method: 'eth_requestAccounts' })
+      window.kardiachain.request({ method: 'eth_requestAccounts' })
     }
   }
 }
 
 export const shouldHideConnectButton = () => {
   return new Promise((resolve) => {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
-      if (window.ethereum.isNiftyWallet) {
-        resolve({ shouldHide: true, account: window.ethereum.selectedAddress })
-      } else if (window.ethereum.isMetaMask) {
-        window.ethereum.request({ method: 'eth_accounts' })
+    if (window.kardiachain) {
+      window.web3 = new Web3(window.kardiachain)
+      if (window.kardiachain.isNiftyWallet) {
+        resolve({ shouldHide: true, account: window.kardiachain.selectedAddress })
+      } else if (window.kardiachain.isMetaMask) {
+        window.kardiachain.request({ method: 'eth_accounts' })
           .then(accounts => {
             accounts.length > 0 ? resolve({ shouldHide: true, account: accounts[0] }) : resolve({ shouldHide: false })
           })
@@ -69,7 +69,7 @@ export const shouldHideConnectButton = () => {
             resolve({ shouldHide: false })
           })
       } else {
-        resolve({ shouldHide: true, account: window.ethereum.selectedAddress })
+        resolve({ shouldHide: true, account: window.kardiachain.selectedAddress })
       }
     } else {
       resolve({ shouldHide: false })
@@ -79,7 +79,7 @@ export const shouldHideConnectButton = () => {
 
 export function callMethod (isWalletEnabled, $functionInputs, explorerChainId, $form, functionName, $element) {
   if (!isWalletEnabled) {
-    const warningMsg = 'You haven\'t approved the reading of account list from your MetaMask or MetaMask/Nifty wallet is locked or is not installed.'
+    const warningMsg = 'You haven\'t approved the reading of account list from your KardiaChain wallet is locked or is not installed.'
     return openWarningModal('Unauthorized', warningMsg)
   }
   const contractAbi = getContractABI($form)
@@ -91,7 +91,7 @@ export function callMethod (isWalletEnabled, $functionInputs, explorerChainId, $
   const txValue = getTxValue($functionInputs)
   const contractAddress = $form.data('contract-address')
 
-  const { chainId: walletChainIdHex } = window.ethereum
+  const { chainId: walletChainIdHex } = window.kardiachain
   compareChainIDs(explorerChainId, walletChainIdHex)
     .then(() => getCurrentAccount())
     .then(currentAccount => {
@@ -113,7 +113,7 @@ export function callMethod (isWalletEnabled, $functionInputs, explorerChainId, $
           to: contractAddress,
           value: txValue || 0
         }
-        window.ethereum.request({
+        window.kardiachain.request({
           method: 'eth_sendTransaction',
           params: [txParams]
         })
@@ -158,7 +158,7 @@ export function queryMethod (isWalletEnabled, url, $methodId, args, type, functi
 function onTransactionHash (txHash, $element, functionName) {
   openModalWithMessage($element.find('#pending-contract-write'), true, txHash)
   const getTxReceipt = (txHash) => {
-    window.ethereum.request({
+    window.kardiachain.request({
       method: 'eth_getTransactionReceipt',
       params: [txHash]
     })
