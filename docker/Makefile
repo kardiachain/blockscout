@@ -370,7 +370,7 @@ else
 endif
 
 rebuild_index:
-	@echo "==> No image found trying to build one..."
+	@echo "==> Rebuild indexer docker image..."
 	@docker build --build-arg COIN="$(COIN)" -f ./index.Dockerfile -t $(INDEX_DOCKER_IMAGE) ../
 
 HAS_BLOCKSCOUT_WEB_IMAGE := $(shell docker images | grep -sw ${WEB_DOCKER_IMAGE})
@@ -384,7 +384,7 @@ else
 endif
 
 rebuild_web:
-	@echo "==> No image found trying to build one..."
+	@echo "==> Rebuild web docker image..."
 	@docker build --build-arg COIN="$(COIN)" -f ./web.Dockerfile -t $(WEB_DOCKER_IMAGE) ../
 
 endif

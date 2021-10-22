@@ -19,7 +19,10 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="$HOME/.cargo/bin:${PATH}"
 ENV RUSTFLAGS="-C target-feature=-crt-static"
 
-ENV MIX_ENV="prod" \
+EXPOSE 4001
+
+ENV PORT=4001 \
+    MIX_ENV="prod" \
     SECRET_KEY_BASE="RMgI4C1HSkxsEjdhtGMfwAHfyT6CKWXOgzCboJflfSm4jeAlic52io05KB6mqzc5"
 
 # Cache elixir deps
