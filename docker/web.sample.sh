@@ -10,7 +10,6 @@ export FIRST_BLOCK=1
 export BLOCKSCOUT_VERSION=1.0.1
 export CHAIN_ID=0
 
-
 ############# RPC ################
 export ETHEREUM_JSONRPC_HTTP_URL=https://dev-1.kardiachain.io
 export ETHEREUM_JSONRPC_WS_URL=
@@ -31,6 +30,7 @@ export TXS_STATS_DAYS_TO_COMPILE_AT_INIT=1
 export ENABLE_POS_STAKING_IN_MENU=false
 export LINK_TO_OTHER_EXPLORERS=false
 export OTHER_EXPLORERS=‘{}’
+export CHECKSUM_ADDRESS_HASHES=true
 
 docker rm -f blockscout_web
 make web
