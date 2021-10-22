@@ -391,7 +391,7 @@ defmodule BlockScoutWeb.ViewingAddressesTest do
       taft = insert(:address, fetched_coin_balance: 5)
 
       contract_address = insert(:contract_address)
-      insert(:token, name: "atoken", symbol: "AT", contract_address: contract_address, type: "ERC-721")
+      insert(:token, name: "atoken", symbol: "AT", contract_address: contract_address, type: "KRC-721")
 
       transaction =
         :transaction
@@ -409,7 +409,7 @@ defmodule BlockScoutWeb.ViewingAddressesTest do
       insert(:address_current_token_balance, address: lincoln, token_contract_address_hash: contract_address.hash)
 
       contract_address_2 = insert(:contract_address)
-      insert(:token, name: "token2", symbol: "T2", contract_address: contract_address_2, type: "ERC-20")
+      insert(:token, name: "token2", symbol: "T2", contract_address: contract_address_2, type: "KRC-20")
 
       transaction_2 =
         :transaction
@@ -441,7 +441,7 @@ defmodule BlockScoutWeb.ViewingAddressesTest do
       |> AddressPage.fill_balance_dropdown_search("ato")
       |> assert_has(AddressPage.token_balance(count: 1))
       |> assert_has(AddressPage.token_type(count: 1))
-      |> assert_has(AddressPage.token_type_count(type: "ERC-721", text: "1"))
+      |> assert_has(AddressPage.token_type_count(type: "KRC-721", text: "1"))
     end
 
     test "filter token balances by token symbol", %{session: session, lincoln: lincoln} do
@@ -456,7 +456,7 @@ defmodule BlockScoutWeb.ViewingAddressesTest do
       |> AddressPage.fill_balance_dropdown_search("T2")
       |> assert_has(AddressPage.token_balance(count: 1))
       |> assert_has(AddressPage.token_type(count: 1))
-      |> assert_has(AddressPage.token_type_count(type: "ERC-20", text: "1"))
+      |> assert_has(AddressPage.token_type_count(type: "KRC-20", text: "1"))
     end
 
     test "reset token balances filter when dropdown closes", %{session: session, lincoln: lincoln} do

@@ -1,9 +1,13 @@
-$body-dark: #1c1d31; // body background
-$dark-bg: #22223a; // hero shade
-$dark-light-bg: #282945; // pills bg shade
-$dark-light: #313355; // tile light top share
-$labels-dark: #8a8dba; // header nav, labels
+$body-dark: #181818; // body background
+$dark-bg: #2A2B40; // hero shade
+$dark-light-bg: #212121; // pills bg shade
+$dark-light: #3A3B3C; // tile light top share
+$labels-dark: #fcfcfc; // header nav, labels
 $dark-stakes-banned-background: #3e314c;
+
+$box-line-bg: rgba(255, 255, 255, 0.1);
+$box-line-bg-hover: #828DA0;
+$box-line-border: #9AA3B2;
 
 // Switcher
 .dark-mode-changer {
@@ -143,7 +147,7 @@ $dark-stakes-banned-background: #3e314c;
 	.card-tab {
 		background-color: transparent;
 		&:hover:not(.active) {
-			background-color: rgba($dark-primary, .15);
+			background-color: #2A2B40;
 			color: $dark-primary;
 		}
 		&.active {
@@ -181,7 +185,7 @@ $dark-stakes-banned-background: #3e314c;
 		}
 	}
 	.tile-bottom-contents {
-		background-color: $dark-bg;
+		background-color: $dark-light;
 	}
 	a.tile-title {
 		color: #fff !important;
@@ -206,18 +210,18 @@ $dark-stakes-banned-background: #3e314c;
 	.tile span[data-address-hash],
 	.tile a[data-test=token_link] { color: $dark-primary; }
 	.fade-up-blocks-chain .tile-type-block-animation .tile-type-line-up {
-		background-color: $dark-primary;
+		background-color: $box-line-border;
 	}
 	.tile.tile-type-block {
-		border-left-color: $dark-primary
+		border-left-color: $box-line-bg;
 	}
 	.tile.tile-type-block .tile-status-label {
 		color: $dark-primary;
 	}
 	.tile.tile-type-block .tile-transaction-type-block {
-		border-right-color: $dark-primary;
-		border-top-color: $dark-primary;
-		border-bottom-color: $dark-primary;
+		border-right-color: $box-line-border;
+		border-top-color: $box-line-border;
+		border-bottom-color: $box-line-border;
 	}
 	.tile .progress {
 		background-color: rgba(#fff, .2);
@@ -232,12 +236,12 @@ $dark-stakes-banned-background: #3e314c;
 	// btns
 
 	.btn-line {
-		background-color: transparent;
-		border-color: $dark-primary;
-		color: $dark-primary;
+		background-color: $box-line-bg;
+		border-color: $box-line-border;
+		color: $labels-dark;
 		&:hover {
-			border-color: $dark-primary;
-			background-color: $dark-primary;
+			background-color: $box-line-bg-hover;
+			border-color: $box-line-border;
 			color: #fff;
 		}
 	}

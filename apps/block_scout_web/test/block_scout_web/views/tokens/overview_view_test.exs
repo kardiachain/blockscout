@@ -67,13 +67,13 @@ defmodule BlockScoutWeb.Tokens.OverviewViewTest do
 
   describe "display_inventory?/1" do
     test "returns true when token is unique" do
-      token = insert(:token, type: "ERC-721")
+      token = insert(:token, type: "KRC-721")
 
       assert OverviewView.display_inventory?(token) == true
     end
 
     test "returns false when token is not unique" do
-      token = insert(:token, type: "ERC-20")
+      token = insert(:token, type: "KRC-20")
 
       assert OverviewView.display_inventory?(token) == false
     end

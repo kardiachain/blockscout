@@ -42,13 +42,13 @@
         'Less than': '<%= gettext("Less than") %>',
         'Market Cap': '<%= gettext("Market Cap") %>',
         'Price': '<%= gettext("Price") %>',
-        'Ether': '<%= gettext("Ether") %>',
+        'KAI': '<%= gettext("KAI") %>',
         'Tx/day': '<%= gettext("Tx/day") %>'
       }
     </script>
   </head>
 
-  <body>
+  <body class="dark-theme-applied">
     <% raw_dark_forest_addresses_0_4 = CustomContractsHelpers.get_raw_custom_addresses_list(:dark_forest_addresses) || "" %>
     <% raw_dark_forest_addresses_0_5 = CustomContractsHelpers.get_raw_custom_addresses_list(:dark_forest_addresses_v_0_5) || "" %>
     <% raw_dark_forest_addresses_0_6 = CustomContractsHelpers.get_raw_custom_addresses_list(:dark_forest_addresses_v_0_6) || "" %>
