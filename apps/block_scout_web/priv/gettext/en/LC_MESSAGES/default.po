@@ -988,12 +988,12 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/views/transaction_view.ex:221
-msgid "ERC-20 "
+msgid "KRC-20 "
 msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/views/transaction_view.ex:222
-msgid "ERC-721 "
+msgid "KRC-721 "
 msgstr ""
 
 #, elixir-format
@@ -1388,7 +1388,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/transaction/overview.html.eex:293
-msgid "List of ERC-1155 tokens created in the transaction."
+msgid "List of KRC-1155 tokens created in the transaction."
 msgstr ""
 
 #, elixir-format
@@ -2012,7 +2012,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/address_token/overview.html.eex:59
-msgid "Shows the tokens held in the address (includes ERC-20, ERC-721 and ERC-1155)."
+msgid "Shows the tokens held in the address (includes KRC-20, KRC-721 and KRC-1155)."
 msgstr ""
 
 #, elixir-format
