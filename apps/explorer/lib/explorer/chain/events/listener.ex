@@ -3,6 +3,8 @@ defmodule Explorer.Chain.Events.Listener do
   Listens and publishes events from PG
   """
 
+  require Logger
+
   use GenServer
 
   alias Postgrex.Notifications
@@ -18,6 +20,8 @@ defmodule Explorer.Chain.Events.Listener do
       |> Application.get_env(Explorer.Repo)
 
     db_url = explorer_repo[:url]
+
+    Logger.info("DATABASE URL : #{db_url}}")
 
     {:ok, pid} =
       explorer_repo
