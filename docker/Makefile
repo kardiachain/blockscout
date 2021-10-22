@@ -369,6 +369,10 @@ else
 	@docker build --build-arg COIN="$(COIN)" -f ./index.Dockerfile -t $(INDEX_DOCKER_IMAGE) ../
 endif
 
+rebuild_index:
+	@echo "==> No image found trying to build one..."
+	@docker build --build-arg COIN="$(COIN)" -f ./index.Dockerfile -t $(INDEX_DOCKER_IMAGE) ../
+
 HAS_BLOCKSCOUT_WEB_IMAGE := $(shell docker images | grep -sw ${WEB_DOCKER_IMAGE})
 build_web:
 	@echo "==> Checking for blockscout image $(WEB_DOCKER_IMAGE)"
@@ -378,6 +382,11 @@ else
 	@echo "==> No image found trying to build one..."
 	@docker build --build-arg COIN="$(COIN)" -f ./web.Dockerfile -t $(WEB_DOCKER_IMAGE) ../
 endif
+
+rebuild_web:
+	@echo "==> No image found trying to build one..."
+	@docker build --build-arg COIN="$(COIN)" -f ./web.Dockerfile -t $(WEB_DOCKER_IMAGE) ../
+
 endif
 
 
