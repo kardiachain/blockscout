@@ -1,6 +1,6 @@
 <div class="tile tile-type-token-transfer fade-in">
   <div class="row justify-content-end">
-    <div class="col-12 col-md-4 col-lg-2 d-flex align-items-center justify-content-start justify-content-lg-center tile-label">
+    <div class="col-12 col-md-2 col-lg-2 d-flex align-items-center justify-content-start justify-content-lg-center tile-label">
       <%= cond do %>
         <% @token_transfer.to_address.hash == @burn_address_hash -> %>
           <%= gettext("Token Burning") %>
@@ -11,17 +11,21 @@
       <% end %>
     </div>
 
-    <div class="col-12 col-md-8 col-lg-10 d-flex flex-column text-nowrap">
-      <span class="text-nowrap">
-        <b>Hash </b>
+    <div class="col-12 col-md-10 col-lg-10 d-flex flex-column text-truncate">
+      <span>
+      <div class="text-truncate d-flex">
+        <b>Hash&nbsp;</b>
         <%= render BlockScoutWeb.TransactionView, "_link.html", transaction_hash: @token_transfer.transaction_hash %>
+      </div>
       </span>
-      <span class="text-nowrap">
-        <b>From </b>
+      <span>
+      <div class="text-truncate d-flex">
+        <b>From&nbsp;</b>
         <%= render BlockScoutWeb.AddressView, "_link.html", address: @token_transfer.from_address, contract: BlockScoutWeb.AddressView.contract?(@token_transfer.from_address), use_custom_tooltip: false %>
         &rarr;
-        <b>To </b>
+        <b>To&nbsp;</b>
         <%= render BlockScoutWeb.AddressView, "_link.html", address: @token_transfer.to_address, contract: BlockScoutWeb.AddressView.contract?(@token_transfer.to_address), use_custom_tooltip: false %>
+      </div>
       </span>
 
       <span class="tile-title">

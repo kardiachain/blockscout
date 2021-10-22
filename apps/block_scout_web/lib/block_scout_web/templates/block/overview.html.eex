@@ -100,6 +100,15 @@
               </dd>
             </dl>
           <% end %>
+          <!-- Block Rewards -->
+          <dl class="row">
+            <dt class="col-sm-3 col-lg-2 text-muted">
+              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+              text: gettext("The block rewards distribute to set of validator.") %>
+              <%= gettext("Block Rewards") %>
+            </dt>
+            <dd class="col-sm-9 col-lg-10"><%= format_wei_value(%Wei{value: @block.block_rewards}, :ether) %></dd>
+          </dl>
           <!-- Hash -->
           <dl class="row">
             <dt class="col-sm-3 col-lg-2 text-muted">
@@ -183,7 +192,20 @@
               </dd>
             </dl>
             <!-- Data Hash -->
-            <!-- TODO(@lewtran) Add root_hash/data_hash -->
+            <dl class="row">
+              <dt class="col-sm-3 col-lg-2 text-muted">
+                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                text: gettext("The SHA256 data hash of txs states") %>
+                <%= gettext("Data Hash") %>
+              </dt>
+              <dd class="col-sm-9 col-lg-10"><%= to_string(@block.transactions_root) %>
+                  <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
+                    additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
+                    clipboard_text: to_string(@block.transactions_root),
+                    aria_label: gettext("Copy Data Hash"),
+                    title: gettext("Copy Data Hash") %>
+              </dd>
+            </dl>
 
             <!-- Gas Used -->
             <dl class="row">

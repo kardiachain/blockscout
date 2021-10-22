@@ -21,7 +21,7 @@ const loadFunctions = (element) => {
       const $connectedTo = $('[connected-to]')
       const $reconnect = $('[re-connect-metamask]')
 
-      window.ethereum && window.ethereum.on('accountsChanged', function (accounts) {
+      window.kardiachain && window.kardiachain.on('accountsChanged', function (accounts) {
         if (accounts.length === 0) {
           showConnectElements($connect, $connectTo, $connectedTo)
         } else {
