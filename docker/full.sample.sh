@@ -1,6 +1,5 @@
 ############# KEEP AWAY ################
-export DISABLE_WEBAPP=true
-export DISABLE_INDEXER=false
+export FULLSTACK=true
 
 ############# GENERAL ################
 export ETHEREUM_JSONRPC_VARIANT=geth
@@ -31,5 +30,5 @@ export ENABLE_POS_STAKING_IN_MENU=false
 export LINK_TO_OTHER_EXPLORERS=false
 export OTHER_EXPLORERS=‘{}’
 
-docker rm -f blockscout_indexer
+docker rm -f blockscout
 make index
