@@ -20,7 +20,7 @@
     <div class="col-md-7 col-lg-8 d-flex flex-column pr-2 pr-sm-2 pr-md-0">
       <span>
       <div class="text-truncate d-flex">
-        <b>Hash </b>
+        <b>Hash&nbsp;</b>
         <%= render "_link.html", transaction_hash: @transaction.hash, data_test: "address_hash_link" %>
         <% method_name = Transaction.get_method_name(@transaction) %>
         <%= if method_name do %>
