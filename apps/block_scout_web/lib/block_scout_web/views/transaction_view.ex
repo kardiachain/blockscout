@@ -218,8 +218,8 @@ defmodule BlockScoutWeb.TransactionView do
 
   def token_type_name(type) do
     case type do
-      :erc20 -> gettext("ERC-20 ")
-      :erc721 -> gettext("ERC-721 ")
+      :erc20 -> gettext("KRC-20 ")
+      :erc721 -> gettext("KRC-721 ")
       _ -> ""
     end
   end

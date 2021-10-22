@@ -54,11 +54,11 @@ defmodule Indexer.Transform.TokenTransfersTest do
         tokens: [
           %{
             contract_address_hash: log_3.address_hash,
-            type: "ERC-721"
+            type: "KRC-721"
           },
           %{
             contract_address_hash: log_1.address_hash,
-            type: "ERC-20"
+            type: "KRC-20"
           }
         ],
         token_transfers: [
@@ -70,7 +70,7 @@ defmodule Indexer.Transform.TokenTransfersTest do
             token_contract_address_hash: log_3.address_hash,
             token_id: 183,
             transaction_hash: log_3.transaction_hash,
-            token_type: "ERC-721",
+            token_type: "KRC-721",
             block_hash: log_3.block_hash
           },
           %{
@@ -81,7 +81,7 @@ defmodule Indexer.Transform.TokenTransfersTest do
             to_address_hash: truncated_hash(log_1.third_topic),
             token_contract_address_hash: log_1.address_hash,
             transaction_hash: log_1.transaction_hash,
-            token_type: "ERC-20",
+            token_type: "KRC-20",
             block_hash: log_1.block_hash
           }
         ]
@@ -90,7 +90,7 @@ defmodule Indexer.Transform.TokenTransfersTest do
       assert TokenTransfers.parse(logs) == expected
     end
 
-    test "parses ERC-721 transfer with addresses in data field" do
+    test "parses KRC-721 transfer with addresses in data field" do
       log = %{
         address_hash: "0x58Ab73CB79c8275628E0213742a85B163fE0A9Fb",
         block_number: 8_683_457,
@@ -110,7 +110,7 @@ defmodule Indexer.Transform.TokenTransfersTest do
         tokens: [
           %{
             contract_address_hash: "0x58Ab73CB79c8275628E0213742a85B163fE0A9Fb",
-            type: "ERC-721"
+            type: "KRC-721"
           }
         ],
         token_transfers: [
@@ -123,7 +123,7 @@ defmodule Indexer.Transform.TokenTransfersTest do
             token_contract_address_hash: log.address_hash,
             token_id: 14_939,
             transaction_hash: log.transaction_hash,
-            token_type: "ERC-721"
+            token_type: "KRC-721"
           }
         ]
       }

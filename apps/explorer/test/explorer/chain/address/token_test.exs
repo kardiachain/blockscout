@@ -12,7 +12,7 @@ defmodule Explorer.Chain.Address.TokenTest do
 
       token =
         :token
-        |> insert(name: "token-c", type: "ERC-721", decimals: 0, symbol: "TC")
+        |> insert(name: "token-c", type: "KRC-721", decimals: 0, symbol: "TC")
         |> Repo.preload(:contract_address)
 
       insert(
@@ -35,7 +35,7 @@ defmodule Explorer.Chain.Address.TokenTest do
                symbol: "TC",
                balance: Decimal.new(1000),
                decimals: Decimal.new(0),
-               type: "ERC-721"
+               type: "KRC-721"
              }
     end
 
@@ -44,7 +44,7 @@ defmodule Explorer.Chain.Address.TokenTest do
 
       token =
         :token
-        |> insert(name: nil, type: "ERC-721", decimals: nil, symbol: nil)
+        |> insert(name: nil, type: "KRC-721", decimals: nil, symbol: nil)
         |> Repo.preload(:contract_address)
 
       insert(
@@ -63,7 +63,7 @@ defmodule Explorer.Chain.Address.TokenTest do
 
       token2 =
         :token
-        |> insert(name: "token-c", type: "ERC-20", decimals: 0, symbol: "TC")
+        |> insert(name: "token-c", type: "KRC-20", decimals: 0, symbol: "TC")
         |> Repo.preload(:contract_address)
 
       insert(
@@ -94,7 +94,7 @@ defmodule Explorer.Chain.Address.TokenTest do
 
       token =
         :token
-        |> insert(name: "atoken", type: "ERC-721", decimals: nil, symbol: nil)
+        |> insert(name: "atoken", type: "KRC-721", decimals: nil, symbol: nil)
         |> Repo.preload(:contract_address)
 
       insert(
@@ -113,7 +113,7 @@ defmodule Explorer.Chain.Address.TokenTest do
 
       token2 =
         :token
-        |> insert(name: "1token-c", type: "ERC-721", decimals: 0, symbol: "TC")
+        |> insert(name: "1token-c", type: "KRC-721", decimals: 0, symbol: "TC")
         |> Repo.preload(:contract_address)
 
       insert(
@@ -132,7 +132,7 @@ defmodule Explorer.Chain.Address.TokenTest do
 
       token3 =
         :token
-        |> insert(name: "token-c", type: "ERC-721", decimals: 0, symbol: "TC")
+        |> insert(name: "token-c", type: "KRC-721", decimals: 0, symbol: "TC")
         |> Repo.preload(:contract_address)
 
       insert(
@@ -163,7 +163,7 @@ defmodule Explorer.Chain.Address.TokenTest do
 
       token =
         :token
-        |> insert(name: nil, type: "ERC-721", decimals: nil, symbol: nil)
+        |> insert(name: nil, type: "KRC-721", decimals: nil, symbol: nil)
         |> Repo.preload(:contract_address)
 
       insert(
@@ -182,7 +182,7 @@ defmodule Explorer.Chain.Address.TokenTest do
 
       token2 =
         :token
-        |> insert(name: "token-c", type: "ERC-721", decimals: 0, symbol: "TC")
+        |> insert(name: "token-c", type: "KRC-721", decimals: 0, symbol: "TC")
         |> Repo.preload(:contract_address)
 
       insert(
@@ -201,7 +201,7 @@ defmodule Explorer.Chain.Address.TokenTest do
 
       token3 =
         :token
-        |> insert(name: "token-c", type: "ERC-721", decimals: 0, symbol: "TC")
+        |> insert(name: "token-c", type: "KRC-721", decimals: 0, symbol: "TC")
         |> Repo.preload(:contract_address)
 
       insert(
@@ -233,7 +233,7 @@ defmodule Explorer.Chain.Address.TokenTest do
 
       token =
         :token
-        |> insert(name: "atoken", type: "ERC-721", decimals: 0, symbol: "AT")
+        |> insert(name: "atoken", type: "KRC-721", decimals: 0, symbol: "AT")
         |> Repo.preload(:contract_address)
 
       insert(
@@ -257,7 +257,7 @@ defmodule Explorer.Chain.Address.TokenTest do
 
       token =
         :token
-        |> insert(name: "atoken", type: "ERC-721", decimals: 0, symbol: "AT")
+        |> insert(name: "atoken", type: "KRC-721", decimals: 0, symbol: "AT")
         |> Repo.preload(:contract_address)
 
       insert(
@@ -301,9 +301,9 @@ defmodule Explorer.Chain.Address.TokenTest do
     end
 
     test "add more conditions to the query when PagingOptions.key is not nil" do
-      token1 = insert(:token, name: "token-a", type: "ERC-20", decimals: 0, symbol: "TA")
+      token1 = insert(:token, name: "token-a", type: "KRC-20", decimals: 0, symbol: "TA")
 
-      token2 = insert(:token, name: "token-c", type: "ERC-721", decimals: 0, symbol: "TC")
+      token2 = insert(:token, name: "token-c", type: "KRC-721", decimals: 0, symbol: "TC")
 
       options = %PagingOptions{key: {token2.name, token2.type, token2.inserted_at}}
 
@@ -315,9 +315,9 @@ defmodule Explorer.Chain.Address.TokenTest do
     end
 
     test "tokens with nil name come after other tokens of same type" do
-      token1 = insert(:token, name: "token-a", type: "ERC-20", decimals: 0, symbol: "TA")
+      token1 = insert(:token, name: "token-a", type: "KRC-20", decimals: 0, symbol: "TA")
 
-      token2 = insert(:token, name: nil, type: "ERC-20", decimals: 0, symbol: "TC")
+      token2 = insert(:token, name: nil, type: "KRC-20", decimals: 0, symbol: "TC")
 
       options = %PagingOptions{key: {token1.name, token1.type, token1.inserted_at}}
 
