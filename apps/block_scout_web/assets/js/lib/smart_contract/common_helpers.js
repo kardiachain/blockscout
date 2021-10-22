@@ -84,7 +84,7 @@ export const formatTitleAndError = (error) => {
 
 export const getCurrentAccount = () => {
   return new Promise((resolve, reject) => {
-    window.ethereum.request({ method: 'eth_accounts' })
+    window.kardiachain.request({ method: 'eth_accounts' })
       .then(accounts => {
         const account = accounts[0] ? accounts[0].toLowerCase() : null
         resolve(account)

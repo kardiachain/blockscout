@@ -22,7 +22,7 @@ export async function makeContractCall (call, store, gasLimit, callbackFunc) {
   }
 
   if (!from) {
-    return callbackFunc('Your MetaMask account is undefined. Please, ensure you are using the latest version of MetaMask and connected it to the page')
+    return callbackFunc('Your KardiaChain Wallet account is undefined. Please, ensure you are using the latest version of KardiaChain Wallet and connected it to the page')
   } else if (!web3) {
     return callbackFunc('Web3 is undefined. Please, contact support.')
   }
@@ -72,7 +72,7 @@ export async function makeContractCall (call, store, gasLimit, callbackFunc) {
             callbackFunc('Transaction reverted')
           }
         } else {
-          const msg = `Your transaction wasn't processed in ${maxWaitBlocks} blocks. Please, try again with the increased gas price or fixed nonce (use Reset Account feature of MetaMask).`
+          const msg = `Your transaction wasn't processed in ${maxWaitBlocks} blocks. Please, try again with the increased gas price or fixed nonce (use Reset Account feature of KardiaChain Wallet).`
           callbackFunc(msg)
         }
       } catch (e) {
@@ -133,7 +133,7 @@ export function isSupportedNetwork (store) {
   if (state.network && state.network.authorized) {
     return true
   }
-  openWarningModal('Unauthorized', 'Please, connect to the xDai Chain.<br /><a href="https://xdaichain.com" target="_blank">Instructions</a>. If you have already connected to, please update MetaMask to the latest version.')
+  openWarningModal('Unauthorized', 'Please, connect to the xDai Chain.<br /><a href="https://xdaichain.com" target="_blank">Instructions</a>. If you have already connected to, please update KardiaChain Wallet to the latest version.')
   return false
 }
 
