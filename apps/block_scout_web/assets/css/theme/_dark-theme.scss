@@ -70,8 +70,8 @@ $box-line-border: #9AA3B2;
 		}
 	}
 	.navbar.navbar-primary .form-control {
-		background-color: $dark-bg;
-		border-color: $dark-bg;
+		background-color: $dark-light-bg;
+		border-color: $box-line-border;
 		color: #fff;
 		&::placeholder {
 			color: $labels-dark;
@@ -1084,7 +1084,7 @@ $box-line-border: #9AA3B2;
 		  }
 	}
 	.main-search-autocomplete {
-		background-color: $dark-bg !important;
+		background-color: $dark-light-bg !important;
 		color: #fff !important;
 	}
 	.autocomplete-category {
