@@ -29,7 +29,7 @@ export POOL_SIZE=20
 export TXS_STATS_DAYS_TO_COMPILE_AT_INIT=1
 export ENABLE_POS_STAKING_IN_MENU=false
 export LINK_TO_OTHER_EXPLORERS=false
-export OTHER_EXPLORERS=‘{}’
+export OTHER_EXPLORERS='{}'
 
 docker rm -f blockscout_indexer
 make index
