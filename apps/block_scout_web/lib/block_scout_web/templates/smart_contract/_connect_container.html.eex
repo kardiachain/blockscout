@@ -3,7 +3,7 @@
       <%= render BlockScoutWeb.IconsView, "_inactive_icon.html" %>
     </span>
      <h2 style="margin-top: -2px;">Disconnected</h2>
-    <button connect-metamask class="button btn-line ml-4">Connect to Metamask</button>
+    <button connect-metamask class="button btn-line ml-4">Connect to KardiaChain Wallet</button>
 </div>
 <div connected-to class="connect-container hidden">
     <span style="margin-top: -2px;" class="mr-2">

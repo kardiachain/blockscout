@@ -1,16 +1,16 @@
 <%= with {:ok, from_address} <- Chain.hash_to_address(@transfer.from_address_hash),
         {:ok, to_address} <- Chain.hash_to_address(@transfer.to_address_hash) do %>
 <tr>
-        <td class="address-mobile" style="word-break: break-all; width: 1%; white-space: nowrap;">
-                <b>From&nbsp;</b>
+        <td class="address-mobile" vertical-align:top>
+                <b>From</b>
                 <%= render BlockScoutWeb.AddressView, "_link.html", address: from_address, contract: BlockScoutWeb.AddressView.contract?(from_address), use_custom_tooltip: false, trimmed: false, truncate: true %>
         </td>
-        <td class="address-mobile" style="word-break: break-all; width: 1%; white-space: nowrap;">
-                <b>To&nbsp;</b>
+        <td class="address-mobile" vertical-align:top>
+                <b>&nbsp;To</b>
                 <%= render BlockScoutWeb.AddressView, "_link.html", address: to_address, contract: BlockScoutWeb.AddressView.contract?(to_address), use_custom_tooltip: false, trimmed: false, truncate: true %>
         </td>
-        <td class="address-mobile" style="word-break: break-all; white-space: nowrap;">
-                <b>For&nbsp;</b>
+        <td class="address-mobile" vertical-align:top>
+                <b>&nbsp;For</b>
                 <%= render BlockScoutWeb.TransactionView, "_total_transfers.html", transfer: @transfer %>
         </td>
 </tr>

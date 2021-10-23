@@ -1,11 +1,11 @@
 $body-dark: #181818; // body background
 $dark-bg: #2A2B40; // hero shade
 $dark-light-bg: #212121; // pills bg shade
-$dark-light: #3A3B3C; // tile light top share
+$dark-light: #3a3b3c; // tile light top share
 $labels-dark: #fcfcfc; // header nav, labels
 $dark-stakes-banned-background: #3e314c;
 
-$box-line-bg: rgba(255, 255, 255, 0.1);
+$box-line-bg: #3a3b3c;
 $box-line-bg-hover: #828DA0;
 $box-line-border: #9AA3B2;
 
@@ -70,8 +70,8 @@ $box-line-border: #9AA3B2;
 		}
 	}
 	.navbar.navbar-primary .form-control {
-		background-color: $dark-bg;
-		border-color: $dark-bg;
+		background-color: $dark-light-bg;
+		border-color: $box-line-border;
 		color: #fff;
 		&::placeholder {
 			color: $labels-dark;
@@ -95,7 +95,7 @@ $box-line-border: #9AA3B2;
 		color: #fff;
 	}
 	.footer-list ul li::before {
-		background-color: $dark-secondary;
+		background-color: $dark-primary;
 	}
 
 	// hero stats
@@ -116,7 +116,7 @@ $box-line-border: #9AA3B2;
 		background-color: $dark-primary;
 	}
 	.dashboard-banner-network-stats-item::before {
-		background-color: $dark-secondary;
+		background-color: $dark-light;
 	}
 	.dashboard-banner-chart-legend .dashboard-banner-chart-legend-item:nth-child(2)::before {
 		background-color: $dark-secondary;
@@ -1084,7 +1084,7 @@ $box-line-border: #9AA3B2;
 		  }
 	}
 	.main-search-autocomplete {
-		background-color: $dark-bg !important;
+		background-color: $dark-light-bg !important;
 		color: #fff !important;
 	}
 	.autocomplete-category {
