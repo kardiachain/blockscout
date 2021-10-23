@@ -436,13 +436,13 @@ endif
 
 start: build postgres
 	@echo "==> Starting blockscout"
-	@docker run -d -v /home/ec2-user/bs/logs:/opt/app/logs --name $(BS_CONTAINER_NAME) \
+	@docker run -d -v $HOME/logs:/opt/app/logs --name $(BS_CONTAINER_NAME) \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					$(DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 
 index: build_index
 	@echo "==> Starting blockscout indexer"
-	@docker run -d -v /Users/longnd/workplace/kardiachain/blockscout/docker/logs:/opt/app/logs --name $(BS_INDEXER_CONTAINER_NAME) \
+	@docker run -d -v $HOME/logs:/opt/app/logs --name $(BS_INDEXER_CONTAINER_NAME) \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					$(INDEX_DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 
