@@ -357,7 +357,7 @@ defmodule BlockScoutWeb.TransactionView do
       :success -> gettext("Success")
       {:error, :awaiting_internal_transactions} -> gettext("Error")
       # The pool of possible error reasons is unknown or even if it is enumerable, so we can't translate them
-      {:error, reason} when is_binary(reason) -> gettext("Error")
+      {:error, reason} when is_binary(reason) -> gettext("Error: %{reason}", reason: reason)
     end
   end
 
