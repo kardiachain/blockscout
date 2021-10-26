@@ -63,10 +63,9 @@
       </span>
       <span>
         <div class="text-truncate d-flex">
-          <b>From</b>
+          <b>From&nbsp;</b>
           <%= @transaction |> BlockScoutWeb.AddressView.address_partial_selector(:from, assigns[:current_address], truncate: true) |> BlockScoutWeb.RenderHelpers.render_partial() %>
-          &rarr;
-          <b>To</b>
+          <b>&nbsp;To&nbsp;</b>
           <%= @transaction |> BlockScoutWeb.AddressView.address_partial_selector(:to, assigns[:current_address], truncate: true) |> BlockScoutWeb.RenderHelpers.render_partial() %>
         </div>
       </span>

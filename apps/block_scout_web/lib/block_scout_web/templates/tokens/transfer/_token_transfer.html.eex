@@ -26,7 +26,6 @@
                   use_custom_tooltip: false
                 ) %>
         <% end %>
-        &rarr;
         <%= link to: address_token_transfers_path(@conn, :index, Address.checksum(@token_transfer.to_address), Address.checksum(@token.contract_address_hash)), "data-test": "address_hash_link" do %>
             <%= render(
                   BlockScoutWeb.AddressView,
