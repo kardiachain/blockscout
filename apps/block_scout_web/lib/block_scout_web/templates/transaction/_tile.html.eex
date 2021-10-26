@@ -72,7 +72,6 @@
       </span>
     </div>
     <% end %>
-
     <!-- Value info -->
     <div class="col-md-2 col-lg-2 d-flex flex-row flex-md-column flex-nowrap justify-content-center text-md-right mt-3 mt-md-0 tile-bottom">
       <span class="mr-2 mr-md-0 order-1">

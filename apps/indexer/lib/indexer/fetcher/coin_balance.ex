@@ -99,7 +99,7 @@ defmodule Indexer.Fetcher.CoinBalance do
       {:error, reason} ->
         Logger.error(
           fn ->
-            ["failed to fetch: ", inspect(reason)]
+            ["failed to fetch coin balance: ", inspect(reason)]
           end,
           error_count: unique_entry_count
         )
