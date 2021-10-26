@@ -23,6 +23,15 @@
           <li><a href="https://t.me/kardiatechsupport" rel="noreferrer" class="footer-link"><%= gettext("Tech support") %></a></li>
         </ul>
       </div>
+
+      <div class="col-xs-12 col-md-4 col-lg-<%= col_size %> footer-list">
+        <h3>For Developers</h3>
+        <ul>
+          <li><a href="/graphiql" rel="noreferrer" class="footer-link"><%= gettext("GraphQL") %></a></li>
+          <li><a href="/api-docs" rel="noreferrer" class="footer-link"><%= gettext("API Documents") %></a></li>
+        </ul>
+      </div>
+
       <% main_nets = main_nets(other_networks()) %>
 
       <%= unless Enum.empty?(main_nets) do %>
