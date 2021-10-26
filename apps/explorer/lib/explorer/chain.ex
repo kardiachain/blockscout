@@ -7049,7 +7049,7 @@ defmodule Explorer.Chain do
   end
 
   @spec get_token_icon_url_by(String.t(), String.t()) :: String.t() | nil
-  def get_token_icon_url_by(chain_id, address_hash) do
+  def get_token_icon_url_by(_chain_id, address_hash) do
     try_url =
       "https://raw.githubusercontent.com/kardiachain/token-assets/master/tokens/#{address_hash}/logo.png"
 
