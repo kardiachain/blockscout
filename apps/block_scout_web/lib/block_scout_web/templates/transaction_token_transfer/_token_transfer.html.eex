@@ -22,7 +22,9 @@
         <div class="text-truncate d-flex">
           <b>From&nbsp;</b>
           <%= render BlockScoutWeb.AddressView, "_link.html", address: @token_transfer.from_address, contract: BlockScoutWeb.AddressView.contract?(@token_transfer.from_address), use_custom_tooltip: false %>
+
           <b>&nbsp;To&nbsp;</b>
+
           <%= render BlockScoutWeb.AddressView, "_link.html", address: @token_transfer.to_address, contract: BlockScoutWeb.AddressView.contract?(@token_transfer.to_address), use_custom_tooltip: false %>
         </div>
       </span>
