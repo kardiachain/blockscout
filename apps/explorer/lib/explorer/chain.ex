@@ -7050,32 +7050,13 @@ defmodule Explorer.Chain do
 
   @spec get_token_icon_url_by(String.t(), String.t()) :: String.t() | nil
   def get_token_icon_url_by(chain_id, address_hash) do
-    chain_name =
-      case chain_id do
-        "1" ->
-          "ethereum"
+    try_url =
+      "https://raw.githubusercontent.com/kardiachain/token-assets/master/tokens/#{address_hash}/logo.png"
 
-        "99" ->
-          "poa"
+    %HTTPoison.Response{status_code: status_code} = HTTPoison.get!(try_url)
 
-        "100" ->
-          "xdai"
-
-        _ ->
-          nil
-      end
-
-    if chain_name do
-      try_url =
-        "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/#{chain_name}/assets/#{address_hash}/logo.png"
-
-      %HTTPoison.Response{status_code: status_code} = HTTPoison.get!(try_url)
-
-      if status_code == 200 do
-        try_url
-      else
-        nil
-      end
+    if status_code == 200 do
+      try_url
     else
       nil
     end
