@@ -10,6 +10,8 @@ export FIRST_BLOCK=1
 export BLOCKSCOUT_VERSION=1.0.1
 export CHAIN_ID=0
 export DISPLAY_TOKEN_ICONS=true
+export RE_CAPTCHA_SECRET_KEY=
+export RE_CAPTCHA_CLIENT_KEY=
 
 ############# RPC ################
 export ETHEREUM_JSONRPC_HTTP_URL=https://dev-1.kardiachain.io
