@@ -20,6 +20,7 @@
 - [#4579](https://github.com/blockscout/blockscout/pull/4579) - Write contract page: Resize inputs; Improve multiplier selector
 
 ### Fixes
+- [#4796](https://github.com/blockscout/blockscout/pull/4796) - Fix nil.timestamp issue
 - [#4768](https://github.com/blockscout/blockscout/pull/4768) - Block Details page: handle zero division
 - [#4751](https://github.com/blockscout/blockscout/pull/4751) - Change text and link for `trade STAKE` button
 - [#4746](https://github.com/blockscout/blockscout/pull/4746) - Fix comparison of decimal value
