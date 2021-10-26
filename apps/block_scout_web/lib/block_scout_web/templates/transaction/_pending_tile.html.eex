@@ -9,7 +9,6 @@
       <%= render BlockScoutWeb.TransactionView, "_link.html", transaction_hash: @transaction.hash %>
       <span class="text-nowrap">
         <%= render BlockScoutWeb.AddressView, "_link.html", address: @transaction.from_address, contract: BlockScoutWeb.AddressView.contract?(@transaction.from_address), use_custom_tooltip: false %>
-        &rarr;
         <%= if @transaction.to_address_hash do %>
           <%= render BlockScoutWeb.AddressView, "_link.html", address: @transaction.to_address, contract: BlockScoutWeb.AddressView.contract?(@transaction.to_address), use_custom_tooltip: false %>
         <% else %>

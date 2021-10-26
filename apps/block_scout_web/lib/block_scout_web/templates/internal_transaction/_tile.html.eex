@@ -18,16 +18,13 @@
       <span>
         <div class="text-truncate d-flex">
           <b>From&nbsp;</b>
-          <%= @internal_transaction |> BlockScoutWeb.AddressView.address_partial_selector(:from, assigns[:current_address]) |> BlockScoutWeb.RenderHelpers.render_partial() %>
-          &rarr;
-          <b>To&nbsp;</b>
-          <%= @internal_transaction |> BlockScoutWeb.AddressView.address_partial_selector(:to, assigns[:current_address]) |> BlockScoutWeb.RenderHelpers.render_partial() %>
-        </div>
-      </span>
-      <span class="d-flex flex-md-row flex-column mt-3 mt-md-0">
-        <span class="tile-title">
+          <%= @internal_transaction |> BlockScoutWeb.AddressView.address_partial_selector(:from, assigns[:current_address], truncate: true) |> BlockScoutWeb.RenderHelpers.render_partial() %>
+          <b>&nbsp;To&nbsp;</b>
+          <%= @internal_transaction |> BlockScoutWeb.AddressView.address_partial_selector(:to, assigns[:current_address], truncate: true) |> BlockScoutWeb.RenderHelpers.render_partial() %>
+          <b>&nbsp;For&nbsp;</b>
+
           <%= BlockScoutWeb.TransactionView.value(@internal_transaction, include_label: false) %> <%= gettext "KAI" %>
-        </span>
+        </div>
       </span>
     </div>
     <!-- Block info -->

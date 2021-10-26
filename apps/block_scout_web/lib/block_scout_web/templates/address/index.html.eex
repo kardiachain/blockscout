@@ -37,7 +37,7 @@
 		  <% end %>
 	      <th class="stakes-table-th">
 			<div class="stakes-table-th-content">
-			Txn Count
+			Total Txn
 			</div>
 	      </th>
 	    </tr>
