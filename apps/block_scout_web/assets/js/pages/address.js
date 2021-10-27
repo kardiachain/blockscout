@@ -49,6 +49,7 @@ export function reducer (state = initialState, action) {
         tokenTransferCount: action.tokenTransferCount,
         gasUsageCount: action.gasUsageCount,
         validationCount: action.validationCount,
+        crcTotalWorth: action.crcTotalWorth,
         countersFetched: true
       })
     }
@@ -120,11 +121,6 @@ const elements = {
         if (oldState.transactionCount === state.transactionCount) return
         const transactionsDSName = (state.transactionCount > 1) ? ' Transactions' : ' Transaction'
         $el.empty().append(numeral(state.transactionCount).format() + transactionsDSName)
-        $el.show()
-        $('.address-transactions-count-item').removeAttr('style')
-      } else {
-        $el.hide()
-        $('.address-transactions-count-item').css('display', 'none')
       }
     }
   },
@@ -137,11 +133,6 @@ const elements = {
         if (oldState.tokenTransferCount === state.tokenTransferCount) return
         const transfersDSName = (state.tokenTransferCount > 1) ? ' Transfers' : ' Transfer'
         $el.empty().append(numeral(state.tokenTransferCount).format() + transfersDSName)
-        $el.show()
-        $('.address-transfers-count-item').removeAttr('style')
-      } else {
-        $el.hide()
-        $('.address-transfers-count-item').css('display', 'none')
       }
     }
   },
@@ -153,11 +144,6 @@ const elements = {
       if (state.countersFetched && state.gasUsageCount) {
         if (oldState.gasUsageCount === state.gasUsageCount) return
         $el.empty().append(numeral(state.gasUsageCount).format())
-        $el.show()
-        $('.address-gas-used-item').removeAttr('style')
-      } else {
-        $el.hide()
-        $('.address-gas-used-item').css('display', 'none')
       }
     }
   },
@@ -181,6 +167,24 @@ const elements = {
         $('.address-validation-count-item').removeAttr('style')
       } else {
         $('.address-validation-count-item').css('display', 'none')
+      }
+    }
+  },
+  '[data-test="address-tokens-panel-crc-total-worth"]': {
+    load ($el) {
+      return { countersFetched: numeral($el.text()).value() }
+    },
+    render ($el, state, oldState) {
+      if (state.countersFetched && state.crcTotalWorth) {
+        if (oldState.crcTotalWorth === state.crcTotalWorth) return
+        $el.empty().append(`${state.crcTotalWorth} CRC`)
+        if (state.crcTotalWorth !== '0') {
+          $('[data-test="address-tokens-panel-crc-total-worth-container"]').removeClass('d-none')
+        } else {
+          $('[data-test="address-tokens-panel-crc-total-worth-container"]').addClass('d-none')
+        }
+      } else {
+        $('[data-test="address-tokens-panel-crc-total-worth-container"]').addClass('d-none')
       }
     }
   }
