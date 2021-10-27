@@ -23,7 +23,7 @@ defmodule Indexer.Transform.AddressTokenBalances do
                                acc
                                when is_integer(block_number) and is_binary(from_address_hash) and
                                       is_binary(to_address_hash) and is_binary(token_contract_address_hash) ->
-      if params[:token_ids] && token_type == "ERC-1155" do
+      if params[:token_ids] && token_type == "KRC-1155" do
         params[:token_ids]
         |> Enum.reduce(acc, fn id, sub_acc ->
           sub_acc

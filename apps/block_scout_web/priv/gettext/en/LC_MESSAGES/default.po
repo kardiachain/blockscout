@@ -989,16 +989,17 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/views/transaction_view.ex:221
-msgid "KRC-20 "
+msgid "KRC-20"
 msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/views/transaction_view.ex:222
-msgid "KRC-721 "
+msgid "KRC-721"
+msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/address_token/overview.html.eex:1
-#: lib/block_scout_web/templates/smart_contract/_functions.html.eex:89 lib/block_scout_web/templates/smart_contract/_functions.html.eex:89
+#: lib/block_scout_web/templates/smart_contract/_functions.html.eex:89
 #: lib/block_scout_web/templates/smart_contract/_functions.html.eex:126
 msgid "ETH"
 msgstr ""

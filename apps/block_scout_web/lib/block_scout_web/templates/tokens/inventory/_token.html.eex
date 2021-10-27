@@ -1,4 +1,4 @@
-<% is_1155 = @token.type == "ERC-1155"%>
+<% is_1155 = @token.type == "KRC-1155"%>
 <% is_unique = Chain.token_id_1155_is_unique?(@token.contract_address_hash, @token_transfer.token_id) or not is_1155%>
 <!-- use "tile-type-unique-token-image" to token with images -->
 <div class="tile tile-type-unique-token fade-in">

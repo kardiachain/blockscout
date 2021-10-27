@@ -587,7 +587,7 @@ defmodule Explorer.Factory do
       block_number: block_number(),
       value: Enum.random(1..100_000),
       value_fetched_at: DateTime.utc_now(),
-      token_type: "ERC-20"
+      token_type: "KRC-20"
     }
   end
 

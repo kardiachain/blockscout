@@ -39,7 +39,7 @@ defmodule Indexer.TokenBalances do
   * `address_hash` - The address_hash that we want to know the balance.
   * `block_number` - The block number that the address_hash has the balance.
   * `token_type` - type of the token that balance belongs to
-  * `token_id` - token id for ERC-1155 tokens
+  * `token_id` - token id for KRC-1155 tokens
   """
   def fetch_token_balances_from_blockchain([]), do: {:ok, []}
 
@@ -51,7 +51,7 @@ defmodule Indexer.TokenBalances do
       token_balances
       |> Enum.filter(fn request ->
         if Map.has_key?(request, :token_type) do
-          request.token_type !== "ERC-1155"
+          request.token_type !== "KRC-1155"
         else
           true
         end
@@ -61,7 +61,7 @@ defmodule Indexer.TokenBalances do
       token_balances
       |> Enum.filter(fn request ->
         if Map.has_key?(request, :token_type) do
-          request.token_type == "ERC-1155"
+          request.token_type == "KRC-1155"
         else
           false
         end

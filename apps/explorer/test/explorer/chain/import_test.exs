@@ -376,19 +376,19 @@ defmodule Explorer.Chain.ImportTest do
               address_hash: "0xe8ddc5c7a2d2f0d7a9798459c0104fdf5e987aca",
               token_contract_address_hash: "0x8bf38d4764929064f2d4d3a56520a76ab3df415b",
               block_number: "37",
-              token_type: "ERC-20"
+              token_type: "KRC-20"
             },
             %{
               address_hash: "0x515c09c5bba1ed566b02a5b0599ec5d5d0aee73d",
               token_contract_address_hash: "0x8bf38d4764929064f2d4d3a56520a76ab3df415b",
               block_number: "37",
-              token_type: "ERC-20"
+              token_type: "KRC-20"
             },
             %{
               address_hash: "0x8bf38d4764929064f2d4d3a56520a76ab3df415b",
               token_contract_address_hash: "0x8bf38d4764929064f2d4d3a56520a76ab3df415b",
               block_number: "37",
-              token_type: "ERC-20"
+              token_type: "KRC-20"
             }
           ],
           timeout: 5
@@ -429,14 +429,14 @@ defmodule Explorer.Chain.ImportTest do
               token_contract_address_hash: "0x8bf38d4764929064f2d4d3a56520a76ab3df415b",
               block_number: "37",
               value: 200,
-              token_type: "ERC-20"
+              token_type: "KRC-20"
             },
             %{
               address_hash: "0x515c09c5bba1ed566b02a5b0599ec5d5d0aee73d",
               token_contract_address_hash: "0x8bf38d4764929064f2d4d3a56520a76ab3df415b",
               block_number: "37",
               value: 100,
-              token_type: "ERC-20"
+              token_type: "KRC-20"
             }
           ],
           timeout: 5
@@ -1569,8 +1569,8 @@ defmodule Explorer.Chain.ImportTest do
                  },
                  address_coin_balances: %{
                    params: [
-                     %{address_hash: miner_hash, block_number: block_number, value: nil, token_type: "ERC-20"},
-                     %{address_hash: uncle_miner_hash, block_number: block_number, value: nil, token_type: "ERC-20"}
+                     %{address_hash: miner_hash, block_number: block_number, value: nil, token_type: "KRC-20"},
+                     %{address_hash: uncle_miner_hash, block_number: block_number, value: nil, token_type: "KRC-20"}
                    ],
                    timeout: 1
                  },
@@ -2256,7 +2256,7 @@ defmodule Explorer.Chain.ImportTest do
                        token_contract_address_hash: token_contract_address_hash,
                        block_number: block_number,
                        value: value_after,
-                       token_type: "ERC-20"
+                       token_type: "KRC-20"
                      }
                    ]
                  },
@@ -2267,7 +2267,7 @@ defmodule Explorer.Chain.ImportTest do
                        token_contract_address_hash: token_contract_address_hash,
                        block_number: block_number,
                        value: value_after,
-                       token_type: "ERC-20"
+                       token_type: "KRC-20"
                      }
                    ]
                  },

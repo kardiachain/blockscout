@@ -5976,7 +5976,7 @@ defmodule Explorer.Chain do
       {"0xf907fc5b" <> _params, ^zero_wei} ->
         :erc20
 
-      # check for ERC-20 or for old ERC-721, ERC-1155 token versions
+      # check for KRC-20 or for old KRC-721, KRC-1155 token versions
       {unquote(TokenTransfer.transfer_function_signature()) <> params, ^zero_wei} ->
         types = [:address, {:uint, 256}]
 

@@ -33,7 +33,7 @@ defmodule Indexer.TokenBalancesTest do
         address_hash: address_hash_string,
         block_number: 1_000,
         token_id: 11,
-        token_type: "ERC-20"
+        token_type: "KRC-20"
       }
 
       get_balance_from_blockchain()
@@ -49,7 +49,7 @@ defmodule Indexer.TokenBalancesTest do
              } = List.first(result)
     end
 
-    test "fetches balances of ERC-1155 tokens" do
+    test "fetches balances of KRC-1155 tokens" do
       address = insert(:address, hash: "0x609991ca0ae39bc4eaf2669976237296d40c2f31")
 
       address_hash_string = Hash.to_string(address.hash)
@@ -66,7 +66,7 @@ defmodule Indexer.TokenBalancesTest do
           address_hash: address_hash_string,
           block_number: 1_000,
           token_id: 5,
-          token_type: "ERC-1155"
+          token_type: "KRC-1155"
         }
       ]
 
@@ -115,49 +115,49 @@ defmodule Indexer.TokenBalancesTest do
           address_hash: address_1_hash_string,
           block_number: 1_000,
           token_id: nil,
-          token_type: "ERC-20"
+          token_type: "KRC-20"
         },
         %{
           token_contract_address_hash: Hash.to_string(token_2.contract_address_hash),
           address_hash: address_2_hash_string,
           block_number: 1_000,
           token_id: nil,
-          token_type: "ERC-20"
+          token_type: "KRC-20"
         },
         %{
           token_contract_address_hash: Hash.to_string(token_3.contract_address_hash),
           address_hash: address_2_hash_string,
           block_number: 1_000,
           token_id: 42,
-          token_type: "ERC-721"
+          token_type: "KRC-721"
         },
         %{
           token_contract_address_hash: Hash.to_string(token_4.contract_address_hash),
           address_hash: address_2_hash_string,
           block_number: 1_000,
           token_id: 5,
-          token_type: "ERC-1155"
+          token_type: "KRC-1155"
         },
         %{
           token_contract_address_hash: Hash.to_string(token_2.contract_address_hash),
           address_hash: Hash.to_string(token_2.contract_address_hash),
           block_number: 1_000,
           token_id: nil,
-          token_type: "ERC-20"
+          token_type: "KRC-20"
         },
         %{
           token_contract_address_hash: Hash.to_string(token_2.contract_address_hash),
           address_hash: address_3_hash_string,
           block_number: 1_000,
           token_id: nil,
-          token_type: "ERC-20"
+          token_type: "KRC-20"
         },
         %{
           token_contract_address_hash: Hash.to_string(token_2.contract_address_hash),
           address_hash: Hash.to_string(token_2.contract_address_hash),
           block_number: 1_000,
           token_id: nil,
-          token_type: "ERC-20"
+          token_type: "KRC-20"
         }
       ]
 
@@ -230,7 +230,7 @@ defmodule Indexer.TokenBalancesTest do
           token_contract_address_hash: to_string(token.contract_address_hash),
           retries_count: 1,
           token_id: 11,
-          token_type: "ERC-20"
+          token_type: "KRC-20"
         }
       ]
 

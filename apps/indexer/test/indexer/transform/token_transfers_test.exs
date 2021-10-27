@@ -160,14 +160,14 @@ defmodule Indexer.Transform.TokenTransfersTest do
                    token_contract_address_hash: "0x58Ab73CB79c8275628E0213742a85B163fE0A9Fb",
                    token_id:
                      7_237_005_577_332_282_011_952_059_972_634_123_378_909_214_838_582_411_639_295_170_840_059_424_276_480,
-                   token_type: "ERC-1155",
+                   token_type: "KRC-1155",
                    transaction_hash: "0x6d2dd62c178e55a13b65601f227c4ffdd8aa4e3bcb1f24731363b4f7619e92c8"
                  }
                ],
                tokens: [
                  %{
                    contract_address_hash: "0x58Ab73CB79c8275628E0213742a85B163fE0A9Fb",
-                   type: "ERC-1155"
+                   type: "KRC-1155"
                  }
                ]
              }
@@ -200,12 +200,12 @@ defmodule Indexer.Transform.TokenTransfersTest do
                    token_contract_address_hash: "0x58Ab73CB79c8275628E0213742a85B163fE0A9Fb",
                    token_id: nil,
                    token_ids: [680_564_733_841_876_926_926_749_214_863_536_422_912],
-                   token_type: "ERC-1155",
+                   token_type: "KRC-1155",
                    transaction_hash: "0x6d2dd62c178e55a13b65601f227c4ffdd8aa4e3bcb1f24731363b4f7619e92c8",
                    amounts: [5000]
                  }
                ],
-               tokens: [%{contract_address_hash: "0x58Ab73CB79c8275628E0213742a85B163fE0A9Fb", type: "ERC-1155"}]
+               tokens: [%{contract_address_hash: "0x58Ab73CB79c8275628E0213742a85B163fE0A9Fb", type: "KRC-1155"}]
              }
     end
 

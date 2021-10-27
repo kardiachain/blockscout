@@ -23,7 +23,7 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
    *  `token_contract_address_hash` - The contract address hash foreign key.
    *  `block_number` - The block's number that the transfer took place.
    *  `value` - The value that's represents the balance.
-   *  `token_id` - The token_id of the transferred token (applicable for ERC-1155 and ERC-721 tokens)
+   *  `token_id` - The token_id of the transferred token (applicable for KRC-1155 and KRC-721 tokens)
    *  `token_type` - The type of the token
   """
   @type t :: %__MODULE__{
@@ -226,7 +226,7 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
   end
 
   @doc """
-  Builds an `t:Ecto.Query.t/0` to fetch holders of the particular token_id in ERC-1155
+  Builds an `t:Ecto.Query.t/0` to fetch holders of the particular token_id in KRC-1155
   """
   def token_holders_by_token_id_query(token_contract_address_hash, token_id) do
     from(
