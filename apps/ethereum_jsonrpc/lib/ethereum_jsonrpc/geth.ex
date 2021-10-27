@@ -5,6 +5,8 @@ defmodule EthereumJSONRPC.Geth do
 
   import EthereumJSONRPC, only: [id_to_params: 1, integer_to_quantity: 1, json_rpc: 2, request: 1]
 
+  require Logger
+
   alias EthereumJSONRPC.{FetchedBalance, FetchedCode, Transactions}
   alias EthereumJSONRPC.Geth.{Calls, Tracer}
 
@@ -80,6 +82,7 @@ defmodule EthereumJSONRPC.Geth do
 
   defp debug_trace_transaction_requests(id_to_params) when is_map(id_to_params) do
     Enum.map(id_to_params, fn {id, %{hash_data: hash_data}} ->
+      Logger.info("Trace transaction from network with #{hash_data}")
       debug_trace_transaction_request(%{id: id, hash_data: hash_data})
     end)
   end

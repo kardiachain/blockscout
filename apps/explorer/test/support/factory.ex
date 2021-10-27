@@ -517,7 +517,7 @@ defmodule Explorer.Factory do
       total_supply: 1_000_000_000,
       decimals: 18,
       contract_address: build(:address),
-      type: "ERC-20",
+      type: "KRC-20",
       cataloged: true
     }
   end

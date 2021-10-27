@@ -201,9 +201,9 @@ $navbar-logo-width: auto !default;
     width: 100%;
 
     &.border {
-      border-color: $secondary !important;
+      border-color: $primary !important;
       border-radius: 5px;
-      color: $secondary;
+      color: $primary;
       background-color: $header-textfield-background-color;
     }
   }

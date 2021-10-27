@@ -25,13 +25,13 @@
                   "data-test": "filter_option"
                 ) %>
                 <%= link(
-                  gettext("To"),
+                  gettext("Incoming"),
                   to: AccessHelpers.get_path(@conn, :address_transaction_path, :index, @address.hash, %{:filter => "to"}),
                   class: "address__link address__link--active dropdown-item",
                   "data-test": "filter_option"
                 ) %>
                 <%= link(
-                  gettext("From"),
+                  gettext("Outoging"),
                   to: AccessHelpers.get_path(@conn, :address_transaction_path, :index, @address.hash, %{:filter => "from"}),
                   class: "address__link address__link--active dropdown-item",
                   "data-test": "filter_option"
@@ -43,7 +43,7 @@
         </div>
         <div data-selector="channel-batching-message" style="display: none;">
           <div data-selector="reload-transactions-button" class="alert alert-info">
-            <a href="#" class="alert-link"><span data-selector="channel-batching-count"></span> <%= gettext "More transactions have come in" %></a>
+            <a href="#" class="alert-link"><span data-selector="channel-batching-count"></span> <%= gettext "new transactions. Click here to reload" %></a>
           </div>
         </div>
         <button data-error-message class="alert alert-danger col-12 text-left" style="display: none;">

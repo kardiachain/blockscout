@@ -43,7 +43,7 @@ defmodule Explorer.Chain.TokenTransfer do
   * `:to_address_hash` - Address hash foreign key
   * `:token_contract_address` - The `t:Explorer.Chain.Address.t/0` of the token's contract.
   * `:token_contract_address_hash` - Address hash foreign key
-  * `:token_id` - ID of the token (applicable to ERC-721 tokens)
+  * `:token_id` - ID of the token (applicable to KRC-721 tokens)
   * `:transaction` - The `t:Explorer.Chain.Transaction.t/0` ledger
   * `:transaction_hash` - Transaction foreign key
   * `:log_index` - Index of the corresponding `t:Explorer.Chain.Log.t/0` in the transaction.
@@ -305,7 +305,7 @@ defmodule Explorer.Chain.TokenTransfer do
 
   @doc """
   Innventory tab query.
-  A token ERC-721 is considered unique because it corresponds to the possession
+  A token KRC-721 is considered unique because it corresponds to the possession
   of a specific asset.
 
   To find out its current owner, it is necessary to look at the token last

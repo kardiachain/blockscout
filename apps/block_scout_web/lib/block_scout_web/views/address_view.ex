@@ -283,7 +283,8 @@ defmodule BlockScoutWeb.AddressView do
   end
 
   def trimmed_hash(address) when is_binary(address) do
-    "#{String.slice(address, 0..7)}–#{String.slice(address, -6..-1)}"
+    addr = Address.checksum(address)
+    "#{String.slice(addr, 0..5)}-#{String.slice(addr, -4..-1)}"
   end
 
   def trimmed_hash(_), do: ""
@@ -367,7 +368,7 @@ defmodule BlockScoutWeb.AddressView do
   defp tab_name(["read-proxy"]), do: gettext("Read Proxy")
   defp tab_name(["write-contract"]), do: gettext("Write Contract")
   defp tab_name(["write-proxy"]), do: gettext("Write Proxy")
-  defp tab_name(["coin-balances"]), do: gettext("Coin Balance History")
+  defp tab_name(["coin-balances"]), do: gettext("Balance History")
   defp tab_name(["validations"]), do: gettext("Blocks Validated")
   defp tab_name(["logs"]), do: gettext("Logs")
 

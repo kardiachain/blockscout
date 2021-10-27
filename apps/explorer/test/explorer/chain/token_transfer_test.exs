@@ -149,7 +149,7 @@ defmodule Explorer.Chain.TokenTransferTest do
   describe "address_to_unique_tokens/2" do
     test "returns list of unique tokens for a token contract" do
       token_contract_address = insert(:contract_address)
-      token = insert(:token, contract_address: token_contract_address, type: "ERC-721")
+      token = insert(:token, contract_address: token_contract_address, type: "KRC-721")
 
       transaction =
         :transaction
