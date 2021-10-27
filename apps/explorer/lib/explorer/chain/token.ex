@@ -8,6 +8,7 @@ defmodule Explorer.Chain.Token do
 
   * KRC-20
   * KRC-721
+  * KRC-1155
 
   ## Token Specifications
 

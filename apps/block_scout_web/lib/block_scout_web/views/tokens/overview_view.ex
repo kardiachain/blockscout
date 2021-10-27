@@ -44,6 +44,7 @@ defmodule BlockScoutWeb.Tokens.OverviewView do
   defp tab_name(["inventory"]), do: gettext("Inventory")
 
   def display_inventory?(%Token{type: "KRC-721"}), do: true
+  def display_inventory?(%Token{type: "KRC-1155"}), do: true
   def display_inventory?(_), do: false
 
   def smart_contract_with_read_only_functions?(
