@@ -12,6 +12,7 @@ export CHAIN_ID=0
 export RE_CAPTCHA_SECRET_KEY=
 export RE_CAPTCHA_CLIENT_KEY=
 
+
 ############# RPC ################
 export ETHEREUM_JSONRPC_HTTP_URL=https://dev-1.kardiachain.io
 export ETHEREUM_JSONRPC_WS_URL=
@@ -32,6 +33,9 @@ export TXS_STATS_DAYS_TO_COMPILE_AT_INIT=1
 export ENABLE_POS_STAKING_IN_MENU=false
 export LINK_TO_OTHER_EXPLORERS=false
 export OTHER_EXPLORERS='{}'
+export ENABLE_TXS_STATS=true
+export SHOW_TXS_CHART=true
+
 
 docker rm -f blockscout_indexer
 make index

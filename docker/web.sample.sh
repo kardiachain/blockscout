@@ -34,6 +34,9 @@ export ENABLE_POS_STAKING_IN_MENU=false
 export LINK_TO_OTHER_EXPLORERS=false
 export OTHER_EXPLORERS='{}'
 export CHECKSUM_ADDRESS_HASHES=true
+export ENABLE_TXS_STATS=true
+export SHOW_TXS_CHART=true
+
 
 docker rm -f blockscout_web
 make web
