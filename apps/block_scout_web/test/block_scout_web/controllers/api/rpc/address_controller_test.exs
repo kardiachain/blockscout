@@ -2164,14 +2164,14 @@ defmodule BlockScoutWeb.API.RPC.AddressControllerTest do
       assert :ok = ExJsonSchema.Validator.validate(tokentx_schema(), response)
     end
 
-    test "has correct value for ERC-721", %{conn: conn} do
+    test "has correct value for KRC-721", %{conn: conn} do
       transaction =
         :transaction
         |> insert()
         |> with_block()
 
       token_address = insert(:contract_address)
-      insert(:token, %{contract_address: token_address, type: "ERC-721"})
+      insert(:token, %{contract_address: token_address, type: "KRC-721"})
 
       token_transfer =
         insert(:token_transfer, %{

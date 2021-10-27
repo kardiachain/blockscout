@@ -884,7 +884,7 @@ defmodule BlockScoutWeb.StakesChannel do
         {:reply, {:error, %{reason: gettext("Pools searching is already in progress for this address")}}, socket}
 
       empty_staker ->
-        {:reply, {:error, %{reason: gettext("Unknown staker address. Please, choose your account in MetaMask")}},
+        {:reply, {:error, %{reason: gettext("Unknown staker address. Please, choose your account in KardiaChain Wallet")}},
          socket}
 
       empty_staking_contract_address ->
@@ -931,7 +931,7 @@ defmodule BlockScoutWeb.StakesChannel do
         {:reply, {:error, %{reason: gettext("Unknown pool staking address. Please, contact support")}}, socket}
 
       empty_staker ->
-        {:reply, {:error, %{reason: gettext("Unknown staker address. Please, choose your account in MetaMask")}},
+        {:reply, {:error, %{reason: gettext("Unknown staker address. Please, choose your account in KardiaChain Wallet")}},
          socket}
 
       empty_staking_contract_address ->

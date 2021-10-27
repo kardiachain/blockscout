@@ -1,18 +1,36 @@
 SYSTEM = $(shell uname -s)
 HOST = host.docker.internal
+# Add new var for fullstack build
 DOCKER_IMAGE = blockscout_prod
 BS_CONTAINER_NAME = blockscout
+# Split build
+INDEX_DOCKER_IMAGE = blockscout_index_prod
+BS_INDEXER_CONTAINER_NAME = blockscout_indexer
+WEB_DOCKER_IMAGE = blockscout_web_prod
+BS_WEB_CONTAINER_NAME = blockscout_web
+
 PG_CONTAINER_NAME = postgres
 PG_CONTAINER_IMAGE = postgres:12.5
 THIS_FILE = $(lastword $(MAKEFILE_LIST))
 
-ifeq ($(SYSTEM), Linux)
-	HOST=localhost
-endif
-
-DB_URL = postgresql://postgres:@$(HOST):5432/explorer?ssl=false
 BLOCKSCOUT_CONTAINER_PARAMS = -e 'MIX_ENV=prod' \
-															 -e 'DATABASE_URL=$(DB_URL)'
+										 -e 'DATABASE_URL=$(DB_URL)'
+
+ifdef PGHOST
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'PGHOST=$(PGHOST)'
+endif
+ifdef PGPORT
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'PGPORT=$(PGPORT)'
+endif
+ifdef PGDATABASE
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'PGDATABASE=$(PGDATABASE)'
+endif
+ifdef PGUSER
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'PGUSER=$(PGUSER)'
+endif
+ifdef PGPASSWORD
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'PGPASSWORD=$(PGPASSWORD)'
+endif
 ifeq ($(SYSTEM), Linux)
 	BLOCKSCOUT_CONTAINER_PARAMS += --network=host
 endif
@@ -330,21 +348,62 @@ ifdef DISPLAY_TOKEN_ICONS
 	BLOCKSCOUT_CONTAINER_PARAMS += -e 'DISPLAY_TOKEN_ICONS=$(DISPLAY_TOKEN_ICONS)'
 endif
 
+ifdef FULLSTACK
 HAS_BLOCKSCOUT_IMAGE := $(shell docker images | grep -sw ${DOCKER_IMAGE})
-build: 
+build:
 	@echo "==> Checking for blockscout image $(DOCKER_IMAGE)"
-ifdef HAS_BLOCKSCOUT_IMAGE
+ifdef HAS_BLOCKSCOUT_INDEX_IMAGE
 	@echo "==> Image exist. Using $(DOCKER_IMAGE)"
 else
 	@echo "==> No image found trying to build one..."
 	@docker build --build-arg COIN="$(COIN)" -f ./Dockerfile -t $(DOCKER_IMAGE) ../
 endif
+else
+HAS_BLOCKSCOUT_INDEX_IMAGE := $(shell docker images | grep -sw ${INDEX_DOCKER_IMAGE})
+build_index:
+	@echo "==> Checking for blockscout image $(INDEX_DOCKER_IMAGE)"
+ifdef HAS_BLOCKSCOUT_INDEX_IMAGE
+	@echo "==> Image exist. Using $(INDEX_DOCKER_IMAGE)"
+else
+	@echo "==> No image found trying to build one..."
+	@docker build --build-arg COIN="$(COIN)" -f ./index.Dockerfile -t $(INDEX_DOCKER_IMAGE) ../
+endif
+
+rebuild_index:
+	@echo "==> Rebuild indexer docker image..."
+	@docker build --build-arg COIN="$(COIN)" -f ./index.Dockerfile -t $(INDEX_DOCKER_IMAGE) ../
+
+HAS_BLOCKSCOUT_WEB_IMAGE := $(shell docker images | grep -sw ${WEB_DOCKER_IMAGE})
+build_web:
+	@echo "==> Checking for blockscout image $(WEB_DOCKER_IMAGE)"
+ifdef HAS_BLOCKSCOUT_WEB_IMAGE
+	@echo "==> Image exist. Using $(WEB_DOCKER_IMAGE)"
+else
+	@echo "==> No image found trying to build one..."
+	@docker build --build-arg COIN="$(COIN)" -f ./web.Dockerfile -t $(WEB_DOCKER_IMAGE) ../
+endif
+
+rebuild_web:
+	@echo "==> Rebuild web docker image..."
+	@docker build --build-arg COIN="$(COIN)" -f ./web.Dockerfile -t $(WEB_DOCKER_IMAGE) ../
+
+endif
+
 
 migrate_only:
-	@echo "==> Running migrations"
+ifdef FULLSTACK
+	@echo "==> Running fullstack migrations"
 	@docker run --rm \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					$(DOCKER_IMAGE) /bin/sh -c "echo $$MIX_ENV && mix do ecto.create, ecto.migrate"
+
+else
+	@echo "==> Running indexer migrations"
+	@docker run --rm \
+					$(BLOCKSCOUT_CONTAINER_PARAMS) \
+					$(INDEX_DOCKER_IMAGE) /bin/sh -c "echo $$MIX_ENV && mix do ecto.create, ecto.migrate"
+
+endif
 
 migrate: build postgres
 	@$(MAKE) -f $(THIS_FILE) migrate_only
@@ -359,33 +418,45 @@ ifdef PG_STARTED
 	@echo "==> PostgreSQL Already started"
 	@$(MAKE) -f $(THIS_FILE) migrate_only
 else
-	@echo "==> Starting PostgreSQL container"
-	@docker start $(PG_CONTAINER_NAME)
+	#@echo "==> Starting PostgreSQL container"
+	#@docker start $(PG_CONTAINER_NAME)
 	@$(MAKE) -f $(THIS_FILE) migrate_only
 endif
 else
-	@echo "==> Creating new PostgreSQL container"
-	@docker run -d --name $(PG_CONTAINER_NAME) \
-					-e POSTGRES_PASSWORD="" \
-					-e POSTGRES_USER="postgres" \
-					-e POSTGRES_HOST_AUTH_METHOD="trust" \
-					-p 5432:5432 \
-					$(PG_CONTAINER_IMAGE)
+	#@echo "==> Creating new PostgreSQL container"
+	#@docker run -d --name $(PG_CONTAINER_NAME) \
+        #				-e POSTGRES_PASSWORD="" \
+	#				-e POSTGRES_USER="postgres" \
+	#				-e POSTGRES_HOST_AUTH_METHOD="trust" \
+	#				-p 5432:5432 \
+	#				$(PG_CONTAINER_IMAGE)
 	@sleep 1
 	@$(MAKE) -f $(THIS_FILE) migrate_only
 endif
 
-start: build postgres 
+start: build postgres
 	@echo "==> Starting blockscout"
-	@docker run --rm --name $(BS_CONTAINER_NAME) \
+	@docker run -d -v $(HOME)/logs:/opt/app/logs --name $(BS_CONTAINER_NAME) \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
-					-p 4000:4000 \
 					$(DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 
+index: build_index
+	@echo "==> Starting blockscout indexer"
+	@docker run -d -v $(HOME)/logs:/opt/app/logs --name $(BS_INDEXER_CONTAINER_NAME) \
+					$(BLOCKSCOUT_CONTAINER_PARAMS) \
+					$(INDEX_DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
+
+web: build_web
+	@echo "==> Starting blockscout web"
+	@docker run -d --name $(BS_WEB_CONTAINER_NAME) \
+                                        $(BLOCKSCOUT_CONTAINER_PARAMS) \
+                                        -p 4000:4000 \
+                                        $(WEB_DOCKER_IMAGE) \
+					/bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 run: start
 
 .PHONY: build \
 				migrate \
 				start \
 				postgres \
-				run 
+				run

@@ -3,6 +3,8 @@ defmodule Explorer.Chain.Events.Listener do
   Listens and publishes events from PG
   """
 
+  require Logger
+
   use GenServer
 
   alias Postgrex.Notifications

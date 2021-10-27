@@ -343,7 +343,7 @@ function accountChanged (account, state) {
 async function getAccounts () {
   let accounts = []
   try {
-    accounts = await window.ethereum.request({ method: 'eth_accounts' })
+    accounts = await window.kardiachain.request({ method: 'eth_accounts' })
   } catch (e) {
     console.error(`eth_accounts request failed. ${constants.METAMASK_VERSION_WARNING}`)
     openErrorModal('Get account', `Cannot get your account address. ${constants.METAMASK_VERSION_WARNING}`)
@@ -352,9 +352,9 @@ async function getAccounts () {
 }
 
 async function getNetId (web3) {
-  let netId = window.ethereum.chainId
+  let netId = window.kardiachain.chainId
   if (!netId) {
-    netId = await window.ethereum.request({ method: 'eth_chainId' })
+    netId = await window.kardiachain.request({ method: 'eth_chainId' })
   }
   if (!netId) {
     console.error(`Cannot get chainId. ${constants.METAMASK_VERSION_WARNING}`)
@@ -370,21 +370,21 @@ function hideCurrentModal () {
 }
 
 function initialize (store) {
-  if (window.ethereum) {
-    const web3 = new Web3(window.ethereum)
-    if (window.ethereum.autoRefreshOnNetworkChange) {
-      window.ethereum.autoRefreshOnNetworkChange = false
+  if (window.kardiachain) {
+    const web3 = new Web3(window.kardiachain)
+    if (window.kardiachain.autoRefreshOnNetworkChange) {
+      window.kardiachain.autoRefreshOnNetworkChange = false
     }
     store.dispatch({ type: 'WEB3_DETECTED', web3 })
 
     initNetworkAndAccount(store, web3)
 
-    window.ethereum.on('chainChanged', async (chainId) => {
+    window.kardiachain.on('chainChanged', async (chainId) => {
       const newNetId = web3.utils.isHex(chainId) ? web3.utils.hexToNumber(chainId) : chainId
       setNetwork(newNetId, store, true)
     })
 
-    window.ethereum.on('accountsChanged', async (accs) => {
+    window.kardiachain.on('accountsChanged', async (accs) => {
       const newAccount = accs && accs.length > 0 ? accs[0].toLowerCase() : null
       if (accountChanged(newAccount, store.getState())) {
         await setAccount(newAccount, store)
@@ -422,12 +422,12 @@ async function loginByMetamask () {
   event.stopPropagation()
   event.preventDefault()
   try {
-    await window.ethereum.request({ method: 'eth_requestAccounts' })
+    await window.kardiachain.request({ method: 'eth_requestAccounts' })
   } catch (e) {
     console.log(e)
     if (e.code !== 4001) {
       console.error(`eth_requestAccounts failed. ${constants.METAMASK_VERSION_WARNING}`)
-      openErrorModal(`Request account access', 'Cannot request access to your account in MetaMask. ${constants.METAMASK_VERSION_WARNING}`)
+      openErrorModal(`Request account access', 'Cannot request access to your account in KardiaChain Wallet. ${constants.METAMASK_VERSION_WARNING}`)
     }
   }
 }

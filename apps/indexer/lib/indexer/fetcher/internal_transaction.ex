@@ -20,15 +20,17 @@ defmodule Indexer.Fetcher.InternalTransaction do
 
   @behaviour BufferedTask
 
-  @max_batch_size 10
-  @max_concurrency 4
+  @max_batch_size 5
+  @max_concurrency 2
   @defaults [
     flush_interval: :timer.seconds(3),
     max_concurrency: @max_concurrency,
     max_batch_size: @max_batch_size,
     poll: true,
     task_supervisor: Indexer.Fetcher.InternalTransaction.TaskSupervisor,
-    metadata: [fetcher: :internal_transaction]
+    metadata: [
+      fetcher: :internal_transaction
+    ]
   ]
 
   @doc """
@@ -97,7 +99,7 @@ defmodule Indexer.Fetcher.InternalTransaction do
     unique_numbers_count = Enum.count(unique_numbers)
     Logger.metadata(count: unique_numbers_count)
 
-    Logger.debug("fetching internal transactions for blocks")
+    Logger.info("Start fetching internal transactions for blocks")
 
     json_rpc_named_arguments
     |> Keyword.fetch!(:variant)
@@ -110,6 +112,7 @@ defmodule Indexer.Fetcher.InternalTransaction do
 
       _ ->
         try do
+          Logger.info("fetch_block_internal_transactions_by_transactions")
           fetch_block_internal_transactions_by_transactions(unique_numbers, json_rpc_named_arguments)
         rescue
           error ->
@@ -120,8 +123,33 @@ defmodule Indexer.Fetcher.InternalTransaction do
       {:ok, internal_transactions_params} ->
         import_internal_transaction(internal_transactions_params, unique_numbers)
 
-      {:error, reason} ->
-        Logger.error(fn -> ["failed to fetch internal transactions for blocks: ", inspect(reason)] end,
+         {:error, :block_not_indexed_properly = reason} ->
+           Logger.debug(
+             fn ->
+               block_numbers = unique_numbers
+                               |> inspect(charlists: :as_lists)
+
+               [
+                 "failed to fetch internal transactions for #{unique_numbers_count} blocks: #{block_numbers} reason: ",
+                 inspect(reason)
+               ]
+             end,
+             error_count: unique_numbers_count
+           )
+
+           :ok
+
+         {:error, reason} ->
+           Logger.error(
+             fn ->
+               block_numbers = unique_numbers
+                               |> inspect(charlists: :as_lists)
+
+               [
+                 "failed to fetch internal transactions for #{unique_numbers_count} blocks: #{block_numbers} reason: ",
+                 inspect(reason)
+               ]
+          end,
           error_count: unique_numbers_count
         )
 
@@ -155,16 +183,24 @@ defmodule Indexer.Fetcher.InternalTransaction do
   end
 
   defp fetch_block_internal_transactions_by_transactions(unique_numbers, json_rpc_named_arguments) do
-    Enum.reduce(unique_numbers, {:ok, []}, fn
-      block_number, {:ok, acc_list} ->
-        block_number
-        |> Chain.get_transactions_of_block_number()
-        |> Enum.map(&params(&1))
-        |> case do
-          [] ->
-            {:ok, []}
+    Logger.info("List unique_numbers")
+    unique_numbers
+    |> inspect()
+    |> Logger.info()
+    Enum.reduce(
+      unique_numbers,
+      {:ok, []},
+      fn
+        block_number, {:ok, acc_list} ->
+          Logger.info("Get all transaction of block: #{block_number} from db")
+          block_number
+          |> Chain.get_transactions_of_block_number()
+          |> Enum.map(&params(&1))
+          |> case do
+               [] ->
+                 {:ok, []}
 
-          transactions ->
+               transactions ->
             try do
               EthereumJSONRPC.fetch_internal_transactions(transactions, json_rpc_named_arguments)
             catch

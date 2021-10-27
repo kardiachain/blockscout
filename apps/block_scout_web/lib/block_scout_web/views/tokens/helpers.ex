@@ -9,30 +9,30 @@ defmodule BlockScoutWeb.Tokens.Helpers do
   @doc """
   Returns the token transfers' amount according to the token's type and decimals.
 
-  When the token's type is ERC-20, then we are going to format the amount according to the token's
+  When the token's type is KRC-20, then we are going to format the amount according to the token's
   decimals considering 0 when the decimals is nil. Case the amount is nil, this function will
   return the symbol `--`.
 
-  When the token's type is ERC-721, the function will return a string with the token_id that
-  represents the ERC-721 token since this kind of token doesn't have amount and decimals.
+  When the token's type is KRC-721, the function will return a string with the token_id that
+  represents the KRC-721 token since this kind of token doesn't have amount and decimals.
   """
   def token_transfer_amount(%{token: token, amount: amount, token_id: token_id}) do
     do_token_transfer_amount(token, amount, token_id)
   end
 
-  defp do_token_transfer_amount(%Token{type: "ERC-20"}, nil, _token_id) do
+  defp do_token_transfer_amount(%Token{type: "KRC-20"}, nil, _token_id) do
     {:ok, "--"}
   end
 
-  defp do_token_transfer_amount(%Token{type: "ERC-20", decimals: nil}, amount, _token_id) do
+  defp do_token_transfer_amount(%Token{type: "KRC-20", decimals: nil}, amount, _token_id) do
     {:ok, CurrencyHelpers.format_according_to_decimals(amount, Decimal.new(0))}
   end
 
-  defp do_token_transfer_amount(%Token{type: "ERC-20", decimals: decimals}, amount, _token_id) do
+  defp do_token_transfer_amount(%Token{type: "KRC-20", decimals: decimals}, amount, _token_id) do
     {:ok, CurrencyHelpers.format_according_to_decimals(amount, decimals)}
   end
 
-  defp do_token_transfer_amount(%Token{type: "ERC-721"}, _amount, _token_id) do
+  defp do_token_transfer_amount(%Token{type: "KRC-721"}, _amount, _token_id) do
     {:ok, :erc721_instance}
   end
 

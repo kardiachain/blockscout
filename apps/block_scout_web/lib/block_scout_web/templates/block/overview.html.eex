@@ -89,7 +89,7 @@
               <dt class="col-sm-3 col-lg-2 text-muted">
                 <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
                 text: gettext("A block producer who successfully included the block onto the blockchain.") %>
-                <%= gettext("Miner") %>
+                <%= gettext("Proposer") %>
               </dt>
               <dd class="col-sm-9 col-lg-10"><%= render BlockScoutWeb.AddressView, "_link.html", address: @block.miner, contract: false, class: "", use_custom_tooltip: false, show_full_hash: true %>
                 <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
@@ -97,17 +97,17 @@
                   clipboard_text: @block.miner,
                   aria_label: gettext("Copy Address"),
                   title: gettext("Copy Address") %>
-                </dd>
+              </dd>
             </dl>
           <% end %>
-          <!-- Size -->
+          <!-- Block Rewards -->
           <dl class="row">
             <dt class="col-sm-3 col-lg-2 text-muted">
               <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
-              text: gettext("Size of the block in bytes.") %>
-              <%= gettext("Size") %>
+              text: gettext("The block rewards distribute to set of validator.") %>
+              <%= gettext("Block Rewards") %>
             </dt>
-            <dd class="col-sm-9 col-lg-10"><%= Cldr.Unit.new(:byte, @block.size) |> cldr_unit_to_string!() %></dd>
+            <dd class="col-sm-9 col-lg-10"><%= format_wei_value(%Wei{value: @block.block_rewards}, :ether) %></dd>
           </dl>
           <!-- Hash -->
           <dl class="row">
@@ -130,7 +130,7 @@
               <dt class="col-sm-3 col-lg-2 text-muted">
                 <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
                 text: gettext("The hash of the block from which this block was generated.") %>
-                <%= gettext("Parent Hash") %>
+                <%= gettext("Last Block Hash") %>
               </dt>
               <dd class="col-sm-9 col-lg-10"><%= link(
                                                         @block.parent_hash,
@@ -140,30 +140,73 @@
                   <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
                     additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
                     clipboard_text: to_string(@block.parent_hash),
-                    aria_label: gettext("Copy Parent Hash"),
-                    title: gettext("Copy Parent Hash") %>
+                    aria_label: gettext("Copy Last Block Hash"),
+                    title: gettext("Copy Last Block Hash") %>
               </dd>
             </dl>
           <% end %>
-          <!-- Difficulty -->
-          <dl class="row">
-            <dt class="col-sm-3 col-lg-2 text-muted">
-              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
-              text: gettext("Block difficulty for miner, used to calibrate block generation time (Note: constant in POA based networks).") %>
-              <%= gettext("Difficulty") %>
-            </dt>
-            <dd class="col-sm-9 col-lg-10"><%= @block.difficulty |> Decimal.to_integer() |> BlockScoutWeb.Cldr.Number.to_string! %></dd>
-          </dl>
           <%= if block_type(@block) == "Block" do %>
-            <!-- Total Difficulty -->
+            <!-- Commit Hash -->
             <dl class="row">
               <dt class="col-sm-3 col-lg-2 text-muted">
                 <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
-                text: gettext("Total difficulty of the chain until this block.") %>
-                <%= gettext("Total Difficulty") %>
+                text: gettext("The SHA256 commit hash of the block.") %>
+                <%= gettext("Commit Hash") %>
               </dt>
-              <dd class="col-sm-9 col-lg-10"><%= @block.total_difficulty |> Decimal.to_integer() |> BlockScoutWeb.Cldr.Number.to_string! %></dd>
+              <dd class="col-sm-9 col-lg-10"><%= to_string(@block.commit_hash) %>
+                  <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
+                    additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
+                    clipboard_text: to_string(@block.commit_hash),
+                    aria_label: gettext("Copy Commit Hash"),
+                    title: gettext("Copy Commit Hash") %>
+              </dd>
             </dl>
+            <!-- Validators Hash -->
+            <dl class="row">
+              <dt class="col-sm-3 col-lg-2 text-muted">
+                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                text: gettext("The SHA256 validators hash.") %>
+                <%= gettext("Validators Hash") %>
+              </dt>
+              <dd class="col-sm-9 col-lg-10"><%= to_string(@block.validator_hash) %>
+                  <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
+                    additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
+                    clipboard_text: to_string(@block.validator_hash),
+                    aria_label: gettext("Copy Validators Hash"),
+                    title: gettext("Copy Validators Hash") %>
+              </dd>
+            </dl>
+            <!-- Next Validators Hash -->
+            <dl class="row">
+              <dt class="col-sm-3 col-lg-2 text-muted">
+                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                text: gettext("The SHA256 validators hash of next validator set.") %>
+                <%= gettext("Next Validator Hash") %>
+              </dt>
+              <dd class="col-sm-9 col-lg-10"><%= to_string(@block.next_validator_hash) %>
+                  <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
+                    additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
+                    clipboard_text: to_string(@block.next_validator_hash),
+                    aria_label: gettext("Copy Next Validator Hash"),
+                    title: gettext("Copy Next Validator Hash") %>
+              </dd>
+            </dl>
+            <!-- Data Hash -->
+            <dl class="row">
+              <dt class="col-sm-3 col-lg-2 text-muted">
+                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                text: gettext("The SHA256 data hash of txs states") %>
+                <%= gettext("Data Hash") %>
+              </dt>
+              <dd class="col-sm-9 col-lg-10"><%= to_string(@block.transactions_root) %>
+                  <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
+                    additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
+                    clipboard_text: to_string(@block.transactions_root),
+                    aria_label: gettext("Copy Data Hash"),
+                    title: gettext("Copy Data Hash") %>
+              </dd>
+            </dl>
+
             <!-- Gas Used -->
             <dl class="row">
               <dt class="col-sm-3 col-lg-2 text-muted">
@@ -171,7 +214,7 @@
                 text: gettext("The total gas amount used in the block and its percentage of gas filled in the block.") %>
                 <%= gettext("Gas Used") %>
               </dt>
-              <dd class="col-sm-9 col-lg-10"><%= @block.gas_used |> BlockScoutWeb.Cldr.Number.to_string! %> | <%= (Decimal.to_integer(@block.gas_used) / Decimal.to_integer(@block.gas_limit)) |> BlockScoutWeb.Cldr.Number.to_string!(format: "#.#%") %></dd>
+              <dd class="col-sm-9 col-lg-10"><%= @block.gas_used |> BlockScoutWeb.Cldr.Number.to_string! %> | <%= if Decimal.cmp(@block.gas_limit, 0) == :eq, do: "0%", else: ((Decimal.to_integer(@block.gas_used) / Decimal.to_integer(@block.gas_limit)) |> BlockScoutWeb.Cldr.Number.to_string!(format: "#.#%")) %></dd>
             </dl>
             <!-- Gas Limit -->
             <dl class="row">
@@ -181,15 +224,6 @@
                 <%= gettext("Gas Limit") %>
               </dt>
               <dd class="col-sm-9 col-lg-10"><%= BlockScoutWeb.Cldr.Number.to_string!(@block.gas_limit) %></dd>
-            </dl>
-            <!-- Nonce -->
-            <dl class="row">
-              <dt class="col-sm-3 col-lg-2 text-muted">
-                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
-                text: gettext("64-bit hash of value verifying proof-of-work (note: null for POA chains).") %>
-                <%= gettext("Nonce") %>
-              </dt>
-              <dd class="col-sm-9 col-lg-10"><%= to_string(@block.nonce) %></dd>
             </dl>
           <% end %>
           <%= if !is_nil(@block.base_fee_per_gas) do%>
@@ -206,7 +240,7 @@
             <dl class="row">
                 <dt class="col-sm-3 col-lg-2 text-muted">
                   <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
-                  text: gettext("Ether") <> " " <> gettext("burned from transactions included in the block (Base fee (per unit of gas) * Gas Used).") %>
+                  text: gettext("KAI") <> " " <> gettext("burned from transactions included in the block (Base fee (per unit of gas) * Gas Used).") %>
                   <%= gettext("Burnt Fees") %>
                 </dt>
                 <dd class="col-sm-9 col-lg-10"><i class="fas fa-fire i-tooltip-2"></i> <s><%= format_wei_value(burned_fee, :ether) %></s></dd>
@@ -220,7 +254,7 @@
                 </dt>
                 <dd class="col-sm-9 col-lg-10"><%= format_wei_value(%Wei{value: priority_fee}, :ether) %></dd>
             </dl>
-          <% end %>  
+          <% end %>
           <%= if show_reward?(@block.rewards) do %>
             <hr>
             <%= for block_reward <- @block.rewards do %>
@@ -262,4 +296,4 @@
     </div>
 </section>
 
-<%= render BlockScoutWeb.Advertisement.BannersAdView, "_banner_728.html", conn: @conn %> 
+<%= render BlockScoutWeb.Advertisement.BannersAdView, "_banner_728.html", conn: @conn %>

@@ -10,9 +10,9 @@ defmodule Explorer.Chain.Block do
   alias Explorer.Chain.{Address, Gas, Hash, PendingBlockOperation, Transaction, Wei}
   alias Explorer.Chain.Block.{Reward, SecondDegreeRelation}
 
-  @optional_attrs ~w(size refetch_needed total_difficulty difficulty base_fee_per_gas)a
+  @optional_attrs ~w(size refetch_needed total_difficulty difficulty base_fee_per_gas nonce)a
 
-  @required_attrs ~w(consensus gas_limit gas_used hash miner_hash nonce number parent_hash timestamp)a
+  @required_attrs ~w(consensus gas_limit gas_used hash commit_hash validator_hash block_rewards next_validator_hash transactions_root miner_hash number parent_hash timestamp)a
 
   @typedoc """
   How much work is required to find a hash with some number of leading 0s.  It is measured in hashes for PoW
@@ -49,29 +49,39 @@ defmodule Explorer.Chain.Block do
    * `base_fee_per_gas` - Minimum fee required per unit of gas. Fee adjusts based on network congestion.
   """
   @type t :: %__MODULE__{
-          consensus: boolean(),
-          difficulty: difficulty(),
-          gas_limit: Gas.t(),
-          gas_used: Gas.t(),
-          hash: Hash.Full.t(),
-          miner: %Ecto.Association.NotLoaded{} | Address.t(),
-          miner_hash: Hash.Address.t(),
-          nonce: Hash.Nonce.t(),
-          number: block_number(),
-          parent_hash: Hash.t(),
-          size: non_neg_integer(),
-          timestamp: DateTime.t(),
-          total_difficulty: difficulty(),
-          transactions: %Ecto.Association.NotLoaded{} | [Transaction.t()],
-          refetch_needed: boolean(),
+               consensus: boolean(),
+               difficulty: difficulty(),
+               gas_limit: Gas.t(),
+               gas_used: Gas.t(),
+               block_rewards: Gas.t(),
+               hash: Hash.Full.t(),
+               commit_hash: Hash.Full.t(),
+               validator_hash: Hash.Full.t(),
+               next_validator_hash: Hash.Full.t(),
+               transactions_root: Hash.Full.t(),
+               miner: %Ecto.Association.NotLoaded{} | Address.t(),
+               miner_hash: Hash.Address.t(),
+               nonce: Hash.Nonce.t(),
+               number: block_number(),
+               parent_hash: Hash.t(),
+               size: non_neg_integer(),
+               timestamp: DateTime.t(),
+               total_difficulty: difficulty(),
+               transactions: %Ecto.Association.NotLoaded{} | [Transaction.t()],
+               refetch_needed: boolean(),
           base_fee_per_gas: Wei.t()
         }
 
   @primary_key {:hash, Hash.Full, autogenerate: false}
   schema "blocks" do
+    field(:commit_hash, Hash.Full)
+    field(:validator_hash, Hash.Full)
+    field(:next_validator_hash, Hash.Full)
+    field(:transactions_root, Hash.Full)
     field(:consensus, :boolean)
     field(:difficulty, :decimal)
     field(:gas_limit, :decimal)
+    field(:block_rewards, :decimal)
     field(:gas_used, :decimal)
     field(:nonce, Hash.Nonce)
     field(:number, :integer)

@@ -72,12 +72,12 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/layout/_default_title.html.eex:2
-msgid "%{subnetwork} Explorer - BlockScout"
+msgid "KardiaChain %{subnetwork} Explorer"
 msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/stakes/_metatags.html.eex:2
-msgid "%{subnetwork} Staking DApp - BlockScout"
+msgid "KardiaChain %{subnetwork} Staking DApp"
 msgstr ""
 
 #, elixir-format
@@ -151,7 +151,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/api_docs/_metatags.html.eex:2
-msgid "API for the %{subnetwork} - BlockScout"
+msgid "API for the %{subnetwork}"
 msgstr ""
 
 #, elixir-format
@@ -197,7 +197,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/address/overview.html.eex:166
-msgid "Address balance in xDAI (doesn't include ERC20, ERC721, ERC1155 tokens)."
+msgid "Address balance."
 msgstr ""
 
 #, elixir-format
@@ -427,7 +427,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/layout/_footer.html.eex:20
-msgid "Blockscout is a tool for inspecting and analyzing EVM based blockchains. Blockchain explorer for Ethereum Networks."
+msgid "KardiaChain Network explorer."
 msgstr ""
 
 #, elixir-format
@@ -560,7 +560,7 @@ msgstr ""
 #, elixir-format
 #: lib/block_scout_web/templates/address/_tabs.html.eex:34
 #: lib/block_scout_web/views/address_view.ex:355
-msgid "Coin Balance History"
+msgid "Balance History"
 msgstr ""
 
 #, elixir-format
@@ -868,7 +868,7 @@ msgstr ""
 #, elixir-format
 #: lib/block_scout_web/templates/address_logs/_logs.html.eex:101
 #: lib/block_scout_web/templates/log/_data_decoded_view.html.eex:7 lib/block_scout_web/templates/transaction/_decoded_input_body.html.eex:21
-#: lib/block_scout_web/templates/transaction_log/_logs.html.eex:104
+#: lib/block_scout_web/templates/transaction_log/_logs.html.eex:120
 msgid "Data"
 msgstr ""
 
@@ -892,7 +892,7 @@ msgstr ""
 #: lib/block_scout_web/templates/address_logs/_logs.html.eex:32
 #: lib/block_scout_web/templates/address_logs/_logs.html.eex:38 lib/block_scout_web/templates/address_logs/_logs.html.eex:53
 #: lib/block_scout_web/templates/transaction_log/_logs.html.eex:33 lib/block_scout_web/templates/transaction_log/_logs.html.eex:41
-#: lib/block_scout_web/templates/transaction_log/_logs.html.eex:56
+#: lib/block_scout_web/templates/transaction_log/_logs.html.eex:56 lib/block_scout_web/templates/transaction_log/_logs.html.eex:72
 msgid "Decoded"
 msgstr ""
 
@@ -988,12 +988,12 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/views/transaction_view.ex:221
-msgid "ERC-20 "
+msgid "KRC-20 "
 msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/views/transaction_view.ex:222
-msgid "ERC-721 "
+msgid "KRC-721 "
 msgstr ""
 
 #, elixir-format
@@ -1088,7 +1088,7 @@ msgstr ""
 #: lib/block_scout_web/templates/layout/app.html.eex:45 lib/block_scout_web/templates/transaction/_pending_tile.html.eex:20
 #: lib/block_scout_web/templates/transaction/_tile.html.eex:37 lib/block_scout_web/templates/transaction/overview.html.eex:399
 #: lib/block_scout_web/views/wei_helpers.ex:78
-msgid "Ether"
+msgid "KAI"
 msgstr ""
 
 #, elixir-format
@@ -1119,7 +1119,7 @@ msgid "External libraries"
 msgstr ""
 
 #, elixir-format
-#: lib/block_scout_web/templates/transaction/_decoded_input.html.eex:33
+#: lib/block_scout_web/templates/transaction/_decoded_input.html.eex:40
 msgid "Failed to decode input data."
 msgstr ""
 
@@ -1388,7 +1388,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/transaction/overview.html.eex:293
-msgid "List of ERC-1155 tokens created in the transaction."
+msgid "List of KRC-1155 tokens created in the transaction."
 msgstr ""
 
 #, elixir-format
@@ -1432,7 +1432,7 @@ msgid "Log Data"
 msgstr ""
 
 #, elixir-format
-#: lib/block_scout_web/templates/transaction_log/_logs.html.eex:114
+#: lib/block_scout_web/templates/transaction_log/_logs.html.eex:130
 msgid "Log Index"
 msgstr ""
 
@@ -1509,7 +1509,7 @@ msgstr ""
 #, elixir-format
 #: lib/block_scout_web/templates/block/_tile.html.eex:41
 #: lib/block_scout_web/templates/block/overview.html.eex:92 lib/block_scout_web/templates/chain/_block.html.eex:16
-msgid "Miner"
+msgid "Proposer"
 msgstr ""
 
 #, elixir-format
@@ -1777,6 +1777,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/transaction/_decoded_input.html.eex:18
+#: lib/block_scout_web/templates/transaction/_decoded_input.html.eex:32
 msgid "Potential matches from our contract method database:"
 msgstr ""
 
@@ -2011,7 +2012,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/address_token/overview.html.eex:59
-msgid "Shows the tokens held in the address (includes ERC-20, ERC-721 and ERC-1155)."
+msgid "Shows the tokens held in the address (includes KRC-20, KRC-721 and KRC-1155)."
 msgstr ""
 
 #, elixir-format
@@ -2205,7 +2206,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/smart_contract/_functions.html.eex:37
-msgid "The fallback function is executed on a call to the contract if none of the other functions match the given function signature, or if no data was supplied at all and there is no receive Ether function. The fallback function always receives data, but in order to also receive Ether it must be marked payable."
+msgid "The fallback function is executed on a call to the contract if none of the other functions match the given function signature, or if no data was supplied at all and there is no receive KAI function. The fallback function always receives data, but in order to also receive KAI it must be marked payable."
 msgstr ""
 
 #, elixir-format
@@ -2255,7 +2256,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/smart_contract/_functions.html.eex:39
-msgid "The receive function is executed on a call to the contract with empty calldata. This is the function that is executed on plain Ether transfers (e.g. via .send() or .transfer()). If no such function exists, but a payable fallback function exists, the fallback function will be called on a plain Ether transfer. If neither a receive Ether nor a payable fallback function is present, the contract cannot receive Ether through regular transactions and throws an exception."
+msgid "The receive function is executed on a call to the contract with empty calldata. This is the function that is executed on plain KAI transfers (e.g. via .send() or .transfer()). If no such function exists, but a payable fallback function exists, the fallback function will be called on a plain KAI transfer. If neither a receive KAI nor a payable fallback function is present, the contract cannot receive KAI through regular transactions and throws an exception."
 msgstr ""
 
 #, elixir-format
@@ -2392,12 +2393,12 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/api_docs/index.html.eex:6
-msgid "This API is provided for developers transitioning their applications from Etherscan to BlockScout. It supports GET and POST requests."
+msgid "This API is provided for developers transitioning their applications. It supports GET and POST requests."
 msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/api_docs/eth_rpc.html.eex:7
-msgid "This API is provided to support some rpc methods in the exact format specified for ethereum nodes, which can be found "
+msgid "This API is provided to support some rpc methods in the exact format specified for KardiaChain nodes, which can be found "
 msgstr ""
 
 #, elixir-format
@@ -2573,7 +2574,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/address_logs/_logs.html.eex:71
-#: lib/block_scout_web/templates/transaction_log/_logs.html.eex:74
+#: lib/block_scout_web/templates/transaction_log/_logs.html.eex:90
 msgid "Topics"
 msgstr ""
 

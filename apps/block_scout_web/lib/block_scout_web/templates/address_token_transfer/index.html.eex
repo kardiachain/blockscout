@@ -31,13 +31,13 @@
                   "data-test": "filter_option"
                 ) %>
                 <%= link(
-                  gettext("To"),
+                  gettext("Incoming"),
                   to: AccessHelpers.get_path(@conn, :address_token_transfers_path, :index, to_string(@address.hash), %{:filter => "to"}),
                   class: "address__link address__link--active dropdown-item",
                   "data-test": "filter_option"
                 ) %>
                 <%= link(
-                  gettext("From"),
+                  gettext("Outgoing"),
                   to: AccessHelpers.get_path(@conn, :address_token_transfers_path, :index, to_string(@address.hash), %{:filter => "from"}),
                   class: "address__link address__link--active dropdown-item",
                   "data-test": "filter_option"

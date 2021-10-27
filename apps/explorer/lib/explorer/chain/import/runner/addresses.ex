@@ -62,9 +62,10 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
       insert(repo, changes_list_with_defaults, insert_options)
     end)
     |> Multi.run(:created_address_code_indexed_at_transactions, fn repo, %{addresses: addresses}
-                                                                   when is_list(addresses) ->
+    when is_list(addresses) ->
       update_transactions(repo, addresses, update_transactions_options)
-    end)
+    end
+       )
   end
 
   @impl Import.Runner
@@ -72,11 +73,15 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
 
   ## Private Functions
 
-  @spec insert(Repo.t(), [%{hash: Hash.Address.t()}], %{
-          optional(:on_conflict) => Import.Runner.on_conflict(),
-          required(:timeout) => timeout,
-          required(:timestamps) => Import.timestamps()
-        }) :: {:ok, [Address.t()]}
+  @spec insert(
+          Repo.t(),
+          [%{hash: Hash.Address.t()}],
+          %{
+            optional(:on_conflict) => Import.Runner.on_conflict(),
+            required(:timeout) => timeout,
+            required(:timestamps) => Import.timestamps()
+          }
+        ) :: {:ok, [Address.t()]}
   defp insert(repo, changes_list, %{timeout: timeout, timestamps: timestamps} = options) when is_list(changes_list) do
     on_conflict = Map.get_lazy(options, :on_conflict, &default_on_conflict/0)
 

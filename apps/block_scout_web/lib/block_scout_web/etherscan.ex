@@ -185,15 +185,15 @@ defmodule BlockScoutWeb.Etherscan do
         "name" => "Example Token",
         "decimals" => "18",
         "symbol" => "ET",
-        "type" => "ERC-20"
+        "type" => "KRC-20"
       },
       %{
         "balance" => "1",
         "contractAddress" => "0x0000000000000000000000000000000000000001",
-        "name" => "Example ERC-721 Token",
+        "name" => "Example KRC-721 Token",
         "decimals" => "18",
         "symbol" => "ET7",
-        "type" => "ERC-721"
+        "type" => "KRC-721"
       }
     ]
   }
@@ -266,7 +266,7 @@ defmodule BlockScoutWeb.Etherscan do
       "name" => "Example Token",
       "symbol" => "ET",
       "totalSupply" => "1000000000",
-      "type" => "ERC-20"
+      "type" => "KRC-20"
     }
   }
 
@@ -918,8 +918,8 @@ defmodule BlockScoutWeb.Etherscan do
       decimals: @token_decimal_type,
       type: %{
         type: "token type",
-        enum: ~s(["ERC-20", "ERC-721"]),
-        enum_interpretation: %{"ERC-20" => "ERC-20 token standard", "ERC-721" => "ERC-721 token standard"}
+        enum: ~s(["KRC-20", "KRC-721"]),
+        enum_interpretation: %{"KRC-20" => "KRC-20 token standard", "KRC-721" => "KRC-721 token standard"}
       },
       cataloged: %{
         type: "boolean",
@@ -1163,7 +1163,7 @@ defmodule BlockScoutWeb.Etherscan do
   @account_eth_get_balance_action %{
     name: "eth_get_balance",
     description:
-      "Mimics Ethereum JSON RPC's eth_getBalance. Returns the balance as of the provided block (defaults to latest)",
+      "Mimics Web3 JSON RPC's eth_getBalance. Returns the balance as of the provided block (defaults to latest)",
     required_params: [
       %{
         key: "address",
@@ -1865,8 +1865,8 @@ defmodule BlockScoutWeb.Etherscan do
   @token_gettoken_action %{
     name: "getToken",
     description:
-      "Get <a href='https://github.com/ethereum/EIPs/issues/20'>ERC-20</a> " <>
-        "or <a href='https://github.com/ethereum/EIPs/issues/721'>ERC-721</a> token by contract address.",
+      "Get <a href='https://github.com/ethereum/EIPs/issues/20'>KRC-20</a> " <>
+        "or <a href='https://github.com/ethereum/EIPs/issues/721'>KRC-721</a> token by contract address.",
     required_params: [
       %{
         key: "contractaddress",
@@ -1954,8 +1954,8 @@ defmodule BlockScoutWeb.Etherscan do
   @stats_tokensupply_action %{
     name: "tokensupply",
     description:
-      "Get <a href='https://github.com/ethereum/EIPs/issues/20'>ERC-20</a> or " <>
-        "<a href='https://github.com/ethereum/EIPs/issues/721'>ERC-721</a> " <>
+      "Get <a href='https://github.com/ethereum/EIPs/issues/20'>KRC-20</a> or " <>
+        "<a href='https://github.com/ethereum/EIPs/issues/721'>KRC-721</a> " <>
         " token total supply by contract address.",
     required_params: [
       %{
@@ -2132,7 +2132,7 @@ defmodule BlockScoutWeb.Etherscan do
 
   @block_eth_block_number_action %{
     name: "eth_block_number",
-    description: "Mimics Ethereum JSON RPC's eth_blockNumber. Returns the lastest block number",
+    description: "Mimics Web3 JSON RPC's eth_blockNumber. Returns the lastest block number",
     required_params: [],
     optional_params: [
       %{
@@ -2308,7 +2308,7 @@ defmodule BlockScoutWeb.Etherscan do
     <div class="m-2">
     curl -d '{"addressHash":"0xc63BB6555C90846afACaC08A0F0Aa5caFCB382a1","compilerVersion":"v0.5.4+commit.9549d8ff",
     "contractSourceCode":"pragma solidity ^0.5.4; \ncontract Test {\n}","name":"Test","optimization":false}'
-    -H "Content-Type: application/json" -X POST  "https://blockscout.com/poa/sokol/api?module=contract&action=verify"
+    -H "Content-Type: application/json" -X POST  "https://explorer.kardiachain.io/api?module=contract&action=verify"
     </pre>
     </div>
     </div>
@@ -2517,7 +2517,7 @@ defmodule BlockScoutWeb.Etherscan do
     <div class='tab-pane fade show active'>
     <div class="tile tile-muted p-1">
     <div class="m-2">
-    curl --location --request POST 'http://localhost:4000/api?module=contract&action=verify_vyper_contract' \
+    curl --location --request POST 'http://explorer.kardiachain.io/api?module=contract&action=verify_vyper_contract' \
     --form 'contractSourceCode="SOURCE_CODE"' \
     --form 'name="Vyper_contract"' \
     --form 'addressHash="0xE60B1B8bD493569a3E945be50A6c89d29a560Fa1"' \

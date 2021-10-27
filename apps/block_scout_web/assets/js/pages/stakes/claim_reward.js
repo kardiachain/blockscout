@@ -225,7 +225,7 @@ function onPoolsFound ($modal, $modalBody, channel, store) {
         $poolsDropdown,
         $epochChoiceRadio,
         $specifiedEpochsText,
-        'Please, sign transaction in MetaMask'
+        'Please, sign transaction in KardiaChain Wallet'
       )
 
       const gasLimit = parseInt($('#tx-gas-limit', $modalBody).text().replace(/~/g, '').trim(), 10)
