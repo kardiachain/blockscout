@@ -18,34 +18,34 @@
 
     <div class="addresses-table-container">
       <div class="stakes-table-container">
-	<table>
-	  <thead>
-	    <tr>
-	      <th class="stakes-table-th">
-			<div class="stakes-table-th-content">&nbsp;</div>
-	      </th>
-	      <th class="stakes-table-th">
-			<div class="stakes-table-th-content">Token</div>
-	      </th>
-	      <th class="stakes-table-th">
-			<div class="stakes-table-th-content">Address</div>
-	      </th>
-	      <th class="stakes-table-th">
-			<div class="stakes-table-th-content">
-			Total Supply
-			</div>
-	      </th>
-	      <th class="stakes-table-th">
-			<div class="stakes-table-th-content">
-			Total Holders
-			</div>
-	      </th>
-	    </tr>
-	  </thead>
-	  <tbody data-items data-selector="top-tokens-list">
-	    <%= render BlockScoutWeb.CommonComponentsView, "_table-loader.html", columns_num: 5 %>
-	  </tbody>
-	</table>
+		<table>
+		<thead>
+			<tr>
+			<th class="stakes-table-th">
+				<div class="stakes-table-th-content">&nbsp;</div>
+			</th>
+			<th class="stakes-table-th">
+				<div class="stakes-table-th-content">Token</div>
+			</th>
+			<th class="stakes-table-th">
+				<div class="stakes-table-th-content">Address</div>
+			</th>
+			<th class="stakes-table-th">
+				<div class="stakes-table-th-content">
+				Total Supply
+				</div>
+			</th>
+			<th class="stakes-table-th">
+				<div class="stakes-table-th-content">
+				Total Holders
+				</div>
+			</th>
+			</tr>
+		</thead>
+		<tbody data-items data-selector="top-tokens-list">
+			<%= render BlockScoutWeb.CommonComponentsView, "_table-loader.html", columns_num: 5 %>
+		</tbody>
+		</table>
       </div>
     </div>
 

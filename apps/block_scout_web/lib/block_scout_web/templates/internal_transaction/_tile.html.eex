@@ -22,7 +22,6 @@
           <b>&nbsp;To&nbsp;</b>
           <%= @internal_transaction |> BlockScoutWeb.AddressView.address_partial_selector(:to, assigns[:current_address], truncate: true) |> BlockScoutWeb.RenderHelpers.render_partial() %>
           <b>&nbsp;For&nbsp;</b>
-
           <%= BlockScoutWeb.TransactionView.value(@internal_transaction, include_label: false) %> <%= gettext "KAI" %>
         </div>
       </span>
