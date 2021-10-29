@@ -3126,6 +3126,21 @@ defmodule Explorer.Chain do
     end
   end
 
+  @spec number_to_valid_block(Block.block_number(), [necessity_by_association_option]) ::
+          {:ok, Block.t()} | {:error, :not_found}
+  def number_to_valid_block(number, options \\ []) when is_list(options) do
+    necessity_by_association = Keyword.get(options, :necessity_by_association, %{})
+
+    Block
+    |> where(number: ^number)
+    |> join_associations(necessity_by_association)
+    |> Repo.one()
+    |> case do
+      nil -> {:error, :not_found}
+      block -> {:ok, block}
+    end
+  end
+
   @spec timestamp_to_block_number(DateTime.t(), :before | :after) :: {:ok, Block.block_number()} | {:error, :not_found}
   def timestamp_to_block_number(given_timestamp, closest) do
     {:ok, t} = Timex.format(given_timestamp, "%Y-%m-%d %H:%M:%S", :strftime)
