@@ -54,8 +54,6 @@ export function prepareMethodArgs ($functionInputs, inputs) {
 }
 
 export function compareChainIDs (explorerChainId, walletChainIdHex) {
-    console.log("explorerChainId", explorerChainId);
-    console.log("walletChainIdHex", walletChainIdHex);
   if (explorerChainId !== parseInt(walletChainIdHex)) {
     const networkDisplayNameFromWallet = props.getNetworkDisplayName(walletChainIdHex)
     const networkDisplayName = props.getNetworkDisplayName(explorerChainId)
