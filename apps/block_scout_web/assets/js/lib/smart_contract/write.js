@@ -147,10 +147,14 @@ export function queryMethod (isWalletEnabled, url, $methodId, args, type, functi
           from: currentAccount,
           args
         }
+        console.log("Query with data", data)
+        console.log("Query with url", url)
         $.get(url, data, response => $responseContainer.html(response))
       }
       )
   } else {
+  console.log("Query with data", data)
+  console.log("Query with url", url)
     $.get(url, data, response => $responseContainer.html(response))
   }
 }
