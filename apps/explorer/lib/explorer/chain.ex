@@ -7151,7 +7151,7 @@ defmodule Explorer.Chain do
     end
   end
 
-  @spec get_token_icon_url_by(String.t(), String.t()) :: String.t() | nil
+  @spec get_token_icon_url_by(String.t(), String.t()) :: String.t()
   def get_token_icon_url_by(_chain_id, address_hash) do
     try_url =
       "https://raw.githubusercontent.com/kardiachain/token-assets/master/tokens/#{address_hash}/logo.png"
@@ -7161,7 +7161,7 @@ defmodule Explorer.Chain do
     if status_code == 200 do
       try_url
     else
-      nil
+      "https://raw.githubusercontent.com/kardiachain/token-assets/master/tokens/default.png"
     end
   end
 

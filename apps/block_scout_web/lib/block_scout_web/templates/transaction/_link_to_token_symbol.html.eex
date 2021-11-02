@@ -1,1 +1,7 @@
-<%= link(token_symbol(@transfer.token), to: token_path(BlockScoutWeb.Endpoint, :show, @transfer.token.contract_address_hash), "data-test": "token_link") %>
+<% token_icon_url = Explorer.Chain.get_token_icon_url_by(nil, Address.checksum(@transfer.token.contract_address_hash)) %>
+<img heigth=15 width=15 src="<%= token_icon_url %>" style="margin-top: -4px;" />
+<%= link(
+    token_symbol(@transfer.token),
+    to: token_path(BlockScoutWeb.Endpoint, :show, @transfer.token.contract_address_hash),
+    "data-test": "token_link")
+%>
