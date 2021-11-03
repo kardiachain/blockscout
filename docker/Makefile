@@ -442,13 +442,13 @@ start: build postgres
 
 index: build_index
 	@echo "==> Starting blockscout indexer"
-	@docker run -d -v $(HOME)/logs:/opt/app/logs --name $(BS_INDEXER_CONTAINER_NAME) \
+	@docker run -d -v $(HOME)/logs:/opt/app/logs --log-opt max-size=300m --name $(BS_INDEXER_CONTAINER_NAME) \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					$(INDEX_DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 
 web: build_web
 	@echo "==> Starting blockscout web"
-	@docker run -d --name $(BS_WEB_CONTAINER_NAME) \
+	@docker run -d --log-opt max-size=300m --name $(BS_WEB_CONTAINER_NAME) \
                                         $(BLOCKSCOUT_CONTAINER_PARAMS) \
                                         -p 4000:4000 \
                                         $(WEB_DOCKER_IMAGE) \
