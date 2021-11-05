@@ -1,7 +1,9 @@
 $body-dark: #181818; // body background
 $dark-bg: #2A2B40; // hero shade
-$dark-light-bg: #212121; // pills bg shade
-$dark-light: #3a3b3c; // tile light top share
+// $dark-light-bg: #212121; // pills bg shade
+// $dark-light: #3a3b3c; // tile light top share
+$dark-light: #434343; // pills bg shade
+$dark-light-bg: #3a3b3c; // tile light top share
 $labels-dark: #fcfcfc; // header nav, labels
 $dark-stakes-banned-background: #3e314c;
 
@@ -102,7 +104,7 @@ $box-line-border: #9AA3B2;
 
 	.layout-container .dashboard-banner-container {
 		background-image: none;
-		background-color: $dark-light;
+		background-color: $dark-light-bg;
 	}
 	.dashboard-banner-network-plain-container,
 	.dashboard-banner-network-plain-container::after {
@@ -147,7 +149,7 @@ $box-line-border: #9AA3B2;
 	.card-tab {
 		background-color: transparent;
 		&:hover:not(.active) {
-			background-color: #2A2B40;
+			background-color: $dark-light;
 			color: $dark-primary;
 		}
 		&.active {
@@ -157,7 +159,7 @@ $box-line-border: #9AA3B2;
 	}
 
 	.card-background-1 {
-		background-color: $dark-primary-alternate;
+		background-color: $dark-light;
 	}
 
 	// Components
@@ -212,9 +214,7 @@ $box-line-border: #9AA3B2;
 	.fade-up-blocks-chain .tile-type-block-animation .tile-type-line-up {
 		background-color: $box-line-border;
 	}
-	.tile.tile-type-block {
-		border-left-color: $box-line-bg;
-	}
+
 	.tile.tile-type-block .tile-status-label {
 		color: $dark-primary;
 	}
@@ -1119,7 +1119,7 @@ $box-line-border: #9AA3B2;
 .dark-theme-applied .dropdown-item.active:not(.header), .dark-theme-applied .dropdown-item:not(.header):hover, .dark-theme-applied .dropdown-item:not(.header):focus {
     background-image: none;
     width: 100%;
-    background-color: #3f426c !important;
+    background-color: $dark-primary !important;
 }
 
 @media (max-width: 991.98px) {
@@ -1128,7 +1128,7 @@ $box-line-border: #9AA3B2;
 	.dark-theme-applied .navbar.navbar-primary .navbar-nav .nav-link:focus {
 		background-image: none;
 		width: 100%;
-		background-color: #35335d !important;
+		background-color: $dark-primary !important;
 		color: white;
 		border: none;
 	}
