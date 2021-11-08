@@ -19,6 +19,12 @@
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "reason",
+        "type": "uint256"
       }
     ],
     "name": "Burn",
@@ -94,21 +100,6 @@
     "type": "event"
   },
   {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "delAddr",
-        "type": "address"
-      }
-    ],
-    "name": "addDelegation",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "constant": true,
     "inputs": [
       {
@@ -123,21 +114,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "allValsLength",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "payable": false,
@@ -163,187 +139,6 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "burn",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "name",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "rate",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "maxRate",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "maxChangeRate",
-        "type": "uint256"
-      }
-    ],
-    "name": "createValidator",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "val",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "delegate",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "deposit",
-    "outputs": [],
-    "payable": true,
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "signerAddr",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "votingPower",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "distributionHeight",
-        "type": "uint256"
-      }
-    ],
-    "name": "doubleSign",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "_signers",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_votingPower",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "bool[]",
-        "name": "_signed",
-        "type": "bool[]"
-      }
-    ],
-    "name": "finalize",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "getValidatorSets",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "valAddrs",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "powers",
-        "type": "uint256[]"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "delAddr",
-        "type": "address"
-      }
-    ],
-    "name": "getValidatorsByDelegator",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "mint",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -404,7 +199,7 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "paramsSmcAddr",
+        "name": "",
         "type": "address"
       }
     ],
@@ -413,27 +208,18 @@
     "type": "function"
   },
   {
-    "constant": false,
-    "inputs": [
+    "constant": true,
+    "inputs": [],
+    "name": "proposal",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "delAddr",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
-    "name": "removeDelegation",
-    "outputs": [],
     "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "removeFromSets",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -446,18 +232,24 @@
     "type": "function"
   },
   {
-    "constant": false,
+    "constant": true,
     "inputs": [],
-    "name": "startValidator",
-    "outputs": [],
+    "name": "totalBonded",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "totalBonded",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
     "inputs": [],
-    "name": "totalBonded",
+    "name": "totalSlashedToken",
     "outputs": [
       {
         "internalType": "uint256",
@@ -476,7 +268,22 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "totalSupply",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "totalVoted",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -506,42 +313,12 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "treasuryAddress",
+        "name": "",
         "type": "address"
       }
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "undelegate",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "signerAddr",
-        "type": "address"
-      }
-    ],
-    "name": "updateSigner",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -557,7 +334,7 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "valSmcAddr",
+        "name": "",
         "type": "address"
       }
     ],
@@ -587,6 +364,133 @@
     "type": "function"
   },
   {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "vote",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "name",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxRate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxChangeRate",
+        "type": "uint256"
+      }
+    ],
+    "name": "createValidator",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "val",
+        "type": "address"
+      }
+    ],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_params",
+        "type": "address"
+      }
+    ],
+    "name": "setParams",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "signerAddr",
+        "type": "address"
+      }
+    ],
+    "name": "updateSigner",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "allValsLength",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_signers",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_votingPower",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "bool[]",
+        "name": "_signed",
+        "type": "bool[]"
+      }
+    ],
+    "name": "finalize",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "constant": false,
     "inputs": [
       {
@@ -607,18 +511,379 @@
     "type": "function"
   },
   {
-    "constant": true,
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "delegate",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "undelegate",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "delAddr",
+        "type": "address"
+      }
+    ],
+    "name": "removeDelegation",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "delAddr",
+        "type": "address"
+      }
+    ],
+    "name": "addDelegation",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "reason",
+        "type": "uint256"
+      }
+    ],
+    "name": "burn",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "signerAddr",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "votingPower",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "distributionHeight",
+        "type": "uint256"
+      }
+    ],
+    "name": "doubleSign",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
     "inputs": [],
-    "name": "totalSlashedToken",
+    "name": "mint",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "totalSlashedToken",
+        "name": "",
         "type": "uint256"
       }
     ],
     "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "delAddr",
+        "type": "address"
+      }
+    ],
+    "name": "getValidatorsByDelegator",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "payable": false,
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "startValidator",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "removeFromSets",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getValidatorSets",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "validatorAddresses",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "validatorPowers",
+        "type": "uint256[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getAllValidator",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_maxValidators",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMaxProposers",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_maxValidators",
+        "type": "uint256"
+      }
+    ],
+    "name": "proposalMaxProposers",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "setProposalFail",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "addVote",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "sumVotingPowerProposer",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "previousProposer",
+        "type": "address"
+      }
+    ],
+    "name": "setPreviousProposer",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_inflationRateChange",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_goalBonded",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_blocksPerYear",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_inflationMax",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_inflationMin",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMintParams",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_downtimeJailDuration",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_slashFractionDowntime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_unbondingTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_slashFractionDoubleSign",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_signedBlockWindow",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minSignedPerWindow",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minStake",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minValidatorStake",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minAmountChangeName",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minSelfDelegation",
+        "type": "uint256"
+      }
+    ],
+    "name": "setValidatorParams",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "deposit",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
     "type": "function"
   }
 ]
