@@ -52,7 +52,7 @@
               </a>
               <div class="dropdown-menu" aria-labeledby="navbarTransactionsDropdown">
                 <%= link(
-                      gettext("All"),
+                      gettext("KRC"),
                       class: "dropdown-item #{tab_status("tokens", @conn.request_path)}",
                       to: tokens_path(@conn, :index)
                     ) %>
@@ -84,7 +84,7 @@
               </a>
               <div class="dropdown-menu" aria-labeledby="navbarTransactionsDropdown">
                 <%= link(
-                      gettext("All"),
+                      gettext("KRC"),
                       class: "dropdown-item #{tab_status("tokens", @conn.request_path)}",
                       to: tokens_path(@conn, :index)
                     ) %>

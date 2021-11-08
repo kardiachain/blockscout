@@ -19,8 +19,9 @@
       <div class="col-xs-12 col-md-4 col-lg-<%= col_size %> footer-list">
         <h3>References</h3>
         <ul>
-          <li><a href="https://github.com/kardiachain/kardiascan/issues" rel="noreferrer" class="footer-link"><%= gettext("Report bugs or contribute") %></a></li>
+          <li><a href="https://github.com/kardiachain/blockscout/issues" rel="noreferrer" class="footer-link"><%= gettext("Report bugs or contribute") %></a></li>
           <li><a href="https://t.me/kardiatechsupport" rel="noreferrer" class="footer-link"><%= gettext("Tech support") %></a></li>
+          <li>License by<a href="https://github.com/blockscout/blockscout/blob/master/LICENSE">&nbsp;BlockScout</a></li>
         </ul>
       </div>
 
