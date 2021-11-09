@@ -20,8 +20,8 @@ defmodule Indexer.Fetcher.InternalTransaction do
 
   @behaviour BufferedTask
 
-  @max_batch_size 20
-  @max_concurrency 5
+  @max_batch_size 1
+  @max_concurrency 1
   @defaults [
     flush_interval: :timer.seconds(3),
     max_concurrency: @max_concurrency,
@@ -179,10 +179,7 @@ defmodule Indexer.Fetcher.InternalTransaction do
   end
 
   defp fetch_block_internal_transactions_by_transactions(unique_numbers, json_rpc_named_arguments) do
-    Logger.info("List unique_numbers")
-    unique_numbers
-    |> inspect()
-    |> Logger.info()
+    Logger.info("List unique_numbers: #{inspect(unique_numbers)}}")
     Enum.reduce(
       unique_numbers,
       {:ok, []},
@@ -229,8 +226,10 @@ defmodule Indexer.Fetcher.InternalTransaction do
          block_number,
          acc
        ) do
-    Logger.debug(
-      "Found #{Enum.count(internal_transactions)} internal tx for block #{block_number} had txs: #{num} used gas #{used_gas}"
+    Logger.info(
+      "Found #{Enum.count(internal_transactions)} internal tx for block #{block_number} had txs: #{num} used gas #{
+        used_gas
+      }"
     )
 
     # Check for empty block
@@ -238,7 +237,7 @@ defmodule Indexer.Fetcher.InternalTransaction do
       {:ok, add_block_hash(block_hash, internal_transactions) ++ acc}
     else
       Logger.error("Block #{block_number} not indexed properly")
-      {:ok, :acc}
+      {:error, :block_not_indexed_properly}
     end
   end
 

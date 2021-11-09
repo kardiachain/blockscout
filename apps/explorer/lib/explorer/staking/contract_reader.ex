@@ -7,8 +7,31 @@ defmodule Explorer.Staking.ContractReader do
 
   def global_requests(block_number) do
     [
+      # Load from staking
+      # "8c3ce260" = keccak256(allValsLength())
+      total_validator: {:staking, "8c3ce260", [], block_number},
       #"5e5a3cb6" = keccak256(getValidatorSets())
-      validators_set: {:staking, "5e5a3cb6", [], block_number}
+      proposers: {:staking, "5e5a3cb6", [], block_number},
+      #"4a91a2f8" = keccak256(getAllValidator())
+      validators: {:staking, "4a91a2f8", [], block_number},
+
+      # Load from validator
+      # 0dc9da02 = keccak256(inforValidator())
+      #validator_set_info: {:validator_set, "0dc9da02", [], block_number},
+
+      # Load from params
+      # 56a3b5fa = keccak256(getMinStake())
+      min_stake: {:params, "56a3b5fa", [], block_number},
+      # d7c1bf59 = keccak256(getMinValidatorStake())
+      min_validator_stake: {:params, "d7c1bf59", [], block_number},
+      # 65062c5c = keccak256(getMinSelfDelegation())
+      min_self_delegate: {:params, "65062c5c", [], block_number},
+      # 3f1f5e7f = keccak256(getUnbondingTime())
+      unbonding_time: {:params, "3f1f5e7f", [], block_number},
+      # b0c9569a = keccak256(getMaxProposers())
+      max_proposer: {:params, "b0c9569a", [], block_number},
+
+
       #      # 673a2a1f = keccak256(getPools())
       #      active_pools: {:staking, "673a2a1f", [], block_number},
       #      # 8c2243ae = keccak256(stakingEpochEndBlock())
@@ -79,9 +102,9 @@ defmodule Explorer.Staking.ContractReader do
 
     data =
       function_signature <>
-        reward_to_distribute <>
-        "00000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000" <>
-        staking_epoch <> "0000000000000000000000000000000000000000000000000000000000000000"
+      reward_to_distribute <>
+      "00000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000" <>
+      staking_epoch <> "0000000000000000000000000000000000000000000000000000000000000000"
 
     request = %{
       id: 0,
@@ -193,11 +216,13 @@ defmodule Explorer.Staking.ContractReader do
       ) do
     staking_epochs_joint =
       staking_epochs
-      |> Enum.map(fn epoch ->
-        epoch
-        |> Integer.to_string(16)
-        |> String.pad_leading(64, ["0"])
-      end)
+      |> Enum.map(
+           fn epoch ->
+             epoch
+             |> Integer.to_string(16)
+             |> String.pad_leading(64, ["0"])
+           end
+         )
       |> Enum.join("")
 
     pool_staking_address = address_pad_to_64(pool_staking_address)
@@ -270,11 +295,13 @@ defmodule Explorer.Staking.ContractReader do
       ) do
     staking_epochs_joint =
       staking_epochs
-      |> Enum.map(fn epoch ->
-        epoch
-        |> Integer.to_string(16)
-        |> String.pad_leading(64, ["0"])
-      end)
+      |> Enum.map(
+           fn epoch ->
+             epoch
+             |> Integer.to_string(16)
+             |> String.pad_leading(64, ["0"])
+           end
+         )
       |> Enum.join("")
 
     pool_staking_address = address_pad_to_64(pool_staking_address)
@@ -483,6 +510,15 @@ defmodule Explorer.Staking.ContractReader do
     ]
   end
 
+  # todo @lond
+  def validator_info(validator_smc_address) do
+
+    [
+      # "0dc9da02" = keccak256(inforValidator())
+      validator_info: {:validator, "0dc9da02", []}
+    ]
+  end
+
   def validator_min_reward_percent_request(epoch_number, block_number) do
     [
       # cdf7a090 = keccak256(validatorMinRewardPercent(uint256))
@@ -548,33 +584,39 @@ defmodule Explorer.Staking.ContractReader do
   end
 
   defp generate_requests(functions, contracts) do
-    Enum.map(functions, fn
-      {_, {contract, method_id, args}} ->
-        %{
-          contract_address: contracts[contract],
-          method_id: method_id,
-          args: args
-        }
+    Enum.map(
+      functions,
+      fn
+        {_, {contract, method_id, args}} ->
+          %{
+            contract_address: contracts[contract],
+            method_id: method_id,
+            args: args
+          }
 
-      {_, {contract, method_id, args, block_number}} ->
-        %{
-          contract_address: contracts[contract],
-          method_id: method_id,
-          args: args,
-          block_number: block_number
-        }
-    end)
+        {_, {contract, method_id, args, block_number}} ->
+          %{
+            contract_address: contracts[contract],
+            method_id: method_id,
+            args: args,
+            block_number: block_number
+          }
+      end
+    )
   end
 
   defp parse_responses(responses, requests) do
     requests
     |> Enum.zip(responses)
-    |> Enum.into(%{}, fn {{key, _}, {:ok, response}} ->
-      case response do
-        [item] -> {key, item}
-        items -> {key, items}
-      end
-    end)
+    |> Enum.into(
+         %{},
+         fn {{key, _}, {:ok, response}} ->
+           case response do
+             [item] -> {key, item}
+             items -> {key, items}
+           end
+         end
+       )
   end
 
   defp parse_grouped_responses(responses, keys, grouped_requests) do
@@ -582,8 +624,11 @@ defmodule Explorer.Staking.ContractReader do
 
     [keys, grouped_requests, grouped_responses]
     |> Enum.zip()
-    |> Enum.into(%{}, fn {key, requests, responses} ->
-      {key, parse_responses(responses, requests)}
-    end)
+    |> Enum.into(
+         %{},
+         fn {key, requests, responses} ->
+           {key, parse_responses(responses, requests)}
+         end
+       )
   end
 end
