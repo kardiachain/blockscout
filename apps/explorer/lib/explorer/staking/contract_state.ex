@@ -423,19 +423,18 @@ defmodule Explorer.Staking.ContractState do
         abi,
         block_number
       )
-
-    # miningAddressToId mapping
-
-    mining_address_to_id = get_mining_address_to_id(validators.all, contracts, abi, block_number)
-
-    # the list of all pools (validators + active pools + inactive pools)
-    # (pool IDs)
-    pools =
-      Enum.uniq(
-        Map.values(mining_address_to_id) ++
-        global_responses.active_pools ++
-        global_responses.inactive_pools
-      )
+#
+#    # miningAddressToId mapping
+#    mining_address_to_id = get_validator_by_contract_addresses(validators.all, contracts, abi, block_number)
+#
+#    # the list of all pools (validators + active pools + inactive pools)
+#    # (pool IDs)
+#    pools =
+#      Enum.uniq(
+#        Map.values(mining_address_to_id) ++
+#        global_responses.active_pools ++
+#        global_responses.inactive_pools
+#      )
 
     # read pool info from the contracts by its staking address
     pool_staking_responses = get_pool_staking_responses(pools, block_number, contracts, abi)
@@ -912,8 +911,7 @@ defmodule Explorer.Staking.ContractState do
       fn {{_pool_id, pool_address, delegator_address, is_active} = key, response} ->
         delegator_share =
           if Map.has_key?(delegator_reward_responses, key) do
-            delegator_reward_responses[key].delegator_share
-          else
+            delegator_reward_responses[key].delegator_shareelse
             0
           end
 
@@ -947,6 +945,28 @@ defmodule Explorer.Staking.ContractState do
                &ContractReader.pool_mining_requests(pool_staking_responses[&1].mining_address_hash, block_number)
              )
           |> ContractReader.perform_grouped_requests(pools_slice, contracts, abi)
+
+        Map.merge(acc, responses)
+      end
+    )
+  end
+
+
+  defp get_validator_info(contract_addresses, contracts, abi, block_number) do
+    # we split batch requests by chunks
+    chunk_size = 20
+    chunks = 0..trunc(ceil(Enum.count(pools) / chunk_size) - 1)
+
+    Enum.reduce(
+      chunks,
+      %{},
+      fn i, acc ->
+        contract_addresses_slice = Enum.slice(contract_addresses, i * chunk_size, chunk_size)
+
+        responses =
+          contract_addresses_slice
+          |> Enum.map(&ContractReader.pool_staking_requests(&1, block_number))
+          |> ContractReader.perform_grouped_requests(contract_addresses_slice, contracts, abi)
 
         Map.merge(acc, responses)
       end
