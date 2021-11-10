@@ -357,7 +357,6 @@ defmodule Explorer.Staking.ContractState do
       true
     else
       change_validator_address_events =
-
         change_pool_address_events = []
       #      change_pool_address_events =
       #        if last_change_block > get(:last_change_block) do
@@ -412,9 +411,10 @@ defmodule Explorer.Staking.ContractState do
          abi,
          block_number
        ) do
+    Logger.info("Update staking details into database")
     is_validator = Enum.into(global_responses.validators, %{}, &{address_bytes_to_string(&1), true})
 
-    # form the list of validator pools
+    # form the list of validators
     validators =
       get_validators(
         start_snapshotting,
@@ -425,6 +425,7 @@ defmodule Explorer.Staking.ContractState do
       )
 
     # miningAddressToId mapping
+
     mining_address_to_id = get_mining_address_to_id(validators.all, contracts, abi, block_number)
 
     # the list of all pools (validators + active pools + inactive pools)
@@ -539,142 +540,142 @@ defmodule Explorer.Staking.ContractState do
     end
   end
 
-
-  defp update_database(
-         epoch_very_beginning,
-         start_snapshotting,
-         global_responses,
-         contracts,
-         abi,
-         block_number
-       ) do
-    Logger.info("Update staking details into database")
-    is_validator = Enum.into(global_responses.validators, %{}, &{address_bytes_to_string(&1), true})
-
-    # form the list of validator pools
-    validators =
-      get_validators(
-        start_snapshotting,
-        global_responses,
-        contracts,
-        abi,
-        block_number
-      )
-
-    # miningAddressToId mapping
-    mining_address_to_id = get_mining_address_to_id(validators.all, contracts, abi, block_number)
-
-    # the list of all pools (validators + active pools + inactive pools)
-    # (pool IDs)
-    pools =
-      Enum.uniq(
-        Map.values(mining_address_to_id) ++
-        global_responses.active_pools ++
-        global_responses.inactive_pools
-      )
-
-    # read pool info from the contracts by its staking address
-    pool_staking_responses = get_pool_staking_responses(pools, block_number, contracts, abi)
-
-    # read pool info from the contracts by its mining address
-    pool_mining_responses = get_pool_mining_responses(pools, pool_staking_responses, block_number, contracts, abi)
-
-    # read info of each staker from the contracts
-    staker_responses = get_staker_responses(pool_staking_responses, block_number, contracts, abi)
-
-    # call `BlockReward.validatorShare` function for each pool
-    # to get validator's reward share of the pool (needed for the `Delegators` list in UI)
-    candidate_reward_responses =
-      get_candidate_reward_responses(
-        pool_staking_responses,
-        global_responses,
-        contracts,
-        abi,
-        block_number
-      )
-
-    # call `BlockReward.delegatorShare` function for each delegator
-    # to get their reward share of the pool (needed for the `Delegators` list in UI)
-    delegator_reward_responses =
-      staker_responses
-      |> get_delegator_responses()
-      |> get_delegator_reward_responses(
-           pool_staking_responses,
-           global_responses,
-           contracts,
-           abi,
-           block_number
-         )
-
-    # calculate likelihood of becoming a validator on the next epoch
-    [likelihood_values, total_likelihood] = global_responses.pools_likelihood
-    # array of pool ids
-    likelihood =
-      global_responses.pools_to_be_elected
-      |> Enum.zip(likelihood_values)
-      |> Enum.into(%{})
-
-    snapshotted_epoch_number = get(:snapshotted_epoch_number)
-
-    # form entries for writing to the `staking_pools_delegators` table in DB
-    delegator_entries = get_delegator_entries(staker_responses, delegator_reward_responses)
-
-    # perform SQL queries
-    {:ok, _} =
-      Chain.import(
-        %{
-          staking_pools_delegators: %{
-            params: delegator_entries
-          },
-          timeout: :infinity
-        }
-      )
-
-    # form entries for writing to the `staking_pools` table in DB.
-    # !!! it's important to do this AFTER updating `staking_pools_delegators`
-    # !!! table because the `get_pool_entries` function requires fresh
-    # !!! info about delegators of validators from the `staking_pools_delegators` table
-    pool_entries =
-      get_pool_entries(
-        %{
-          pools: pools,
-          pool_mining_responses: pool_mining_responses,
-          pool_staking_responses: pool_staking_responses,
-          is_validator: is_validator,
-          candidate_reward_responses: candidate_reward_responses,
-          global_responses: global_responses,
-          snapshotted_epoch_number: snapshotted_epoch_number,
-          likelihood: likelihood,
-          total_likelihood: total_likelihood
-        }
-      )
-
-    # perform SQL queries
-    {:ok, _} =
-      Chain.import(
-        %{
-          staking_pools: %{
-            params: pool_entries
-          },
-          timeout: :infinity
-        }
-      )
-
-    if start_snapshotting do
-      mining_to_staking_address = get_mining_to_staking_address(validators.for_snapshot, contracts, abi, block_number)
-
-      do_start_snapshotting(
-        epoch_very_beginning,
-        pool_staking_responses,
-        global_responses,
-        contracts,
-        abi,
-        validators.for_snapshot,
-        mining_to_staking_address,
-        mining_address_to_id
-      )
-    end
-  end
+#
+#  defp update_database(
+#         epoch_very_beginning,
+#         start_snapshotting,
+#         global_responses,
+#         contracts,
+#         abi,
+#         block_number
+#       ) do
+#    Logger.info("Update staking details into database")
+#    is_validator = Enum.into(global_responses.validators, %{}, &{address_bytes_to_string(&1), true})
+#
+#    # form the list of validator pools
+#    validators =
+#      get_validators(
+#        start_snapshotting,
+#        global_responses,
+#        contracts,
+#        abi,
+#        block_number
+#      )
+#
+#    # miningAddressToId mapping
+#    mining_address_to_id = get_mining_address_to_id(validators.all, contracts, abi, block_number)
+#
+#    # the list of all pools (validators + active pools + inactive pools)
+#    # (pool IDs)
+#    pools =
+#      Enum.uniq(
+#        Map.values(mining_address_to_id) ++
+#        global_responses.active_pools ++
+#        global_responses.inactive_pools
+#      )
+#
+#    # read pool info from the contracts by its staking address
+#    pool_staking_responses = get_pool_staking_responses(pools, block_number, contracts, abi)
+#
+#    # read pool info from the contracts by its mining address
+#    pool_mining_responses = get_pool_mining_responses(pools, pool_staking_responses, block_number, contracts, abi)
+#
+#    # read info of each staker from the contracts
+#    staker_responses = get_staker_responses(pool_staking_responses, block_number, contracts, abi)
+#
+#    # call `BlockReward.validatorShare` function for each pool
+#    # to get validator's reward share of the pool (needed for the `Delegators` list in UI)
+#    candidate_reward_responses =
+#      get_candidate_reward_responses(
+#        pool_staking_responses,
+#        global_responses,
+#        contracts,
+#        abi,
+#        block_number
+#      )
+#
+#    # call `BlockReward.delegatorShare` function for each delegator
+#    # to get their reward share of the pool (needed for the `Delegators` list in UI)
+#    delegator_reward_responses =
+#      staker_responses
+#      |> get_delegator_responses()
+#      |> get_delegator_reward_responses(
+#           pool_staking_responses,
+#           global_responses,
+#           contracts,
+#           abi,
+#           block_number
+#         )
+#
+#    # calculate likelihood of becoming a validator on the next epoch
+#    [likelihood_values, total_likelihood] = global_responses.pools_likelihood
+#    # array of pool ids
+#    likelihood =
+#      global_responses.pools_to_be_elected
+#      |> Enum.zip(likelihood_values)
+#      |> Enum.into(%{})
+#
+#    snapshotted_epoch_number = get(:snapshotted_epoch_number)
+#
+#    # form entries for writing to the `staking_pools_delegators` table in DB
+#    delegator_entries = get_delegator_entries(staker_responses, delegator_reward_responses)
+#
+#    # perform SQL queries
+#    {:ok, _} =
+#      Chain.import(
+#        %{
+#          staking_pools_delegators: %{
+#            params: delegator_entries
+#          },
+#          timeout: :infinity
+#        }
+#      )
+#
+#    # form entries for writing to the `staking_pools` table in DB.
+#    # !!! it's important to do this AFTER updating `staking_pools_delegators`
+#    # !!! table because the `get_pool_entries` function requires fresh
+#    # !!! info about delegators of validators from the `staking_pools_delegators` table
+#    pool_entries =
+#      get_pool_entries(
+#        %{
+#          pools: pools,
+#          pool_mining_responses: pool_mining_responses,
+#          pool_staking_responses: pool_staking_responses,
+#          is_validator: is_validator,
+#          candidate_reward_responses: candidate_reward_responses,
+#          global_responses: global_responses,
+#          snapshotted_epoch_number: snapshotted_epoch_number,
+#          likelihood: likelihood,
+#          total_likelihood: total_likelihood
+#        }
+#      )
+#
+#    # perform SQL queries
+#    {:ok, _} =
+#      Chain.import(
+#        %{
+#          staking_pools: %{
+#            params: pool_entries
+#          },
+#          timeout: :infinity
+#        }
+#      )
+#
+#    if start_snapshotting do
+#      mining_to_staking_address = get_mining_to_staking_address(validators.for_snapshot, contracts, abi, block_number)
+#
+#      do_start_snapshotting(
+#        epoch_very_beginning,
+#        pool_staking_responses,
+#        global_responses,
+#        contracts,
+#        abi,
+#        validators.for_snapshot,
+#        mining_to_staking_address,
+#        mining_address_to_id
+#      )
+#    end
+#  end
 
   defp get_current_block_number do
     json_rpc_named_arguments = Application.get_env(:explorer, :json_rpc_named_arguments)
@@ -696,26 +697,28 @@ defmodule Explorer.Staking.ContractState do
   end
 
   defp get_settings(global_responses, state, block_number) do
-    validator_min_reward_percent =
-      get_validator_min_reward_percent(
-        global_responses.epoch_number,
-        block_number,
-        state.contracts,
-        state.abi
-      )
+#    validator_min_reward_percent =
+#      get_validator_min_reward_percent(
+#        global_responses.epoch_number,
+#        block_number,
+#        state.contracts,
+#        state.abi
+#      )
+#
+    # return base setting
+    get_base_settings(global_responses)
+#
+#    update_token =
+#      get(:token) == nil or
+#      get(:token_contract).address != global_responses.token_contract_address or
+#      rem(block_number, @token_renew_frequency) == 0
+#
+#    if update_token do
+#      Enum.concat(base_settings, token: get_token(global_responses.token_contract_address))
+#    else
+#      base_settings
+#    end
 
-    base_settings = get_base_settings(global_responses, validator_min_reward_percent)
-
-    update_token =
-      get(:token) == nil or
-      get(:token_contract).address != global_responses.token_contract_address or
-      rem(block_number, @token_renew_frequency) == 0
-
-    if update_token do
-      Enum.concat(base_settings, token: get_token(global_responses.token_contract_address))
-    else
-      base_settings
-    end
   end
 
   defp set_settings(global_responses, state, block_number) do
@@ -764,19 +767,35 @@ defmodule Explorer.Staking.ContractState do
     :ets.insert(@table_name, settings)
   end
 
-  defp get_mining_address_to_id(mining_addresses, contracts, abi, block_number) do
-    mining_addresses
-    |> Enum.map(&ContractReader.id_by_mining_request(&1, block_number))
-    |> ContractReader.perform_grouped_requests(mining_addresses, contracts, abi)
-    |> Map.new(fn {mining_address, resp} -> {mining_address, resp.pool_id} end)
+  # kardia staking
+  defp get_validator_by_contract_addresses(contract_addresses, contracts, abi, block_number) do
+    contract_addresses
+    |> Enum.map(&ContractReader.validator_address_by_contract(&1, block_number))
+    |> ContractReader.perform_grouped_requests(contract_addresses, contracts, abi)
+    |> Map.new(fn {contract_address, resp} -> {contract_address, resp.validator_address} end)
   end
 
-  defp get_mining_to_staking_address(mining_addresses, contracts, abi, block_number) do
-    mining_addresses
-    |> Enum.map(&ContractReader.staking_by_mining_request(&1, block_number))
-    |> ContractReader.perform_grouped_requests(mining_addresses, contracts, abi)
-    |> Map.new(fn {mining_address, resp} -> {mining_address, address_string_to_bytes(resp.staking_address).bytes} end)
+  # kardia staking
+  defp get_contracts_by_validator_addresses(validator_addresses, contracts, abi, block_number) do
+    validator_addresses
+    |> Enum.map(&ContractReader.contract_address_by_validator(&1, block_number))
+    |> ContractReader.perform_grouped_requests(validator_addresses, contracts, abi)
+    |> Map.new(fn {validator_address, resp} -> {validator_address, resp.contract_address} end)
   end
+#
+#  defp get_mining_address_to_id(mining_addresses, contracts, abi, block_number) do
+#    mining_addresses
+#    |> Enum.map(&ContractReader.id_by_mining_request(&1, block_number))
+#    |> ContractReader.perform_grouped_requests(mining_addresses, contracts, abi)
+#    |> Map.new(fn {mining_address, resp} -> {mining_address, resp.pool_id} end)
+#  end
+#
+#  defp get_mining_to_staking_address(mining_addresses, contracts, abi, block_number) do
+#    mining_addresses
+#    |> Enum.map(&ContractReader.staking_by_mining_request(&1, block_number))
+#    |> ContractReader.perform_grouped_requests(mining_addresses, contracts, abi)
+#    |> Map.new(fn {mining_address, resp} -> {mining_address, address_string_to_bytes(resp.staking_address).bytes} end)
+#  end
 
   defp get_candidate_reward_responses(
          pool_staking_responses,
@@ -1005,23 +1024,52 @@ defmodule Explorer.Staking.ContractState do
     ).value
   end
 
+  defp get_base_settings(global_responses) do
+    global_responses
+    |> Map.take(
+         [
+           #           :token_contract_address,
+           #           :max_candidates,
+           #           :min_candidate_stake,
+           #           :min_delegator_stake,
+           #           :epoch_number,
+           #           :epoch_start_block,
+           #           :epoch_end_block,
+           #           :staking_allowed,
+           #           :validator_set_apply_block
+           :min_stake,
+           :min_validator_stake,
+           :min_self_delegate,
+           :unbonding_time,
+           :max_proposer
+         ]
+       )
+    |> Map.to_list()
+    #|> Enum.concat(validator_min_reward_percent: validator_min_reward_percent)
+  end
+
   defp get_base_settings(global_responses, validator_min_reward_percent) do
     global_responses
     |> Map.take(
          [
-           :token_contract_address,
-           :max_candidates,
-           :min_candidate_stake,
-           :min_delegator_stake,
-           :epoch_number,
-           :epoch_start_block,
-           :epoch_end_block,
-           :staking_allowed,
-           :validator_set_apply_block
+#           :token_contract_address,
+#           :max_candidates,
+#           :min_candidate_stake,
+#           :min_delegator_stake,
+#           :epoch_number,
+#           :epoch_start_block,
+#           :epoch_end_block,
+#           :staking_allowed,
+#           :validator_set_apply_block
+           :min_stake,
+           :min_validator_stake,
+           :min_self_delegate,
+           :unbonding_time,
+           :max_proposer
          ]
        )
     |> Map.to_list()
-    |> Enum.concat(validator_min_reward_percent: validator_min_reward_percent)
+    #|> Enum.concat(validator_min_reward_percent: validator_min_reward_percent)
   end
 
   defp get_validators(
@@ -1034,41 +1082,43 @@ defmodule Explorer.Staking.ContractState do
     Logger.info("Get validators with start_snapshotting #{start_snapshotting}")
 
     #todo @lond
-    if start_snapshotting do
-      # If total_validator had some change, then reload list validator address
-
-      # eebc7a39 = keccak256(getPendingValidators())
-      # 004a8803 = keccak256(validatorsToBeFinalized())
-      if global_responses.validator_set_apply_block == 0 do
-        %{
-          "eebc7a39" => {:ok, [validators_pending]},
-          "004a8803" => {:ok, [validators_to_be_finalized]}
-        } =
-          Reader.query_contract_by_block_number(
-            contracts.validator_set,
-            abi,
-            %{
-              "eebc7a39" => [],
-              "004a8803" => []
-            },
-            block_number
-          )
-
-        validators_pending = Enum.uniq(validators_pending ++ validators_to_be_finalized)
-
-        %{
-          all: Enum.uniq(global_responses.validators ++ validators_pending),
-          for_snapshot: validators_pending
-        }
-      else
-        %{
-          all: global_responses.validators,
-          for_snapshot: global_responses.validators
-        }
-      end
-    else
-      %{all: global_responses.validators}
-    end
+#    if start_snapshotting do
+#      # If total_validator had some change, then reload list validator address
+#
+#      # eebc7a39 = keccak256(getPendingValidators())
+#      # 004a8803 = keccak256(validatorsToBeFinalized())
+#      if global_responses.validator_set_apply_block == 0 do
+#        %{
+#          "eebc7a39" => {:ok, [validators_pending]},
+#          "004a8803" => {:ok, [validators_to_be_finalized]}
+#        } =
+#          Reader.query_contract_by_block_number(
+#            contracts.validator_set,
+#            abi,
+#            %{
+#              "eebc7a39" => [],
+#              "004a8803" => []
+#            },
+#            block_number
+#          )
+#
+#        validators_pending = Enum.uniq(validators_pending ++ validators_to_be_finalized)
+#
+#        %{
+#          all: Enum.uniq(global_responses.validators ++ validators_pending),
+#          for_snapshot: validators_pending
+#        }
+#      else
+#        %{
+#          all: global_responses.validators,
+#          for_snapshot: global_responses.validators
+#        }
+#      end
+#    else
+#      %{all: global_responses.validators}
+#    end
+    # lond: return list from global response
+    %{all: global_responses.validators}
   end
 
   def show_snapshotted_data(

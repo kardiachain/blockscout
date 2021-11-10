@@ -489,6 +489,20 @@ defmodule Explorer.Staking.ContractReader do
     ]
   end
 
+  def contract_address_by_validator(validator_address, block_number) do
+    [
+      # "" = keccak256()
+      contract_address: {:validator, "", [validator_address], block_number}
+    ]
+  end
+
+  def validator_address_by_contract(contract_address, block_number) do
+    [
+      # "" = keccak256()
+      validator_address: {:validator, "", [contract_address], block_number}
+    ]
+  end
+
   def id_by_mining_request(mining_address, block_number) do
     [
       # 2bbb7b72 = keccak256(idByMiningAddress(address))
@@ -548,6 +562,8 @@ defmodule Explorer.Staking.ContractReader do
     |> Reader.query_contracts(abi)
     |> parse_grouped_responses(keys, requests)
   end
+
+
 
   def get_contract_events(contract_address, from_block, to_block, event_hash) do
     json_rpc_named_arguments = Application.get_env(:explorer, :json_rpc_named_arguments)
