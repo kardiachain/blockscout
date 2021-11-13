@@ -3,6 +3,8 @@ defmodule Explorer.Staking.ContractReader do
   Routines for batched fetching of information from POSDAO contracts.
   """
 
+  require Logger
+
   alias Explorer.SmartContract.Reader
 
   def global_requests(block_number) do
@@ -15,10 +17,6 @@ defmodule Explorer.Staking.ContractReader do
       #"4a91a2f8" = keccak256(getAllValidator()) # should return all validator contracts
       validators: {:staking, "4a91a2f8", [], block_number},
 
-      # Load from validator
-      # 0dc9da02 = keccak256(inforValidator())
-      #validator_set_info: {:validator_set, "0dc9da02", [], block_number},
-
       # Load from params
       # 56a3b5fa = keccak256(getMinStake())
       min_stake: {:params, "56a3b5fa", [], block_number},
@@ -29,45 +27,7 @@ defmodule Explorer.Staking.ContractReader do
       # 3f1f5e7f = keccak256(getUnbondingTime())
       unbonding_time: {:params, "3f1f5e7f", [], block_number},
       # b0c9569a = keccak256(getMaxProposers())
-      max_proposer: {:params, "b0c9569a", [], block_number},
-
-
-      #      # 673a2a1f = keccak256(getPools())
-      #      active_pools: {:staking, "673a2a1f", [], block_number},
-      #      # 8c2243ae = keccak256(stakingEpochEndBlock())
-      #      epoch_end_block: {:staking, "8c2243ae", [], block_number},
-      #      # 794c0c68 = keccak256(stakingEpoch())
-      #      epoch_number: {:staking, "794c0c68", [], block_number},
-      #      # 7069e746 = keccak256(stakingEpochStartBlock())
-      #      epoch_start_block: {:staking, "7069e746", [], block_number},
-      #      # df6f55f5 = keccak256(getPoolsInactive())
-      #      inactive_pools: {:staking, "df6f55f5", [], block_number},
-      #      # f0786096 = keccak256(MAX_CANDIDATES())
-      #      max_candidates: {:staking, "f0786096", [], block_number},
-      #      # 714897df = keccak256(MAX_VALIDATORS())
-      #      max_validators: {:validator_set, "714897df", [], block_number},
-      #      # 5fef7643 = keccak256(candidateMinStake())
-      #      min_candidate_stake: {:staking, "5fef7643", [], block_number},
-      #      # da7a9b6a = keccak256(delegatorMinStake())
-      #      min_delegator_stake: {:staking, "da7a9b6a", [], block_number},
-      #      # 957950a7 = keccak256(getPoolsLikelihood())
-      #      pools_likelihood: {:staking, "957950a7", [], block_number},
-      #      # a5d54f65 = keccak256(getPoolsToBeElected())
-      #      pools_to_be_elected: {:staking, "a5d54f65", [], block_number},
-      #      # f4942501 = keccak256(areStakeAndWithdrawAllowed())
-      #      staking_allowed: {:staking, "f4942501", [], block_number},
-      #      # 74bdb372 = keccak256(lastChangeBlock())
-      #      staking_last_change_block: {:staking, "74bdb372", [], block_number},
-      #      # 2d21d217 = keccak256(erc677TokenContract())
-      #      token_contract_address: {:staking, "2d21d217", [], block_number},
-      #      # 704189ca = keccak256(unremovableValidator())
-      #      unremovable_validator: {:validator_set, "704189ca", [], block_number},
-      #      # b7ab4db5 = keccak256(getValidators())
-      #      validators: {:validator_set, "b7ab4db5", [], block_number},
-      #      # b927ef43 = keccak256(validatorSetApplyBlock())
-      #      validator_set_apply_block: {:validator_set, "b927ef43", [], block_number},
-      #      # 74bdb372 = keccak256(lastChangeBlock())
-      #      validator_set_last_change_block: {:validator_set, "74bdb372", [], block_number}
+      max_proposer: {:params, "b0c9569a", [], block_number}
     ]
   end
 
@@ -406,47 +366,48 @@ defmodule Explorer.Staking.ContractReader do
     ]
   end
 
+
   def validator_info_request(contract_address, block_number) do
     [
-      #
-      active_delegators: active_delegators_request(pool_id, block_number)[:active_delegators],
-      # 378bf28b = keccak256(poolDescription(uint256))
-      description: {:validator_set, "378bf28b", [pool_id], block_number},
-      # a1fc2753 = keccak256(poolDelegatorsInactive(uint256))
-      inactive_delegators: {:staking, "a1fc2753", [pool_id], block_number},
-      # bbbaf8c8 = keccak256(isPoolActive(uint256))
-      is_active: {:staking, "bbbaf8c8", [pool_id], block_number},
-      mining_address_hash: mining_by_id_request(pool_id, block_number)[:mining_address],
-      name: pool_name_request(pool_id, block_number)[:name],
-      staking_address_hash: staking_by_id_request(pool_id, block_number)[:staking_address],
-      # 3fb1a1e4 = keccak256(stakeAmount(uint256,address))
-      self_staked_amount: {:staking, "3fb1a1e4", [pool_id, "0x0000000000000000000000000000000000000000"], block_number},
-      # 2a8f6ecd = keccak256(stakeAmountTotal(uint256))
-      total_staked_amount: {:staking, "2a8f6ecd", [pool_id], block_number},
-      # 3bf47e96 = keccak256(validatorRewardPercent(uint256))
-      validator_reward_percent: {:block_reward, "3bf47e96", [pool_id], block_number}
+      #0dc9da02 = keccak256(inforValidator())
+      validator_info: {:validator, "0dc9da02", [], block_number}
+      #      # 378bf28b = keccak256(poolDescription(uint256))
+      #      description: {:validator_set, "378bf28b", [pool_id], block_number},
+      #      # a1fc2753 = keccak256(poolDelegatorsInactive(uint256))
+      #      inactive_delegators: {:staking, "a1fc2753", [pool_id], block_number},
+      #      # bbbaf8c8 = keccak256(isPoolActive(uint256))
+      #      is_active: {:staking, "bbbaf8c8", [pool_id], block_number},
+      #      mining_address_hash: mining_by_id_request(pool_id, block_number)[:mining_address],
+      #      name: pool_name_request(pool_id, block_number)[:name],
+      #      staking_address_hash: staking_by_id_request(pool_id, block_number)[:staking_address],
+      #      # 3fb1a1e4 = keccak256(stakeAmount(uint256,address))
+      #      self_staked_amount: {:staking, "3fb1a1e4", [pool_id, "0x0000000000000000000000000000000000000000"], block_number},
+      #      # 2a8f6ecd = keccak256(stakeAmountTotal(uint256))
+      #      total_staked_amount: {:staking, "2a8f6ecd", [pool_id], block_number},
+      #      # 3bf47e96 = keccak256(validatorRewardPercent(uint256))
+      #      validator_reward_percent: {:block_reward, "3bf47e96", [pool_id], block_number}
     ]
   end
 
 
   def pool_staking_requests(pool_id, block_number) do
     [
-      active_delegators: active_delegators_request(pool_id, block_number)[:active_delegators],
-      # 378bf28b = keccak256(poolDescription(uint256))
-      description: {:validator_set, "378bf28b", [pool_id], block_number},
-      # a1fc2753 = keccak256(poolDelegatorsInactive(uint256))
-      inactive_delegators: {:staking, "a1fc2753", [pool_id], block_number},
-      # bbbaf8c8 = keccak256(isPoolActive(uint256))
-      is_active: {:staking, "bbbaf8c8", [pool_id], block_number},
-      mining_address_hash: mining_by_id_request(pool_id, block_number)[:mining_address],
-      name: pool_name_request(pool_id, block_number)[:name],
-      staking_address_hash: staking_by_id_request(pool_id, block_number)[:staking_address],
-      # 3fb1a1e4 = keccak256(stakeAmount(uint256,address))
-      self_staked_amount: {:staking, "3fb1a1e4", [pool_id, "0x0000000000000000000000000000000000000000"], block_number},
-      # 2a8f6ecd = keccak256(stakeAmountTotal(uint256))
-      total_staked_amount: {:staking, "2a8f6ecd", [pool_id], block_number},
-      # 3bf47e96 = keccak256(validatorRewardPercent(uint256))
-      validator_reward_percent: {:block_reward, "3bf47e96", [pool_id], block_number}
+      #      active_delegators: active_delegators_request(pool_id, block_number)[:active_delegators],
+      #      # 378bf28b = keccak256(poolDescription(uint256))
+      #      description: {:validator_set, "378bf28b", [pool_id], block_number},
+      #      # a1fc2753 = keccak256(poolDelegatorsInactive(uint256))
+      #      inactive_delegators: {:staking, "a1fc2753", [pool_id], block_number},
+      #      # bbbaf8c8 = keccak256(isPoolActive(uint256))
+      #      is_active: {:staking, "bbbaf8c8", [pool_id], block_number},
+      #      mining_address_hash: mining_by_id_request(pool_id, block_number)[:mining_address],
+      #      name: pool_name_request(pool_id, block_number)[:name],
+      #      staking_address_hash: staking_by_id_request(pool_id, block_number)[:staking_address],
+      #      # 3fb1a1e4 = keccak256(stakeAmount(uint256,address))
+      #      self_staked_amount: {:staking, "3fb1a1e4", [pool_id, "0x0000000000000000000000000000000000000000"], block_number},
+      #      # 2a8f6ecd = keccak256(stakeAmountTotal(uint256))
+      #      total_staked_amount: {:staking, "2a8f6ecd", [pool_id], block_number},
+      #      # 3bf47e96 = keccak256(validatorRewardPercent(uint256))
+      #      validator_reward_percent: {:block_reward, "3bf47e96", [pool_id], block_number}
     ]
   end
 
@@ -513,6 +474,7 @@ defmodule Explorer.Staking.ContractReader do
   end
 
   def contract_address_by_validator(validator_address, block_number) do
+    Logger.info("Validator address #{validator_address}")
     [
       # "" = keccak256()
       contract_address: {:validator, "", [validator_address], block_number}
@@ -549,10 +511,9 @@ defmodule Explorer.Staking.ContractReader do
 
   # todo @lond
   def validator_info(validator_smc_address) do
-
     [
       # "0dc9da02" = keccak256(inforValidator())
-      validator_info: {:validator, "0dc9da02", []}
+      validator: {validator_smc_address, "0dc9da02", []}
     ]
   end
 
@@ -578,6 +539,14 @@ defmodule Explorer.Staking.ContractReader do
     |> parse_responses(requests)
   end
 
+  def perform_grouped_validator_requests(requests, keys, contracts, abi) do
+    requests
+    |> List.flatten()
+    |> generate_requests_with_contract_addr()
+    |> Reader.query_contracts(abi)
+    |> parse_grouped_responses(keys, requests)
+  end
+
   def perform_grouped_requests(requests, keys, contracts, abi) do
     requests
     |> List.flatten()
@@ -585,8 +554,6 @@ defmodule Explorer.Staking.ContractReader do
     |> Reader.query_contracts(abi)
     |> parse_grouped_responses(keys, requests)
   end
-
-
 
   def get_contract_events(contract_address, from_block, to_block, event_hash) do
     json_rpc_named_arguments = Application.get_env(:explorer, :json_rpc_named_arguments)
@@ -620,6 +587,29 @@ defmodule Explorer.Staking.ContractReader do
     address
     |> String.replace_leading("0x", "")
     |> String.pad_leading(64, ["0"])
+  end
+
+  # generate request with contract addr
+  defp generate_requests_with_contract_addr(functions) do
+    Enum.map(
+      functions,
+      fn
+        {_, {contract, method_id, args}} ->
+          %{
+            contract_address: contract,
+            method_id: method_id,
+            args: args
+          }
+
+        {_, {contract, method_id, args, block_number}} ->
+          %{
+            contract_address: contract,
+            method_id: method_id,
+            args: args,
+            block_number: block_number
+          }
+      end
+    )
   end
 
   defp generate_requests(functions, contracts) do
