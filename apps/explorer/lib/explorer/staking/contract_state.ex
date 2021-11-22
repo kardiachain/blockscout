@@ -419,6 +419,7 @@ defmodule Explorer.Staking.ContractState do
 
     # read validator information from contracts base on its address
     pool_staking_responses = get_validator_info_responses(global_responses.validators, block_number, contracts, abi)
+
 #
 #    # read pool info from the contracts by its mining address
 #    pool_mining_responses = get_pool_mining_responses(pools, pool_staking_responses, block_number, contracts, abi)

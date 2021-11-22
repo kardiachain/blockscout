@@ -370,7 +370,7 @@ defmodule Explorer.Staking.ContractReader do
   def validator_info_request(contract_address, block_number) do
     [
       #0dc9da02 = keccak256(inforValidator())
-      validator_info: {:validator, "0dc9da02", [], block_number}
+      validator: {contract_address, "0dc9da02", [], block_number}
       #      # 378bf28b = keccak256(poolDescription(uint256))
       #      description: {:validator_set, "378bf28b", [pool_id], block_number},
       #      # a1fc2753 = keccak256(poolDelegatorsInactive(uint256))
@@ -513,7 +513,7 @@ defmodule Explorer.Staking.ContractReader do
   def validator_info(validator_smc_address) do
     [
       # "0dc9da02" = keccak256(inforValidator())
-      validator: {validator_smc_address, "0dc9da02", []}
+      validators: {validator_smc_address, "0dc9da02", []}
     ]
   end
 
