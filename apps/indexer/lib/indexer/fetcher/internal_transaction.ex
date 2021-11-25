@@ -226,7 +226,7 @@ defmodule Indexer.Fetcher.InternalTransaction do
          block_number,
          acc
        ) do
-    Logger.debug(
+    Logger.info(
       "Found #{Enum.count(internal_transactions)} internal tx for block #{block_number} had txs: #{num} used gas #{used_gas}"
     )
 

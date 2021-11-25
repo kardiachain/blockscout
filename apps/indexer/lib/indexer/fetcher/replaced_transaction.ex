@@ -100,7 +100,7 @@ defmodule Indexer.Fetcher.ReplacedTransaction do
               tracer: Tracer
             )
   def run(entries, _) do
-    Logger.debug("fetching replaced transactions for transactions")
+    Logger.info("fetching replaced transactions for transactions")
 
     try do
       {pending, realtime} =
