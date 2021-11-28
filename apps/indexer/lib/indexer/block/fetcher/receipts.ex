@@ -35,22 +35,28 @@ defmodule Indexer.Block.Fetcher.Receipts do
     end
   end
 
+`  # ngdlong | Process duplicate tx if any
   def put(transactions_params, receipts_params) when is_list(transactions_params) and is_list(receipts_params) do
     transaction_hash_to_receipt_params =
       Enum.into(receipts_params, %{}, fn %{transaction_hash: transaction_hash} = receipt_params ->
         {transaction_hash, receipt_params}
       end)
 
-    Enum.map(transactions_params, fn %{hash: transaction_hash} = transaction_params ->
-      receipts_params = Map.fetch!(transaction_hash_to_receipt_params, transaction_hash)
-      merged_params = Map.merge(transaction_params, receipts_params)
+    final_txs_params =
+      Enum.map(transactions_params, fn %{hash: transaction_hash} = transaction_params ->
+        receipts_params = Map.fetch!(transaction_hash_to_receipt_params, transaction_hash)
+        merged_params = Map.merge(transaction_params, receipts_params)
 
-      if transaction_params[:created_contract_address_hash] && is_nil(receipts_params[:created_contract_address_hash]) do
-        Map.put(merged_params, :created_contract_address_hash, transaction_params[:created_contract_address_hash])
-      else
-        merged_params
-      end
-    end)
+        if transaction_params[:created_contract_address_hash] && is_nil(receipts_params[:created_contract_address_hash]) do
+          Map.put(merged_params, :created_contract_address_hash, transaction_params[:created_contract_address_hash])
+        else
+          merged_params
+        end
+      end)
+
+      Logger.info("Final txs params #{inspect(final_txs_params)}")
+    final_txs_params
+
   end
 
   defp set_block_number_to_logs(%{logs: logs} = params, transaction_params) do
