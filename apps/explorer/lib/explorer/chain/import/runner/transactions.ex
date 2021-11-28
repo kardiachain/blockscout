@@ -45,7 +45,7 @@ defmodule Explorer.Chain.Import.Runner.Transactions do
     # Enforce ShareLocks tables order (see docs: sharelocks.md)
     multi
     |> Multi.run(:recollated_transactions, fn repo, _ ->
-      discard_blocks_for_recollated_transactions(repo, changes_list, insert_options)
+      discard_blocks_for_failed_transactions(repo, changes_list, insert_options)
     end)
     |> Multi.run(:transactions, fn repo, _ ->
       insert(repo, changes_list, insert_options)
