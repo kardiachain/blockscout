@@ -292,7 +292,7 @@ defmodule Explorer.Chain.Import.Runner.Transactions do
         {_, result} =
           repo.update_all(
             from(b in Block, join: s in subquery(query), on: b.hash == s.hash),
-            [set: [num_txs: b.num_txs -1, updated_at: updated_at]], #if case total tx == 0, then update is_empty = true
+            [set: [num_txs: {b.num_txs -1}, updated_at: updated_at]], #if case total tx == 0, then update is_empty = true
             timeout: timeout
           )
 
