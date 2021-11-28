@@ -238,16 +238,34 @@ defmodule Explorer.Chain.Import.Runner.Transactions do
           ),
         on: transaction.hash == new_transaction.hash,
       # assume block n+1 has duplicate tx with status = 1
-      # so previous
-        where: transaction.block_hash != new_transaction.block_hash and transaction.status != 1,
+      # so previous block should reduce 1 tx
+        where: transaction.block_hash != new_transaction.block_hash and transaction.status = 0,
         select: transaction.block_hash
+      )
+
+    failed_transactions_before =
+      from(
+        transaction in Transaction,
+        join:
+          new_transaction in fragment(
+            "(SELECT unnest(?::bytea[]) as hash, unnest(?::bytea[]) as block_hash)",
+            ^transactions_hashes,
+            ^transactions_block_hashes
+          ),
+        on: transaction.hash == new_transaction.hash,
+        # assume block n+1 has duplicate tx with status = 1
+        # so previous block should reduce 1 tx
+        where: transaction.block_hash != new_transaction.block_hash and transaction.status = 0,
+        select: transaction.hash
       )
 
     #
     block_hashes =
       blocks_with_recollated_transactions
       |> repo.all()
-      |> Enum.uniq()
+
+      uniq_block_hashes =
+    blocks_with_recollated_transactions |> repo.all() |> Enum.uniq()
 
     if Enum.empty?(block_hashes) do
       {:ok, []}
@@ -261,11 +279,28 @@ defmodule Explorer.Chain.Import.Runner.Transactions do
           lock: "FOR UPDATE"
         )
 
+      unique_block_query =
+        from(
+          block in Block,
+          where: block.hash in ^uniq_block_hashes,
+          # Enforce Block ShareLocks order (see docs: sharelocks.md)
+          order_by: [asc: block.hash],
+          lock: "FOR UPDATE"
+        )
+
       try do
         {_, result} =
           repo.update_all(
             from(b in Block, join: s in subquery(query), on: b.hash == s.hash),
-            [set: [consensus: false, updated_at: updated_at]],
+            [set: [num_tx: num_tx -1, updated_at: updated_at]], #if case total tx == 0, then update is_empty = true
+            timeout: timeout
+          )
+
+        {_, result} =
+          repo.update_all(
+            from(b in Block, join: s in subquery(unique_block_query), on: b.hash == s.hash),
+            [set: [is_empty: true, updated_at: updated_at]], #if case total tx == 0, then update is_empty = true
+            where: num_tx = 0,
             timeout: timeout
           )
 
