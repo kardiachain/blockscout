@@ -74,6 +74,7 @@ defmodule Indexer.EmptyBlocksSanitizer do
   end
 
   defp sanitize_empty_blocks(json_rpc_named_arguments) do
+    # Some block after remove duplicate may empty, so consider remove or alter this one
     unprocessed_empty_blocks_from_db = Chain.unprocessed_empty_blocks_query_list(@limit)
 
     unprocessed_empty_blocks_from_db
