@@ -45,7 +45,7 @@ defmodule Explorer.Chain.Import.Runner.Transactions do
     # Enforce ShareLocks tables order (see docs: sharelocks.md)
     multi
     |> Multi.run(:recollated_transactions, fn repo, _ ->
-      update_blocks_for_failed_transactions(repo, changes_list, insert_options)
+      force_blocks_concensus_for_duplicated_transactions(repo, changes_list, insert_options)
     end)
     |> Multi.run(:transactions, fn repo, _ ->
       insert(repo, changes_list, insert_options)
@@ -303,6 +303,72 @@ defmodule Explorer.Chain.Import.Runner.Transactions do
             from(b in Block, join: s in subquery(unique_block_query), on: b.hash == s.hash),
             [set: [is_empty: true, updated_at: updated_at]], #if case total tx == 0, then update is_empty = true
             where: b.num_txs = 0,
+            timeout: timeout
+          )
+
+        {:ok, result}
+      rescue
+        postgrex_error in Postgrex.Error ->
+          {:error, %{exception: postgrex_error, block_hashes: block_hashes}}
+      end
+    end
+  end
+
+  defp force_blocks_concensus_for_duplicated_transactions(repo, changes_list, %{
+    timeout: timeout,
+    timestamps: %{updated_at: updated_at}
+  })
+       when is_list(changes_list) do
+    {transactions_hashes, transactions_block_hashes} =
+      changes_list
+      |> Enum.filter(&Map.has_key?(&1, :block_hash))
+      |> Enum.map(fn %{hash: hash, block_hash: block_hash} ->
+        {:ok, hash_bytes} = Hash.Full.dump(hash)
+        {:ok, block_hash_bytes} = Hash.Full.dump(block_hash)
+        {hash_bytes, block_hash_bytes}
+      end)
+      |> Enum.unzip()
+
+    # Query block which tx duplicate and discard
+    blocks_with_recollated_transactions =
+      from(
+        transaction in Transaction,
+        join:
+          new_transaction in fragment(
+            "(SELECT unnest(?::bytea[]) as hash, unnest(?::bytea[]) as block_hash)",
+            ^transactions_hashes,
+            ^transactions_block_hashes
+          ),
+        on: transaction.hash == new_transaction.hash,
+        where: transaction.block_hash != new_transaction.block_hash and transaction.status == 0, # Check list with failed tx
+        select: transaction.block_hash
+      )
+
+    # List block
+    block_hashes =
+      blocks_with_recollated_transactions
+      |> repo.all()
+
+
+
+    if Enum.empty?(block_hashes) do
+      {:ok, []}
+    else
+
+      query =
+        from(
+          block in Block,
+          where: block.hash in ^block_hashes,
+          # Enforce Block ShareLocks order (see docs: sharelocks.md)
+          order_by: [asc: block.hash],
+          lock: "FOR UPDATE"
+        )
+
+      try do
+        {_, result} =
+          repo.update_all(
+            from(b in Block, join: s in subquery(query), on: b.hash == s.hash),
+            [set: [consensus: true, updated_at: updated_at]], # force consensus == true
             timeout: timeout
           )
 
