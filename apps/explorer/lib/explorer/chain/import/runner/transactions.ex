@@ -188,7 +188,7 @@ defmodule Explorer.Chain.Import.Runner.Transactions do
           EXCLUDED.created_contract_code_indexed_at, EXCLUDED.cumulative_gas_used, EXCLUDED.from_address_hash,
           EXCLUDED.gas, EXCLUDED.gas_price, EXCLUDED.gas_used, EXCLUDED.index, EXCLUDED.input, EXCLUDED.nonce, EXCLUDED.r, EXCLUDED.s,
           EXCLUDED.status, EXCLUDED.to_address_hash, EXCLUDED.v, EXCLUDED.value)
-          IS DISTINCT FROM (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) AND EXCLUDED.status == 1",
+          IS DISTINCT FROM (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) AND EXCLUDED.status = 1",
           transaction.block_hash,
           transaction.block_number,
           transaction.created_contract_address_hash,
