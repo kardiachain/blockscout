@@ -288,11 +288,13 @@ defmodule Explorer.Chain.Import.Runner.Transactions do
           lock: "FOR UPDATE"
         )
 
+      #num_txs is on cache, so remove all block query and just update on cache
+
       try do
         {_, result} =
           repo.update_all(
             from(b in Block, join: s in subquery(query), on: b.hash == s.hash),
-            [set: [num_txs: {b.num_txs -1}, updated_at: updated_at]], #if case total tx == 0, then update is_empty = true
+            [set: [num_txs: b.num_txs -1, updated_at: updated_at]], #if case total tx == 0, then update is_empty = true
             timeout: timeout
           )
 
@@ -366,7 +368,7 @@ defmodule Explorer.Chain.Import.Runner.Transactions do
         {_, result} =
           repo.update_all(
             from(b in Block, join: s in subquery(query), on: b.hash == s.hash),
-            [set: [consensus: false, updated_at: updated_at]],
+            [set: [consensus: true, updated_at: updated_at]], # force consensus == true
             timeout: timeout
           )
 
