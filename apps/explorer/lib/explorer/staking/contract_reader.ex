@@ -540,8 +540,15 @@ defmodule Explorer.Staking.ContractReader do
   end
 
   def perform_grouped_validator_requests(requests, keys, contracts, abi) do
+    first_element
+    |> List.first()
+
+
+    Logger.info("First element {#")
+
     requests
-    |> List.flatten()
+    |> List.first()
+    |> Logger.info()
     |> generate_requests_with_contract_addr()
     |> Reader.query_contracts(abi)
     |> parse_grouped_responses(keys, requests)
@@ -591,6 +598,28 @@ defmodule Explorer.Staking.ContractReader do
 
   # generate request with contract addr
   defp generate_requests_with_contract_addr(functions) do
+    Logger.info("Generate request with contract addr ")
+    Enum.map(
+      functions,
+      fn
+        {_, {contract, method_id, args}} ->
+          %{
+            contract_address: contract,
+            method_id: method_id,
+            args: args
+          }
+          Logger.info("1.Contract address #{contract}, method: #{method_id}")
+
+        {_, {contract, method_id, args, block_number}} ->
+          %{
+            contract_address: contract,
+            method_id: method_id,
+            args: args,
+            block_number: block_number
+          }
+          Logger.info("2. Contract address #{contract}, method: #{method_id}")
+      end
+    )
     Enum.map(
       functions,
       fn
@@ -650,6 +679,7 @@ defmodule Explorer.Staking.ContractReader do
 
   defp parse_grouped_responses(responses, keys, grouped_requests) do
     {grouped_responses, _} = Enum.map_reduce(grouped_requests, responses, &Enum.split(&2, length(&1)))
+    Logger.info("Group response #{inspect(grouped_responses)}")
 
     [keys, grouped_requests, grouped_responses]
     |> Enum.zip()

@@ -933,7 +933,6 @@ defmodule Explorer.Staking.ContractState do
     )
   end
 
-
   defp get_validator_info_responses(contract_addresses, contracts, abi, block_number) do
     # we split batch requests by chunks
     chunk_size = 20
