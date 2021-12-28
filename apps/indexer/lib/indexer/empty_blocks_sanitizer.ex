@@ -94,14 +94,14 @@ defmodule Indexer.EmptyBlocksSanitizer do
             fetcher: :empty_blocks_to_refetch
           )
 
-          Blocks.invalidate_consensus_blocks([block_number])
+#          Blocks.invalidate_consensus_blocks([block_number])
         else
           Logger.debug(
             "Block with number #{block_number} and hash #{to_string(block_hash)} is empty. We should set is_empty=true for it.",
             fetcher: :empty_blocks_to_refetch
           )
 
-          set_is_empty_for_block(block_hash)
+#          set_is_empty_for_block(block_hash)
         end
       end
     end)
