@@ -32,7 +32,7 @@ defmodule Indexer.Supervisor do
     TokenInstance,
     TokenTotalSupplyOnDemand,
     TokenUpdater,
-    UncleBlock
+    #UncleBlock
   }
 
   alias Indexer.Temporary.{
@@ -112,7 +112,7 @@ defmodule Indexer.Supervisor do
        ]},
 
       # Async catchup fetchers
-      {UncleBlock.Supervisor, [[block_fetcher: block_fetcher, memory_monitor: memory_monitor]]},
+      #{UncleBlock.Supervisor, [[block_fetcher: block_fetcher, memory_monitor: memory_monitor]]},
       {BlockReward.Supervisor, [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
       {InternalTransaction.Supervisor,
        [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
