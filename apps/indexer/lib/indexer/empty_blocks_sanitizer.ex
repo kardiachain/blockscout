@@ -15,7 +15,7 @@ defmodule Indexer.EmptyBlocksSanitizer do
 
   import EthereumJSONRPC, only: [integer_to_quantity: 1, json_rpc: 2, request: 1]
 
-#  alias Explorer.{Chain, Repo}
+  alias Explorer.{Chain}
 #  alias Explorer.Chain.Block
 #  alias Explorer.Chain.Import.Runner.Blocks
 
