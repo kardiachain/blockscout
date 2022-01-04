@@ -9,13 +9,13 @@ defmodule Indexer.PendingTransactionsSanitizer do
   require Logger
 
   import EthereumJSONRPC, only: [json_rpc: 2, request: 1]
-  import EthereumJSONRPC.Receipt, only: [to_elixir: 1]
+#  import EthereumJSONRPC.Receipt, only: [to_elixir: 1]
 
   alias Ecto.Changeset
   alias Explorer.{Chain, Repo}
-  alias Explorer.Chain.Hash.Full, as: Hash
-  alias Explorer.Chain.Import.Runner.Blocks
-  alias Explorer.Chain.Transaction
+#  alias Explorer.Chain.Hash.Full, as: Hash
+#  alias Explorer.Chain.Import.Runner.Blocks
+#  alias Explorer.Chain.Transaction
 
   @interval :timer.minutes(10)
 
