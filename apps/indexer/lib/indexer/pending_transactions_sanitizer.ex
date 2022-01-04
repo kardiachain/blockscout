@@ -82,20 +82,20 @@ defmodule Indexer.PendingTransactionsSanitizer do
 
           if block_hash do
 
-            Logger.info(
+            Logger.debug(
               "Transaction with hash #{pending_tx_hash_str} already included into the block #{block_hash}. We should invalidate consensus for it in order to re-fetch transactions",
               fetcher: :pending_transactions_to_refetch
             )
 
             fetch_block_and_invalidate(block_hash, pending_tx, result)
           else
-            Logger.info(
+            Logger.debug(
               "Transaction with hash #{pending_tx_hash_str} is still pending. Do nothing.",
               fetcher: :pending_transactions_to_refetch
             )
           end
         else
-          Logger.info(
+          Logger.debug(
             "Transaction with hash #{pending_tx_hash_str} doesn't exist in the node anymore. We should remove it from Blockscout DB.",
             fetcher: :pending_transactions_to_refetch
           )
