@@ -169,7 +169,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
 
       Repo.update(changeset)
 
-      Logger.debug(
+      Logger.info(
         "Pending tx with hash #{"0x" <> Base.encode16(pending_tx.hash.bytes, case: :lower)} assigned to block ##{block_number} with hash #{block_hash}"
       )
     end
