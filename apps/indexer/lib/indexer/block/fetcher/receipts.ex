@@ -13,8 +13,8 @@ defmodule Indexer.Block.Fetcher.Receipts do
         %Block.Fetcher{json_rpc_named_arguments: json_rpc_named_arguments} = state,
         transaction_params
       ) do
-    Logger.info("Fetching transaction receipts with total entity", count: Enum.count(transaction_params))
-    Logger.info("Transaction list  #{inspect(transaction_params)}")
+    Logger.info("Fetching transaction receipts with total entity #{Enum.count(transaction_params)}")
+    #Logger.info("Transaction list  #{inspect(transaction_params)}")
     stream_opts = [max_concurrency: state.receipts_concurrency, timeout: :infinity]
 
     transaction_params
@@ -55,7 +55,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
         end
       end)
 
-      Logger.info("Final txs params #{inspect(final_txs_params)}")
+      #Logger.info("Final txs params #{inspect(final_txs_params)}")
     final_txs_params
 
   end
