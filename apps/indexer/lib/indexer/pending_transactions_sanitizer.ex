@@ -104,7 +104,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
       end
     end)
 
-    Logger.debug("Pending transactions are sanitized",
+    Logger.info("Pending transactions are sanitized",
       fetcher: :pending_transactions_to_refetch
     )
   end
@@ -152,7 +152,8 @@ defmodule Indexer.PendingTransactionsSanitizer do
 
   defp invalidate_block(block_number, block_hash, consensus, pending_tx, tx) do
     if consensus do
-      Blocks.invalidate_consensus_blocks([block_number])
+      Logger.info("Block with #{block_number} should invalidate")
+      #Blocks.invalidate_consensus_blocks([block_number])
     else
       {:ok, hash} = Hash.cast(block_hash)
       tx_info = to_elixir(tx)
