@@ -132,45 +132,45 @@ defmodule Indexer.PendingTransactionsSanitizer do
     end
   end
 
-  defp fetch_block_and_invalidate(block_hash, pending_tx, tx) do
-    case Chain.fetch_block_by_hash(block_hash) do
-      %{number: number, consensus: consensus} ->
-        Logger.debug(
-          "Corresponding number of the block with hash #{block_hash} to invalidate is #{number} and consensus #{consensus}",
-          fetcher: :pending_transactions_to_refetch
-        )
+#  defp fetch_block_and_invalidate(block_hash, pending_tx, tx) do
+#    case Chain.fetch_block_by_hash(block_hash) do
+#      %{number: number, consensus: consensus} ->
+#        Logger.debug(
+#          "Corresponding number of the block with hash #{block_hash} to invalidate is #{number} and consensus #{consensus}",
+#          fetcher: :pending_transactions_to_refetch
+#        )
+#
+#        invalidate_block(number, block_hash, consensus, pending_tx, tx)
+#
+#      _ ->
+#        Logger.debug(
+#          "Block with hash #{block_hash} is not yet in the DB",
+#          fetcher: :pending_transactions_to_refetch
+#        )
+#    end
+#  end
 
-        invalidate_block(number, block_hash, consensus, pending_tx, tx)
-
-      _ ->
-        Logger.debug(
-          "Block with hash #{block_hash} is not yet in the DB",
-          fetcher: :pending_transactions_to_refetch
-        )
-    end
-  end
-
-  defp invalidate_block(block_number, block_hash, consensus, pending_tx, tx) do
-    if consensus do
-      Blocks.invalidate_consensus_blocks([block_number])
-    else
-      {:ok, hash} = Hash.cast(block_hash)
-      tx_info = to_elixir(tx)
-
-      changeset =
-        pending_tx
-        |> Transaction.changeset()
-        |> Changeset.put_change(:cumulative_gas_used, tx_info["cumulativeGasUsed"])
-        |> Changeset.put_change(:gas_used, tx_info["gasUsed"])
-        |> Changeset.put_change(:index, tx_info["transactionIndex"])
-        |> Changeset.put_change(:block_number, block_number)
-        |> Changeset.put_change(:block_hash, hash)
-
-      Repo.update(changeset)
-
-      Logger.debug(
-        "Pending tx with hash #{"0x" <> Base.encode16(pending_tx.hash.bytes, case: :lower)} assigned to block ##{block_number} with hash #{block_hash}"
-      )
-    end
-  end
+#  defp invalidate_block(block_number, block_hash, consensus, pending_tx, tx) do
+#    if consensus do
+#      Blocks.invalidate_consensus_blocks([block_number])
+#    else
+#      {:ok, hash} = Hash.cast(block_hash)
+#      tx_info = to_elixir(tx)
+#
+#      changeset =
+#        pending_tx
+#        |> Transaction.changeset()
+#        |> Changeset.put_change(:cumulative_gas_used, tx_info["cumulativeGasUsed"])
+#        |> Changeset.put_change(:gas_used, tx_info["gasUsed"])
+#        |> Changeset.put_change(:index, tx_info["transactionIndex"])
+#        |> Changeset.put_change(:block_number, block_number)
+#        |> Changeset.put_change(:block_hash, hash)
+#
+#      Repo.update(changeset)
+#
+#      Logger.debug(
+#        "Pending tx with hash #{"0x" <> Base.encode16(pending_tx.hash.bytes, case: :lower)} assigned to block ##{block_number} with hash #{block_hash}"
+#      )
+#    end
+#  end
 end
