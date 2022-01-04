@@ -14,7 +14,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
   alias Ecto.Changeset
   alias Explorer.{Chain, Repo}
   alias Explorer.Chain.Hash.Full, as: Hash
-  alias Explorer.Chain.Import.Runner.Blocks
+#  alias Explorer.Chain.Import.Runner.Blocks
   alias Explorer.Chain.Transaction
 
   @interval :timer.minutes(10)
