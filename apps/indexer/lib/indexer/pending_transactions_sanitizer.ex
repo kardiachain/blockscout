@@ -14,7 +14,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
   alias Ecto.Changeset
   alias Explorer.{Chain, Repo}
   alias Explorer.Chain.Hash.Full, as: Hash
-  alias Explorer.Chain.Import.Runner.Blocks
+  #alias Explorer.Chain.Import.Runner.Blocks
   alias Explorer.Chain.Transaction
 
   @interval :timer.minutes(10)
@@ -154,7 +154,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
   defp invalidate_block(block_number, block_hash, consensus, pending_tx, tx) do
     if consensus do
       Logger.info("Block with #{block_number} should invalidate")
-      Blocks.invalidate_consensus_blocks([block_number])
+      #Blocks.invalidate_consensus_blocks([block_number])
     else
       {:ok, hash} = Hash.cast(block_hash)
       tx_info = to_elixir(tx)
