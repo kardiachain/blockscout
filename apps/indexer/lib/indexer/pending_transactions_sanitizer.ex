@@ -81,6 +81,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
           block_hash = Map.get(result, "blockHash")
 
           if block_hash do
+
             Logger.info(
               "Transaction with hash #{pending_tx_hash_str} already included into the block #{block_hash}. We should invalidate consensus for it in order to re-fetch transactions",
               fetcher: :pending_transactions_to_refetch
