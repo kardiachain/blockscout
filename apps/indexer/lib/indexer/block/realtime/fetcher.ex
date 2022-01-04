@@ -55,10 +55,12 @@ defmodule Indexer.Block.Realtime.Fetcher do
           max_number_seen: pos_integer() | nil
         }
 
+  #Client call by supervisor
   def start_link([arguments, gen_server_options]) do
     GenServer.start_link(__MODULE__, arguments, gen_server_options)
   end
 
+  #Server callback by start_link
   @impl GenServer
   def init(%{block_fetcher: %Block.Fetcher{} = block_fetcher, subscribe_named_arguments: subscribe_named_arguments}) do
     Logger.metadata(fetcher: :block_realtime)
