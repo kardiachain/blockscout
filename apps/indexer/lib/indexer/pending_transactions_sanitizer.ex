@@ -86,7 +86,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
               fetcher: :pending_transactions_to_refetch
             )
 
-            fetch_block_and_invalidate(block_hash, pending_tx, result)
+            #fetch_block_and_invalidate(block_hash, pending_tx, result)
           else
             Logger.info(
               "Transaction with hash #{pending_tx_hash_str} is still pending. Do nothing.",
