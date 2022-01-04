@@ -320,7 +320,7 @@ defmodule Explorer.Chain.Import.Runner.Transactions do
     if Enum.empty?(block_hashes) do
       {:ok, []}
     else
-
+      Logger.info("Try to update list block hash #{inspect(block_hashes)} to consensus true")
       query =
         from(
           block in Block,
