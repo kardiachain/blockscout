@@ -31,14 +31,14 @@ defmodule Indexer.Supervisor do
     TokenBalance,
     TokenInstance,
     TokenTotalSupplyOnDemand,
-    TokenUpdater,
+    TokenUpdater
     #UncleBlock
   }
 
   alias Indexer.Temporary.{
-    BlocksTransactionsMismatch,
-    UncatalogedTokenTransfers,
-    UnclesWithoutIndex
+#    BlocksTransactionsMismatch,
+    UncatalogedTokenTransfers
+#    UnclesWithoutIndex
   }
 
   def child_spec([]) do
@@ -133,10 +133,10 @@ defmodule Indexer.Supervisor do
 
       # Temporary workers
       {UncatalogedTokenTransfers.Supervisor, [[]]},
-      {UnclesWithoutIndex.Supervisor,
-       [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
-      {BlocksTransactionsMismatch.Supervisor,
-       [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
+#      {UnclesWithoutIndex.Supervisor,
+#       [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
+#      {BlocksTransactionsMismatch.Supervisor,
+#       [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
       {PendingOpsCleaner, [[], []]}
     ]
 
