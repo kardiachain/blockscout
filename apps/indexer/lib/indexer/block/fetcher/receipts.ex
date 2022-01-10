@@ -25,10 +25,10 @@ defmodule Indexer.Block.Fetcher.Receipts do
         {:cont, {:ok, %{logs: acc_logs ++ logs, receipts: acc_receipts ++ receipts}}}
 
       {:ok, {:error, reason}}, {:ok, _acc} ->
-        {:halt, {:error, reason}}
+        {:cont, {:error, reason}}
 
       {:error, reason}, {:ok, _acc} ->
-        {:halt, {:error, reason}}
+        {:cont, {:error, reason}}
     end)
     |> case do
       {:ok, receipt_params} -> {:ok, set_block_number_to_logs(receipt_params, transaction_params)}
