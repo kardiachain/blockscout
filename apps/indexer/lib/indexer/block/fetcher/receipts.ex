@@ -29,7 +29,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
 
         # Look like RPC call error,
       {:error, reason}, {:ok, _acc} ->
-        {:halt, {:error, reason}}
+        {:cont, {:error, reason}}
     end)
     |> case do
       {:ok, receipt_params} -> {:ok, set_block_number_to_logs(receipt_params, transaction_params)}
