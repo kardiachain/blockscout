@@ -30,7 +30,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
              {:cont, {:skip, %{logs: [], receipts: []}}}
 
            # Look like RPC call error,
-           {:error, reason}, {:ok, _acc} ->
+           {:error, _reason}, {:ok, _acc} ->
              {:cont, {:skip, %{logs: [], receipts: []}}}
          end
        )
