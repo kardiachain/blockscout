@@ -19,7 +19,6 @@ defmodule Indexer.Block.Fetcher.Receipts do
     transaction_params
     |> Enum.chunk_every(state.receipts_batch_size)
     |> Task.async_stream(&EthereumJSONRPC.fetch_transaction_receipts(&1, json_rpc_named_arguments), stream_opts)
-    |> Logger.info()
     |> Enum.reduce_while(
          {:ok, %{logs: [], receipts: []}},
          fn
@@ -34,7 +33,6 @@ defmodule Indexer.Block.Fetcher.Receipts do
              {:halt, {:error, reason}}
          end
        )
-    |> Logger.info()
     |> case do
          {:ok, receipt_params} -> {:ok, set_block_number_to_logs(receipt_params, transaction_params)}
          #{:skip, _empty} -> {:skip, transaction_params}
