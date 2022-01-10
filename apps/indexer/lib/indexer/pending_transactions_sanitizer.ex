@@ -136,7 +136,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
   defp fetch_block_and_invalidate(block_hash, pending_tx, tx) do
     case Chain.fetch_block_by_hash(block_hash) do
       %{number: number, consensus: consensus} ->
-        Logger.info(
+        Logger.debug(
           "Corresponding number of the block with hash #{block_hash} to invalidate is #{number} and consensus #{consensus}",
           fetcher: :pending_transactions_to_refetch
         )
