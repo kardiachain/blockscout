@@ -14,7 +14,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
         transaction_params
       ) do
     Logger.info("Fetching transaction receipts with total entity #{Enum.count(transaction_params)}")
-    #Logger.info("Transaction list  #{inspect(transaction_params)}")
+    Logger.info("Transaction list  #{inspect(transaction_params)}")
     stream_opts = [max_concurrency: state.receipts_concurrency, timeout: :infinity]
 
     transaction_params
@@ -26,17 +26,17 @@ defmodule Indexer.Block.Fetcher.Receipts do
            {:ok, {:ok, %{logs: logs, receipts: receipts}}}, {:ok, %{logs: acc_logs, receipts: acc_receipts}} ->
              {:cont, {:ok, %{logs: acc_logs ++ logs, receipts: acc_receipts ++ receipts}}}
 
-           {:ok, {:error, _reason}}, {:ok, _acc} ->
-             {:cont, {:skip, %{logs: [], receipts: []}}}
+           {:ok, {:error, reason}}, {:ok, _acc} ->
+             {:halt, {:error, reason}}
 
            # Look like RPC call error,
-           {:error, _reason}, {:ok, _acc} ->
-             {:cont, {:skip, %{logs: [], receipts: []}}}
+           {:error, reason}, {:ok, _acc} ->
+             {:halt, {:error, reason}}
          end
        )
     |> case do
          {:ok, receipt_params} -> {:ok, set_block_number_to_logs(receipt_params, transaction_params)}
-         {:skip, _empty} -> {:skip, transaction_params}
+         #{:skip, _empty} -> {:skip, transaction_params}
          other -> other
        end
   end
