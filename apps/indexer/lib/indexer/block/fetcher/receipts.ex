@@ -25,12 +25,12 @@ defmodule Indexer.Block.Fetcher.Receipts do
            {:ok, {:ok, %{logs: logs, receipts: receipts}}}, {:ok, %{logs: acc_logs, receipts: acc_receipts}} ->
              {:cont, {:ok, %{logs: acc_logs ++ logs, receipts: acc_receipts ++ receipts}}}
 
-           {:ok, {:error, reason}}, {:ok, _acc} ->
-             {:halt, {:error, reason}}
+           {:ok, {:error, _reason}}, {:ok, acc} ->
+             {:cont, {:ok, acc}}
 
            # Look like RPC call error,
-           {:error, reason}, {:ok, _acc} ->
-             {:halt, {:error, reason}}
+           {:error, reason}, {:ok, acc} ->
+             {:cont, {:ok, acc}}
          end
        )
     |> case do
