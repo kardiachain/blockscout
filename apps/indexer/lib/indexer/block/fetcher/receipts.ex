@@ -104,18 +104,6 @@ defmodule Indexer.Block.Fetcher.Receipts do
     final_txs_params
   end
 
-  defp uniq_txs_params([x | rest], found) do
-    if MapSet.member?(found, x) do
-      uniq(rest, found)
-    else
-      [x | uniq(rest, MapSet.put(found, x))]
-    end
-  end
-
-  defp uniq_txs_params([], _) do
-    []
-  end
-
   defp set_block_number_to_logs(%{logs: logs} = params, transaction_params) do
     logs_with_block_numbers =
       Enum.map(
