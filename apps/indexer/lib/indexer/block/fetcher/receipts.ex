@@ -71,6 +71,13 @@ defmodule Indexer.Block.Fetcher.Receipts do
           else
             merged_params
           end
+          if is_nil(transaction_params[:gas_used]) do
+            Map.put(merged_params, :gas_used, 0)
+          end
+          if is_nil(transaction_params[:cumulative_gas_used]) do
+            Map.put(merged_params, :gas_used, 0)
+          end
+
         end
       )
 
