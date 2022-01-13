@@ -14,24 +14,6 @@ defmodule Indexer.Block.Fetcher.Receipts do
         transaction_params
       ) do
     Logger.info("Fetching transaction receipts with total entity #{Enum.count(transaction_params)}")
-
-    group_txs =
-      transaction_params
-      |> Enum.group_by(&(&1.hash))
-
-    {_, grouped_transaction_params} =
-      Enum.map_reduce(group_txs, [], fn x, acc ->
-        {hash, list} = x
-        if Enum.count(list) == 2 do
-          Logger.info("Duplicate tx with hash #{inspect(hash)}")
-          Logger.info("Details:  #{inspect(list)}")
-        end
-        {x, [List.first(list) | acc]}
-      end)
-
-    Logger.info("############grouped_transaction_params #{inspect(grouped_transaction_params)}")
-
-
     stream_opts = [max_concurrency: state.receipts_concurrency, timeout: :infinity]
 
     grouped_transaction_params
@@ -60,6 +42,22 @@ defmodule Indexer.Block.Fetcher.Receipts do
 
   # ngdlong | Process duplicate tx if any
   def put(transactions_params, receipts_params) when is_list(transactions_params) and is_list(receipts_params) do
+    group_txs =
+      transaction_params
+      |> Enum.group_by(&(&1.hash))
+
+    {_, grouped_transaction_params} =
+      Enum.map_reduce(group_txs, [], fn x, acc ->
+        {hash, list} = x
+        if Enum.count(list) == 2 do
+          Logger.info("Duplicate tx with hash #{inspect(hash)}")
+          Logger.info("Details:  #{inspect(list)}")
+        end
+        {x, [List.first(list) | acc]}
+      end)
+
+    Logger.info("############grouped_transaction_params #{inspect(grouped_transaction_params)}")
+
     transaction_hash_to_receipt_params =
       Enum.into(
         receipts_params,
@@ -71,38 +69,38 @@ defmodule Indexer.Block.Fetcher.Receipts do
 
     final_txs_params =
       Enum.map(
-        transactions_params,
+        grouped_transaction_params,
         fn %{hash: transaction_hash} = transaction_params ->
           # do not drop error if hash not exist in receipts
           merged_params =
             if Map.has_key?(transaction_hash_to_receipt_params, transaction_hash) do
               receipts_params = Map.fetch!(transaction_hash_to_receipt_params, transaction_hash)
-              Map.merge(transaction_params, receipts_params)
+              Map.merge(grouped_transaction_params, receipts_params)
             else
-              transaction_params
+              grouped_transaction_params
             end
           # Check if receipts status is success, then put block_number && block_hash from receipt
 #          merged_params =
 #            if receipts_params[:status]
 
           merged_params =
-            if transaction_params[:created_contract_address_hash] && is_nil(
+            if grouped_transaction_params[:created_contract_address_hash] && is_nil(
               receipts_params[:created_contract_address_hash]
             ) do
-              Map.put(merged_params, :created_contract_address_hash, transaction_params[:created_contract_address_hash])
+              Map.put(merged_params, :created_contract_address_hash, grouped_transaction_params[:created_contract_address_hash])
             else
               merged_params
             end
 
           merged_params =
-            if is_nil(transaction_params[:gas_used])do
+            if is_nil(grouped_transaction_params[:gas_used])do
               Map.put(merged_params, :gas_used, 0)
             else
               merged_params
             end
 
           merged_params =
-            if is_nil(transaction_params[:cumulative_gas_used]) do
+            if is_nil(grouped_transaction_params[:cumulative_gas_used]) do
               Map.put(merged_params, :cumulative_gas_used, 0)
             else
               merged_params
