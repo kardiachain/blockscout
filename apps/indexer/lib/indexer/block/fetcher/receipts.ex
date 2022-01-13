@@ -31,7 +31,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
         end
       end)
 
-    Logger.info("Finals list #{finals}")
+    Logger.info("Finals list #{inspect(finals)}")
 
     Logger.info("Group_txs #{inspect(group_txs)}")
 
