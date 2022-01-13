@@ -82,7 +82,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
         end
       )
 
-    Logger.info("Final txs params #{inspect(final_txs_params)}")
+    #Logger.info("Final txs params #{inspect(final_txs_params)}")
     final_txs_params
 
   end
