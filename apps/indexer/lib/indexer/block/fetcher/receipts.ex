@@ -64,21 +64,28 @@ defmodule Indexer.Block.Fetcher.Receipts do
               transaction_params
             end
 
-          if transaction_params[:created_contract_address_hash] && is_nil(
-            receipts_params[:created_contract_address_hash]
-          ) do
-            Map.put(merged_params, :created_contract_address_hash, transaction_params[:created_contract_address_hash])
-          else
-            merged_params
-          end
+          merged_params =
+            if transaction_params[:created_contract_address_hash] && is_nil(
+              receipts_params[:created_contract_address_hash]
+            ) do
+              Map.put(merged_params, :created_contract_address_hash, transaction_params[:created_contract_address_hash])
+            else
+              merged_params
+            end
 
-          if is_nil(transaction_params[:gas_used]) || is_nil(transaction_params[:cumulative_gas_used]) do
-            Map.put(merged_params, :gas_used, 0)
-            Map.put(merged_params, :cumulative_gas_used, 0)
-          else
-            merged_params
-          end
+          merged_params =
+            if is_nil(transaction_params[:gas_used])do
+              Map.put(merged_params, :gas_used, 0)
+            else
+              merged_params
+            end
 
+          merged_params =
+            if is_nil(transaction_params[:cumulative_gas_used]) do
+              Map.put(merged_params, :cumulative_gas_used, 0)
+            else
+              merged_params
+            end
         end
       )
 
