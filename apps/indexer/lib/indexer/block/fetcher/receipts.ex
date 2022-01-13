@@ -14,6 +14,13 @@ defmodule Indexer.Block.Fetcher.Receipts do
         transaction_params
       ) do
     Logger.info("Fetching transaction receipts with total entity #{Enum.count(transaction_params)}")
+
+    group_txs =
+      transaction_params
+      |> Enum.group_by(&(&1.hash))
+
+    Logger.info("Group_txs #{inspect(group_txs)}")
+
     stream_opts = [max_concurrency: state.receipts_concurrency, timeout: :infinity]
 
     transaction_params
@@ -63,6 +70,9 @@ defmodule Indexer.Block.Fetcher.Receipts do
             else
               transaction_params
             end
+          # Check if receipts status is success, then put block_number && block_hash from receipt
+#          merged_params =
+#            if receipts_params[:status]
 
           merged_params =
             if transaction_params[:created_contract_address_hash] && is_nil(
@@ -94,6 +104,22 @@ defmodule Indexer.Block.Fetcher.Receipts do
     #Logger.info("Final txs params #{inspect(final_txs_params)}")
     final_txs_params
 
+  end
+
+  def uniq_txs_params(list) do
+    uniq(list, MapSet.new)
+  end
+
+  defp uniq_txs_params([x | rest], found) do
+    if MapSet.member?(found, x) do
+      uniq(rest, found)
+    else
+      [x | uniq(rest, MapSet.put(found, x))]
+    end
+  end
+
+  defp uniq_txs_params([], _) do
+    []
   end
 
   defp set_block_number_to_logs(%{logs: logs} = params, transaction_params) do
