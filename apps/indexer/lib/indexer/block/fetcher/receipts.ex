@@ -22,6 +22,10 @@ defmodule Indexer.Block.Fetcher.Receipts do
     {_, grouped_transaction_params} =
       Enum.map_reduce(group_txs, [], fn x, acc ->
         {hash, list} = x
+        if Enum.count(list) == 2 do
+          Logger.info("Duplicate tx with hash #{inspect(hash)}")
+          Logger.info("Details:  #{inspect(list)}")
+        end
         {x, [List.first(list) | acc]}
       end)
 
