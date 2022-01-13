@@ -101,13 +101,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
         end
       )
 
-    #Logger.info("Final txs params #{inspect(final_txs_params)}")
     final_txs_params
-
-  end
-
-  def uniq_txs_params(list) do
-    uniq(list, MapSet.new)
   end
 
   defp uniq_txs_params([x | rest], found) do
