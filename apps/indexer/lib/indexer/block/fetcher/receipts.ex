@@ -55,7 +55,8 @@ defmodule Indexer.Block.Fetcher.Receipts do
       Enum.map(
         transactions_params,
         fn %{hash: transaction_hash} = transaction_params ->
-          receipts_params = Map.fetch!(transaction_hash_to_receipt_params, transaction_hash)
+          # do not drop error if hash not exist in receipts
+          receipts_params = Map.fetch(transaction_hash_to_receipt_params, transaction_hash)
           merged_params = Map.merge(transaction_params, receipts_params)
 
           if transaction_params[:created_contract_address_hash] && is_nil(
