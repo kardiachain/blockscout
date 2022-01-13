@@ -22,13 +22,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
     {_, grouped_transaction_params} =
       Enum.map_reduce(group_txs, [], fn x, acc ->
         {hash, list} = x
-        if Enum.count(list) == 2 do
-          Logger.info("Duplicate hash #{inspect(hash)}")
-          Logger.info("Duplicate #{inspect(list)}")
-          {x, acc ++ List.first(list)}
-        else
-          {x, acc ++ list}
-        end
+        {x, [List.first(list) | acc]}
       end)
 
     Logger.info("############grouped_transaction_params #{inspect(grouped_transaction_params)}")
