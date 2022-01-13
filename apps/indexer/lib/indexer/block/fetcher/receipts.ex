@@ -57,12 +57,12 @@ defmodule Indexer.Block.Fetcher.Receipts do
         fn %{hash: transaction_hash} = transaction_params ->
           # do not drop error if hash not exist in receipts
           merged_params =
-          if Map.has_key?(transaction_hash_to_receipt_params, transaction_hash) do
+            if Map.has_key?(transaction_hash_to_receipt_params, transaction_hash) do
               receipts_params = Map.fetch(transaction_hash_to_receipt_params, transaction_hash)
               Map.merge(transaction_params, receipts_params)
             else
               transaction_params
-          end
+            end
 
           if transaction_params[:created_contract_address_hash] && is_nil(
             receipts_params[:created_contract_address_hash]
@@ -73,9 +73,13 @@ defmodule Indexer.Block.Fetcher.Receipts do
           end
           if is_nil(transaction_params[:gas_used]) do
             Map.put(merged_params, :gas_used, 0)
+          else
+            merged_params
           end
           if is_nil(transaction_params[:cumulative_gas_used]) do
             Map.put(merged_params, :gas_used, 0)
+          else
+            merged_params
           end
 
         end
