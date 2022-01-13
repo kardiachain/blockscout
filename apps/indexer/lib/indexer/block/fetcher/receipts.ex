@@ -19,7 +19,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
       transaction_params
       |> Enum.group_by(&(&1.hash))
 
-    {_, finals} =
+    {_, grouped_transaction_params} =
       Enum.map_reduce(group_txs, [], fn x, acc ->
         {hash, list} = x
         if Enum.count(list) == 2 do
@@ -31,13 +31,12 @@ defmodule Indexer.Block.Fetcher.Receipts do
         end
       end)
 
-    Logger.info("Finals list #{inspect(finals)}")
+    Logger.info("############grouped_transaction_params #{inspect(grouped_transaction_params)}")
 
-    Logger.info("Group_txs #{inspect(group_txs)}")
 
     stream_opts = [max_concurrency: state.receipts_concurrency, timeout: :infinity]
 
-    transaction_params
+    grouped_transaction_params
     |> Enum.chunk_every(state.receipts_batch_size)
     |> Task.async_stream(&EthereumJSONRPC.fetch_transaction_receipts(&1, json_rpc_named_arguments), stream_opts)
     |> Enum.reduce_while(
