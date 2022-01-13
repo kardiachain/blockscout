@@ -20,7 +20,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
       |> Enum.group_by(&(&1.hash))
 
     {_, finals} =
-      Enum.map_reduce(grouped, [], fn x, acc ->
+      Enum.map_reduce(group_txs, [], fn x, acc ->
         {hash, list} = x
         if Enum.count(list) == 2 do
           Logger.info("Duplicate hash #{inspect(hash)}")
