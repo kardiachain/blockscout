@@ -22,9 +22,9 @@ defmodule Indexer.Block.Fetcher.Receipts do
     {_, finals} =
       Enum.map_reduce(grouped, [], fn x, acc ->
         {hash, list} = x
-        Logger.info("Hash #{inspect(hash)}")
-        Logger.info("List #{inspect(list)}")
         if Enum.count(list) == 2 do
+          Logger.info("Duplicate hash #{inspect(hash)}")
+          Logger.info("Duplicate #{inspect(list)}")
           {x, acc ++ List.first(list)}
         else
           {x, acc ++ list}
