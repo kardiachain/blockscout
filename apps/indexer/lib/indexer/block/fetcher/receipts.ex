@@ -56,11 +56,10 @@ defmodule Indexer.Block.Fetcher.Receipts do
         transactions_params,
         fn %{hash: transaction_hash} = transaction_params ->
           # do not drop error if hash not exist in receipts
+          merged_params = transaction_params
           if Map.has_key(transaction_hash_to_receipt_params, transaction_hash) do
             receipts_params = Map.fetch(transaction_hash_to_receipt_params, transaction_hash)
             merged_params = Map.merge(transaction_params, receipts_params)
-            else
-            merged_params = transaction_params
           end
 
           if transaction_params[:created_contract_address_hash] && is_nil(
