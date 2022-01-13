@@ -58,7 +58,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
           # do not drop error if hash not exist in receipts
           merged_params =
             if Map.has_key?(transaction_hash_to_receipt_params, transaction_hash) do
-              receipts_params = Map.fetch(transaction_hash_to_receipt_params, transaction_hash)
+              receipts_params = Map.fetch!(transaction_hash_to_receipt_params, transaction_hash)
               Map.merge(transaction_params, receipts_params)
             else
               transaction_params
