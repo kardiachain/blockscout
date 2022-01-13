@@ -86,6 +86,8 @@ defmodule Indexer.Block.Fetcher.Receipts do
             else
               merged_params
             end
+
+          merged_params
         end
       )
 
