@@ -43,7 +43,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
   # ngdlong | Process duplicate tx if any
   def put(transactions_params, receipts_params) when is_list(transactions_params) and is_list(receipts_params) do
     group_txs =
-      transaction_params
+      transactions_params
       |> Enum.group_by(&(&1.hash))
 
     {_, grouped_transaction_params} =
@@ -70,7 +70,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
     final_txs_params =
       Enum.map(
         grouped_transaction_params,
-        fn %{hash: transaction_hash} = transaction_params ->
+        fn %{hash: transaction_hash} = grouped_transaction_params ->
           # do not drop error if hash not exist in receipts
           merged_params =
             if Map.has_key?(transaction_hash_to_receipt_params, transaction_hash) do
