@@ -19,6 +19,20 @@ defmodule Indexer.Block.Fetcher.Receipts do
       transaction_params
       |> Enum.group_by(&(&1.hash))
 
+    {_, finals} =
+      Enum.map_reduce(grouped, [], fn x, acc ->
+        {hash, list} = x
+        Logger.info("Hash #{inspect(hash)}")
+        Logger.info("List #{inspect(list)}")
+        if Enum.count(list) == 2 do
+          {x, acc ++ List.first(list)}
+        else
+          {x, acc ++ list}
+        end
+      end)
+
+    Logger.info("Finals list #{finals}")
+
     Logger.info("Group_txs #{inspect(group_txs)}")
 
     stream_opts = [max_concurrency: state.receipts_concurrency, timeout: :infinity]
