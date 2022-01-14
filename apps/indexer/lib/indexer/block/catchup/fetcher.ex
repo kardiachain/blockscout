@@ -33,7 +33,7 @@ defmodule Indexer.Block.Catchup.Fetcher do
   # DO NOT use them directly in the code.  Get options from `state`.
 
   @blocks_batch_size 5
-  @blocks_concurrency 25
+  @blocks_concurrency 40
   @sequence_name :block_catchup_sequencer
 
   defstruct blocks_batch_size: @blocks_batch_size,
