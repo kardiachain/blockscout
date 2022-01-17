@@ -2481,6 +2481,7 @@ defmodule Explorer.Chain do
   def address_to_transaction_count(address) do
     if contract?(address) do
       incoming_transaction_count = address_to_incoming_transaction_count(address.hash)
+      Logger.info("Total incoming transaction count #{incoming_transaction_count}")
 
       if incoming_transaction_count == 0 do
         total_transactions_sent_by_address(address.hash)
