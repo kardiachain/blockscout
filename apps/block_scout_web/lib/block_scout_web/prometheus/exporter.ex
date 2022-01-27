@@ -5,5 +5,5 @@ defmodule BlockScoutWeb.Prometheus.Exporter do
 
   @dialyzer :no_match
 
-  #use Prometheus.PlugExporter
+  use Prometheus.PlugExporter
 end
