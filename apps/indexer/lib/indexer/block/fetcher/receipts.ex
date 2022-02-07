@@ -56,6 +56,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
         {x, [List.first(list) | acc]}
       end)
 
+    Logger.info("############grouped_transaction_params #{inspect(grouped_transaction_params)}")
 
     transaction_hash_to_receipt_params =
       Enum.into(
