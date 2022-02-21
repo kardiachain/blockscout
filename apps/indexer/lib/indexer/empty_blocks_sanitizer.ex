@@ -8,19 +8,19 @@ defmodule Indexer.EmptyBlocksSanitizer do
 
   require Logger
 
-#  import Ecto.Query,
-#    only: [
-#      from: 2
-#    ]
+  import Ecto.Query,
+    only: [
+      from: 2
+    ]
 
   import EthereumJSONRPC, only: [integer_to_quantity: 1, json_rpc: 2, request: 1]
 
   alias Explorer.{Chain}
-#  alias Explorer.Chain.Block
-#  alias Explorer.Chain.Import.Runner.Blocks
+  alias Explorer.Chain.Block
+  alias Explorer.Chain.Import.Runner.Blocks
 
   # milliseconds
-#  @timeout 1_000
+  @timeout 1_000
 
   # unprocessed emty blocks to fetch at once
   @limit 400
