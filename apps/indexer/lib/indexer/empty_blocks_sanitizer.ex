@@ -94,14 +94,14 @@ defmodule Indexer.EmptyBlocksSanitizer do
             fetcher: :empty_blocks_to_refetch
           )
 
-#          Blocks.invalidate_consensus_blocks([block_number])
+          Blocks.invalidate_consensus_blocks([block_number])
         else
           Logger.debug(
             "Block with number #{block_number} and hash #{to_string(block_hash)} is empty. We should set is_empty=true for it.",
             fetcher: :empty_blocks_to_refetch
           )
 
-#          set_is_empty_for_block(block_hash)
+          set_is_empty_for_block(block_hash)
         end
       end
     end)
@@ -111,34 +111,34 @@ defmodule Indexer.EmptyBlocksSanitizer do
     )
   end
 
-#  defp set_is_empty_for_block(block_hash) do
-#    query =
-#      from(
-#        block in Block,
-#        select: block,
-#        where: block.hash == ^block_hash,
-#        lock: "FOR UPDATE"
-#      )
-#
-#    updated_at = DateTime.utc_now()
-#
-#    update_query =
-#      from(
-#        b in Block,
-#        join: s in subquery(query),
-#        on: b.hash == s.hash,
-#        update: [
-#          set: [
-#            is_empty: true,
-#            updated_at: ^updated_at
-#          ]
-#        ],
-#        select: s
-#      )
-#
-#    Repo.update_all(update_query, [], timeout: @timeout)
-#  rescue
-#    postgrex_error in Postgrex.Error ->
-#      {:error, %{exception: postgrex_error}}
-#  end
+  defp set_is_empty_for_block(block_hash) do
+    query =
+      from(
+        block in Block,
+        select: block,
+        where: block.hash == ^block_hash,
+        lock: "FOR UPDATE"
+      )
+
+    updated_at = DateTime.utc_now()
+
+    update_query =
+      from(
+        b in Block,
+        join: s in subquery(query),
+        on: b.hash == s.hash,
+        update: [
+          set: [
+            is_empty: true,
+            updated_at: ^updated_at
+          ]
+        ],
+        select: s
+      )
+
+    Repo.update_all(update_query, [], timeout: @timeout)
+  rescue
+    postgrex_error in Postgrex.Error ->
+      {:error, %{exception: postgrex_error}}
+  end
 end
