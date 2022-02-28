@@ -29,7 +29,7 @@
   <script type="text/javascript">
     var widgetId1
     var onloadCallback = function() {
-      console.log("Captcha client key",'<%= Application.get_env(:block_scout_web, :re_captcha_client_key) %>')
+      console.log("Captcha client key","<%= Application.get_env(:block_scout_web, :re_captcha_client_key) %>")
       widgetId1 = grecaptcha.render('recaptcha', {
         'sitekey': '<%= Application.get_env(:block_scout_web, :re_captcha_client_key) %>',
         'theme': localStorage.getItem('current-color-mode')
