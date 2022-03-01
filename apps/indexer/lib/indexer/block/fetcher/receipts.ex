@@ -91,7 +91,8 @@ defmodule Indexer.Block.Fetcher.Receipts do
             else
               merged_params
             end
-          Logger.info("Final txs params #{inspect(grouped_transaction_params)}")
+          Logger.info("grouped_transaction_params #{inspect(grouped_transaction_params)}")
+          Logger.info("merged_params #{inspect(merged_params)}")
           merged_params =
             if is_nil(grouped_transaction_params[:gas_used])do
               Map.put(merged_params, :gas_used, 0)
