@@ -94,14 +94,14 @@ defmodule Indexer.Block.Fetcher.Receipts do
           Logger.info("grouped_transaction_params #{inspect(grouped_transaction_params)}")
           Logger.info("merged_params #{inspect(merged_params)}")
           merged_params =
-            if is_nil(grouped_transaction_params[:gas_used])do
+            if is_nil(grouped_transaction_params[:gas_used]) && is_nil(merged_params[:gas_used])do
               Map.put(merged_params, :gas_used, 0)
             else
               merged_params
             end
 
           merged_params =
-            if is_nil(grouped_transaction_params[:cumulative_gas_used]) do
+            if is_nil(grouped_transaction_params[:cumulative_gas_used])&& is_nil(merged_params[:cumulative_gas_used]) do
               Map.put(merged_params, :cumulative_gas_used, 0)
             else
               merged_params
