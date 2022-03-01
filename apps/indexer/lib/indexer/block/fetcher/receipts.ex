@@ -110,7 +110,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
           merged_params
         end
       )
-
+    Logger.info("final_txs_params #{inspect(final_txs_params)}")
     final_txs_params
   end
 
