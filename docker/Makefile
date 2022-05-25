@@ -443,7 +443,7 @@ endif
 start: build postgres
 	@echo "==> Starting blockscout"
 	@docker rm -f blockscout_indexer blockscout
-	@docker run -d -v $(HOME)/logs:/opt/app/logs --name $(BS_CONTAINER_NAME) \
+	@docker run -d -v $(HOME)/logs:/opt/app/logs --log-opt max-size=300m --name $(BS_CONTAINER_NAME) \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					$(DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 
