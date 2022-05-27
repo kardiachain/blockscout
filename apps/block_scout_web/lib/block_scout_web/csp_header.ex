@@ -13,12 +13,12 @@ defmodule BlockScoutWeb.CSPHeader do
       "content-security-policy" => "\
         connect-src 'self' #{websocket_endpoints(conn)} https://raw.githubusercontent.com/kardiachain/token-assets/;\
         default-src 'self';\
-        script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com;\
-        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;\
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com;\
+        style-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com;\
         img-src 'self' * data:;\
         media-src 'self' * data:;\
         font-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.gstatic.com data:;\
-        frame-src 'self' https://www.google.com;\
+        frame-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com;\
       "
     })
   end
