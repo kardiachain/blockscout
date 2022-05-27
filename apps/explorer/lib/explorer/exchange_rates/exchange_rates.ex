@@ -78,7 +78,7 @@ defmodule Explorer.ExchangeRates do
   end
 
   defp schedule_next_consolidation do
-    Process.send_after(self(), :update, :timer.minutes(1))
+    Process.send_after(self(), :update, :timer.minutes(5))
   end
 
   @doc """
