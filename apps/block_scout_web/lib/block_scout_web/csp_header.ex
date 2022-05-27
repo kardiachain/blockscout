@@ -17,7 +17,7 @@ defmodule BlockScoutWeb.CSPHeader do
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;\
         img-src 'self' * data:;\
         media-src 'self' * data:;\
-        font-src 'self' https://fonts.gstatic.com data:;\
+        font-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.gstatic.com data:;\
         frame-src 'self' https://www.google.com;\
       "
     })
