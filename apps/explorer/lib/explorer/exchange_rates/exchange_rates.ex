@@ -12,7 +12,7 @@ defmodule Explorer.ExchangeRates do
   alias Explorer.Chain.Events.Publisher
   alias Explorer.ExchangeRates.{Source, Token}
 
-  @interval :timer.minutes(10)
+  @interval :timer.minutes(540)
   @table_name :exchange_rates
 
   @impl GenServer
