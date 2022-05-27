@@ -34,34 +34,35 @@ function adjustPaddingForTextAd (showAd, data) {
 
 function getTextAdData () {
   return new Promise((resolve) => {
-    const displayAd = showAd()
-    if (displayAd) {
-      $.get('https://request-global.czilladx.com/serve/native.php?z=19260bf627546ab7242', function (data) {
-        if (!data) {
-          if (customAds && customAds.length > 0) {
-            try {
-              const ind = getRandomInt(0, customAds.length)
-              const inHouse = true
-              adjustPaddingForTextAd(displayAd, true)
-              resolve({ data: customAds[ind], inHouse: inHouse })
-            } catch (_e) {
-              adjustPaddingForTextAd(displayAd, false)
-              resolve({ data: null, inHouse: null })
-            }
-          } else {
-            adjustPaddingForTextAd(displayAd, false)
-            resolve({ data: null, inHouse: null })
-          }
-        } else {
-          const inHouse = false
-          adjustPaddingForTextAd(displayAd, true)
-          resolve({ data: data, inHouse: inHouse })
-        }
-      })
-    } else {
-      adjustPaddingForTextAd(displayAd, false)
-      resolve({ data: null, inHouse: null })
-    }
+    resolve({ data: null, inHouse: null })
+//    const displayAd = showAd()
+//    if (displayAd) {
+//      $.get('https://request-global.czilladx.com/serve/native.php?z=19260bf627546ab7242', function (data) {
+//        if (!data) {
+//          if (customAds && customAds.length > 0) {
+//            try {
+//              const ind = getRandomInt(0, customAds.length)
+//              const inHouse = true
+//              adjustPaddingForTextAd(displayAd, true)
+//              resolve({ data: customAds[ind], inHouse: inHouse })
+//            } catch (_e) {
+//              adjustPaddingForTextAd(displayAd, false)
+//              resolve({ data: null, inHouse: null })
+//            }
+//          } else {
+//            adjustPaddingForTextAd(displayAd, false)
+//            resolve({ data: null, inHouse: null })
+//          }
+//        } else {
+//          const inHouse = false
+//          adjustPaddingForTextAd(displayAd, true)
+//          resolve({ data: data, inHouse: inHouse })
+//        }
+//      })
+//    } else {
+//      adjustPaddingForTextAd(displayAd, false)
+//      resolve({ data: null, inHouse: null })
+//    }
   })
 }
 
