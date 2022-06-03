@@ -112,7 +112,7 @@
               <%= link(
                     gettext("Staking"),
                     class: "dropdown-item #{tab_status("staking", @conn.request_path)}",
-                    to: "https://legacy-explorer.kardiachain.io/staking"
+                    to: "https://staking.kardiachain.io"
                   ) %>
               <%= link(
                     gettext("Web Wallet"),
