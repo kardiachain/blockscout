@@ -49,27 +49,28 @@ defmodule Explorer.Chain.Block do
    * `base_fee_per_gas` - Minimum fee required per unit of gas. Fee adjusts based on network congestion.
   """
   @type t :: %__MODULE__{
-               consensus: boolean(),
-               difficulty: difficulty(),
-               gas_limit: Gas.t(),
-               gas_used: Gas.t(),
-               block_rewards: Gas.t(),
-               hash: Hash.Full.t(),
-               commit_hash: Hash.Full.t(),
-               validator_hash: Hash.Full.t(),
-               next_validator_hash: Hash.Full.t(),
-               transactions_root: Hash.Full.t(),
-               miner: %Ecto.Association.NotLoaded{} | Address.t(),
-               miner_hash: Hash.Address.t(),
-               nonce: Hash.Nonce.t(),
-               number: block_number(),
-               parent_hash: Hash.t(),
-               size: non_neg_integer(),
-               timestamp: DateTime.t(),
-               total_difficulty: difficulty(),
-               transactions: %Ecto.Association.NotLoaded{} | [Transaction.t()],
-               refetch_needed: boolean(),
-          base_fee_per_gas: Wei.t()
+          consensus: boolean(),
+          difficulty: difficulty(),
+          gas_limit: Gas.t(),
+          gas_used: Gas.t(),
+          block_rewards: Gas.t(),
+          hash: Hash.Full.t(),
+          commit_hash: Hash.Full.t(),
+          validator_hash: Hash.Full.t(),
+          next_validator_hash: Hash.Full.t(),
+          transactions_root: Hash.Full.t(),
+          miner: %Ecto.Association.NotLoaded{} | Address.t(),
+          miner_hash: Hash.Address.t(),
+          nonce: Hash.Nonce.t(),
+          number: block_number(),
+          parent_hash: Hash.t(),
+          size: non_neg_integer(),
+          timestamp: DateTime.t(),
+          total_difficulty: difficulty(),
+          transactions: %Ecto.Association.NotLoaded{} | [Transaction.t()],
+          refetch_needed: boolean(),
+          base_fee_per_gas: Wei.t(),
+          is_empty: boolean()
         }
 
   @primary_key {:hash, Hash.Full, autogenerate: false}
@@ -90,6 +91,7 @@ defmodule Explorer.Chain.Block do
     field(:total_difficulty, :decimal)
     field(:refetch_needed, :boolean)
     field(:base_fee_per_gas, Wei)
+    field(:is_empty, :boolean)
 
     timestamps()
 

@@ -86,7 +86,19 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
     on_conflict = Map.get_lazy(options, :on_conflict, &default_on_conflict/0)
 
     # Enforce Address ShareLocks order (see docs: sharelocks.md)
-    ordered_changes_list = sort_changes_list(changes_list)
+    ordered_changes_list =
+      changes_list
+      |> Enum.group_by(fn %{
+                            hash: hash
+                          } ->
+        {hash}
+      end)
+      |> Enum.map(fn {_, grouped_addresses} ->
+        Enum.max_by(grouped_addresses, fn address ->
+          address_max_by(address)
+        end)
+      end)
+      |> Enum.sort_by(& &1.hash)
 
     Import.insert_changes_list(
       repo,
@@ -98,6 +110,19 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
       timeout: timeout,
       timestamps: timestamps
     )
+  end
+
+  defp address_max_by(address) do
+    cond do
+      Map.has_key?(address, :address) ->
+        address.fetched_coin_balance_block_number
+
+      Map.has_key?(address, :nonce) ->
+        address.nonce
+
+      true ->
+        address
+    end
   end
 
   defp default_on_conflict do
@@ -128,7 +153,8 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
               "GREATEST(EXCLUDED.fetched_coin_balance_block_number, ?)",
               address.fetched_coin_balance_block_number
             ),
-          nonce: fragment("GREATEST(EXCLUDED.nonce, ?)", address.nonce)
+          nonce: fragment("GREATEST(EXCLUDED.nonce, ?)", address.nonce),
+          updated_at: fragment("GREATEST(?, EXCLUDED.updated_at)", address.updated_at)
         ]
       ],
       # where any of `set`s would make a change
@@ -141,10 +167,6 @@ defmodule Explorer.Chain.Import.Runner.Addresses do
             address.fetched_coin_balance_block_number
           ) or fragment("GREATEST(?, EXCLUDED.nonce) IS DISTINCT FROM  ?", address.nonce, address.nonce)
     )
-  end
-
-  defp sort_changes_list(changes_list) do
-    Enum.sort_by(changes_list, & &1.hash)
   end
 
   defp update_transactions(repo, addresses, %{timeout: timeout, timestamps: timestamps}) do

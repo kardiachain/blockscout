@@ -140,10 +140,17 @@ defmodule BlockScoutWeb.WebRouter do
       )
 
       resources(
-        "/verify-via-json",
+        "/verify-via-metadata-json",
         AddressContractVerificationViaJsonController,
         only: [:new],
         as: :verify_contract_via_json
+      )
+
+      resources(
+        "/verify-via-standard-json-input",
+        AddressContractVerificationViaStandardJsonInputController,
+        only: [:new],
+        as: :verify_contract_via_standard_json_input
       )
 
       resources(
@@ -229,9 +236,30 @@ defmodule BlockScoutWeb.WebRouter do
 
       resources(
         "/read-contract",
-        Tokens.ReadContractController,
+        Tokens.ContractController,
         only: [:index],
         as: :read_contract
+      )
+
+      resources(
+        "/write-contract",
+        Tokens.ContractController,
+        only: [:index],
+        as: :write_contract
+      )
+
+      resources(
+        "/read-proxy",
+        Tokens.ContractController,
+        only: [:index],
+        as: :read_proxy
+      )
+
+      resources(
+        "/write-proxy",
+        Tokens.ContractController,
+        only: [:index],
+        as: :write_proxy
       )
 
       resources(
@@ -266,6 +294,13 @@ defmodule BlockScoutWeb.WebRouter do
           Tokens.Instance.MetadataController,
           only: [:index],
           as: :metadata
+        )
+
+        resources(
+          "/token-holders",
+          Tokens.Instance.HolderController,
+          only: [:index],
+          as: :holder
         )
       end
     end
@@ -280,9 +315,30 @@ defmodule BlockScoutWeb.WebRouter do
 
       resources(
         "/read-contract",
-        Tokens.ReadContractController,
+        Tokens.ContractController,
         only: [:index],
         as: :read_contract
+      )
+
+      resources(
+        "/write-contract",
+        Tokens.ContractController,
+        only: [:index],
+        as: :write_contract
+      )
+
+      resources(
+        "/read-proxy",
+        Tokens.ContractController,
+        only: [:index],
+        as: :read_proxy
+      )
+
+      resources(
+        "/write-proxy",
+        Tokens.ContractController,
+        only: [:index],
+        as: :write_proxy
       )
 
       resources(
@@ -317,6 +373,13 @@ defmodule BlockScoutWeb.WebRouter do
           Tokens.Instance.MetadataController,
           only: [:index],
           as: :metadata
+        )
+
+        resources(
+          "/token-holders",
+          Tokens.Instance.HolderController,
+          only: [:index],
+          as: :holder
         )
       end
     end

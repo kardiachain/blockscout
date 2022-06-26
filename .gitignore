@@ -37,7 +37,7 @@ screenshots/
 # Sobelow
 .sobelow
 
-# osx 
+# osx
 .DS_Store
 
 # mix phx.gen.cert self-signed certs for dev
@@ -50,3 +50,9 @@ screenshots/
 /apps/ethereum_jsonrpc/ethereum_jsonrpc.iml
 /apps/explorer/explorer.iml
 /apps/indexer/indexer.iml
+
+/docker-compose/postgres-data
+/docker-compose/tmp
+
+.idea/
+*.iml

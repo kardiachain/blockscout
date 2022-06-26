@@ -11,20 +11,15 @@ defmodule Indexer.Transform.AddressCoinBalancesDaily do
       |> MapSet.to_list()
 
     coin_balances_daily_params_list =
-      Enum.reduce(
-        coin_balances_params,
-        [],
-        fn coin_balances_param, acc ->
-          address_hash = Map.get(coin_balances_param, :address_hash)
-          block_number = Map.get(coin_balances_param, :block_number)
+      Enum.reduce(coin_balances_params, [], fn coin_balances_param, acc ->
+        address_hash = Map.get(coin_balances_param, :address_hash)
+        block_number = Map.get(coin_balances_param, :block_number)
 
-          block =
-            blocks
-            |> Enum.find(
-                 fn block ->
-                   block.number == block_number
-                 end
-               )
+        block =
+          blocks
+          |> Enum.find(fn block ->
+            block.number == block_number
+          end)
 
           day =
             if block do
@@ -46,7 +41,7 @@ defmodule Indexer.Transform.AddressCoinBalancesDaily do
 
     coin_balances_daily_params_set =
       coin_balances_daily_params_list
-      |> Enum.dedup()
+      |> Enum.uniq()
       |> Enum.into(MapSet.new())
 
     coin_balances_daily_params_set
@@ -69,7 +64,7 @@ defmodule Indexer.Transform.AddressCoinBalancesDaily do
 
     coin_balances_daily_params_set =
       coin_balances_daily_params_list
-      |> Enum.dedup()
+      |> Enum.uniq()
       |> Enum.into(MapSet.new())
 
     coin_balances_daily_params_set

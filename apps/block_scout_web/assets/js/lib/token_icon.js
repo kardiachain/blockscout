@@ -64,15 +64,16 @@ function getTokenIconUrl (chainID, addressHash) {
 
 function appendTokenIcon ($tokenIconContainer, chainID, addressHash, foreignChainID, foreignAddressHash, displayTokenIcons, size) {
   const iconSize = size || 20
-  var tokenIconURL = null
+  let tokenIconURL = null
   tokenIconURL = getTokenIconUrl(null, addressHash)
   if (displayTokenIcons) {
     checkLink(tokenIconURL)
       .then(checkTokenIconLink => {
         if (checkTokenIconLink) {
           if ($tokenIconContainer) {
-            var img = new Image(iconSize, iconSize)
+            const img = new Image(iconSize, iconSize)
             img.src = tokenIconURL
+            img.className = 'mr-1'
             $tokenIconContainer.append(img)
           }
         }
