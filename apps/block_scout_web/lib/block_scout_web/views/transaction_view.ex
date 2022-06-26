@@ -1,4 +1,5 @@
 defmodule BlockScoutWeb.TransactionView do
+  require Logger
   use BlockScoutWeb, :view
 
   alias BlockScoutWeb.{AccessHelpers, AddressView, BlockView, TabHelpers}
@@ -211,7 +212,7 @@ defmodule BlockScoutWeb.TransactionView do
     case type do
       :erc20 -> gettext("KRC-20 ")
       :erc721 -> gettext("KRC-721 ")
-      :erc1155 -> gettext("ERC-1155 ")
+      :erc1155 -> gettext("KRC-1155 ")
       _ -> ""
     end
   end
@@ -392,6 +393,7 @@ defmodule BlockScoutWeb.TransactionView do
   def gas_used_perc(%Transaction{gas_used: nil}), do: nil
 
   def gas_used_perc(%Transaction{gas_used: gas_used, gas: gas}) do
+    Logger.info("---------Check gas used perc #{gas_used} and gas #{gas}")
     if Decimal.compare(gas, 0) == :gt do
       gas_used
       |> Decimal.div(gas)

@@ -98,7 +98,7 @@ defmodule Explorer.Token.InstanceMetadataRetrieverTest do
                )
     end
 
-    test "fetches json metadata for ERC-1155 token", %{json_rpc_named_arguments: json_rpc_named_arguments} do
+    test "fetches json metadata for KRC-1155 token", %{json_rpc_named_arguments: json_rpc_named_arguments} do
       if json_rpc_named_arguments[:transport] == EthereumJSONRPC.Mox do
         EthereumJSONRPC.Mox
         |> expect(:json_rpc, fn [

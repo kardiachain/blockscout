@@ -56,22 +56,37 @@ defmodule Indexer.Block.Realtime.Fetcher do
           max_number_seen: pos_integer() | nil
         }
 
+  #Client call by supervisor
   def start_link([arguments, gen_server_options]) do
     GenServer.start_link(__MODULE__, arguments, gen_server_options)
   end
 
+  #Server callback by start_link
   @impl GenServer
   def init(%{block_fetcher: %Block.Fetcher{} = block_fetcher, subscribe_named_arguments: subscribe_named_arguments}) do
     Logger.metadata(fetcher: :block_realtime)
 
-    {:ok, %__MODULE__{block_fetcher: %Block.Fetcher{block_fetcher | broadcast: :realtime, callback_module: __MODULE__}},
-     {:continue, {:init, subscribe_named_arguments}}}
+    {
+      :ok,
+      %__MODULE__{
+        block_fetcher: %Block.Fetcher{
+          block_fetcher |
+          broadcast: :realtime,
+          callback_module: __MODULE__
+        }
+      },
+      {:continue, {:init, subscribe_named_arguments}}
+    }
   end
 
   @impl GenServer
   def handle_continue({:init, subscribe_named_arguments}, %__MODULE__{subscription: nil} = state) do
     timer = schedule_polling()
-    {:noreply, %__MODULE__{state | timer: timer} |> subscribe_to_new_heads(subscribe_named_arguments)}
+    {
+      :noreply,
+      %__MODULE__{state | timer: timer}
+      |> subscribe_to_new_heads(subscribe_named_arguments)
+    }
   end
 
   @impl GenServer
@@ -106,13 +121,16 @@ defmodule Indexer.Block.Realtime.Fetcher do
     Process.cancel_timer(timer)
     new_timer = schedule_polling()
 
-    {:noreply,
-     %{
-       state
-       | previous_number: number,
-         max_number_seen: new_max_number,
-         timer: new_timer
-     }}
+    {
+      :noreply,
+      %{
+        state
+      |
+        previous_number: number,
+        max_number_seen: new_max_number,
+        timer: new_timer
+      }
+    }
   end
 
   @impl GenServer
@@ -137,13 +155,16 @@ defmodule Indexer.Block.Realtime.Fetcher do
 
     timer = schedule_polling()
 
-    {:noreply,
-     %{
-       state
-       | previous_number: number,
-         max_number_seen: new_max_number,
-         timer: timer
-     }}
+    {
+      :noreply,
+      %{
+        state
+      |
+        previous_number: number,
+        max_number_seen: new_max_number,
+        timer: timer
+      }
+    }
   end
 
   # don't handle other messages (e.g. :ssl_closed)
@@ -195,27 +216,42 @@ defmodule Indexer.Block.Realtime.Fetcher do
   def import(
         block_fetcher,
         %{
-          address_coin_balances: %{params: address_coin_balances_params},
-          address_coin_balances_daily: %{params: address_coin_balances_daily_params},
+          address_coin_balances: %{
+            params: address_coin_balances_params
+          },
+          address_coin_balances_daily: %{
+            params: address_coin_balances_daily_params
+          },
           address_hash_to_fetched_balance_block_number: address_hash_to_block_number,
-          addresses: %{params: addresses_params},
+          addresses: %{
+            params: addresses_params
+          },
           block_rewards: block_rewards
         } = options
       ) do
-    with {:balances,
-          {:ok,
-           %{
-             addresses_params: balances_addresses_params,
-             balances_params: balances_params,
-             balances_daily_params: balances_daily_params
-           }}} <-
-           {:balances,
-            balances(block_fetcher, %{
-              address_hash_to_block_number: address_hash_to_block_number,
-              addresses_params: addresses_params,
-              balances_params: address_coin_balances_params,
-              balances_daily_params: address_coin_balances_daily_params
-            })},
+    with {
+           :balances,
+           {
+             :ok,
+             %{
+               addresses_params: balances_addresses_params,
+               balances_params: balances_params,
+               balances_daily_params: balances_daily_params
+             }
+           }
+         } <-
+           {
+             :balances,
+             balances(
+               block_fetcher,
+               %{
+                 address_hash_to_block_number: address_hash_to_block_number,
+                 addresses_params: addresses_params,
+                 balances_params: address_coin_balances_params,
+                 balances_daily_params: address_coin_balances_daily_params
+               }
+             )
+           },
          {block_reward_errors, chain_import_block_rewards} = Map.pop(block_rewards, :errors),
          chain_import_options =
            options
@@ -228,7 +264,11 @@ defmodule Indexer.Block.Realtime.Fetcher do
          {:import, {:ok, imported} = ok} <- {:import, Chain.import(chain_import_options)} do
       async_import_remaining_block_data(
         imported,
-        %{block_rewards: %{errors: block_reward_errors}}
+        %{
+          block_rewards: %{
+            errors: block_reward_errors
+          }
+        }
       )
 
       Accounts.drop(imported[:addresses])
@@ -244,6 +284,7 @@ defmodule Indexer.Block.Realtime.Fetcher do
   end
 
   defp start_fetch_and_import(number, block_fetcher, previous_number, max_number_seen) do
+
     start_at = determine_start_at(number, previous_number, max_number_seen)
     Logger.info(
       "start_fetch_and_import. Start: #{start_at} Number: #{number}, prev: #{previous_number}, number_seen: #{
@@ -311,13 +352,15 @@ defmodule Indexer.Block.Realtime.Fetcher do
         Logger.info("Fetched and imported with block number:  #{block_number_to_fetch}.")
 
       {:ok, %{inserted: _, errors: [_ | _] = errors}} ->
-        Logger.error(fn ->
-          [
-            "failed to fetch block: ",
-            inspect(errors),
-            ".  Block will be retried by catchup indexer."
-          ]
-        end)
+        Logger.error(
+          fn ->
+            [
+              "failed to fetch block: ",
+              inspect(errors),
+              ".  Block will be retried by catchup indexer."
+            ]
+          end
+        )
 
       {:error, {:import = step, [%Changeset{} | _] = changesets}} ->
         params = %{
@@ -404,7 +447,11 @@ defmodule Indexer.Block.Realtime.Fetcher do
 
   defp async_import_remaining_block_data(
          imported,
-         %{block_rewards: %{errors: block_reward_errors}}
+         %{
+           block_rewards: %{
+             errors: block_reward_errors
+           }
+         }
        ) do
     async_import_block_rewards(block_reward_errors)
     async_import_created_contract_codes(imported)
@@ -437,17 +484,22 @@ defmodule Indexer.Block.Realtime.Fetcher do
         block_timestamp_map = CoinBalance.block_timestamp_map(params_list, json_rpc_named_arguments)
 
         importable_balances_daily_params =
-          Enum.map(params_list, fn param ->
-            day = Map.get(block_timestamp_map, "#{param.block_number}")
-            Map.put(param, :day, day)
-          end)
+          Enum.map(
+            params_list,
+            fn param ->
+              day = Map.get(block_timestamp_map, "#{param.block_number}")
+              Map.put(param, :day, day)
+            end
+          )
 
-        {:ok,
-         %{
-           addresses_params: merged_addresses_params,
-           balances_params: importable_balances_params,
-           balances_daily_params: importable_balances_daily_params
-         }}
+        {
+          :ok,
+          %{
+            addresses_params: merged_addresses_params,
+            balances_params: importable_balances_params,
+            balances_daily_params: importable_balances_daily_params
+          }
+        }
 
       {:error, _} = error ->
         error
@@ -457,11 +509,13 @@ defmodule Indexer.Block.Realtime.Fetcher do
     end
   end
 
-  defp fetch_balances_params_list(%{
-         addresses_params: addresses_params,
-         address_hash_to_block_number: address_hash_to_block_number,
-         balances_params: balances_params
-       }) do
+  defp fetch_balances_params_list(
+         %{
+           addresses_params: addresses_params,
+           address_hash_to_block_number: address_hash_to_block_number,
+           balances_params: balances_params
+         }
+       ) do
     addresses_params
     |> addresses_params_to_fetched_balances_params_set(%{address_hash_to_block_number: address_hash_to_block_number})
     |> MapSet.union(balances_params_to_fetch_balances_params_set(balances_params))
@@ -469,26 +523,37 @@ defmodule Indexer.Block.Realtime.Fetcher do
     |> Enum.sort_by(fn %{hash_data: hash_data, block_quantity: block_quantity} -> {hash_data, block_quantity} end)
   end
 
-  defp addresses_params_to_fetched_balances_params_set(addresses_params, %{
-         address_hash_to_block_number: address_hash_to_block_number
-       }) do
-    Enum.into(addresses_params, MapSet.new(), fn %{hash: address_hash} = address_params when is_binary(address_hash) ->
-      block_number =
-        case address_params do
-          %{fetched_coin_balance_block_number: block_number} when is_integer(block_number) ->
-            block_number
+  defp addresses_params_to_fetched_balances_params_set(
+         addresses_params,
+         %{
+           address_hash_to_block_number: address_hash_to_block_number
+         }
+       ) do
+    Enum.into(
+      addresses_params,
+      MapSet.new(),
+      fn %{hash: address_hash} = address_params when is_binary(address_hash) ->
+        block_number =
+          case address_params do
+            %{fetched_coin_balance_block_number: block_number} when is_integer(block_number) ->
+              block_number
 
-          _ ->
-            Map.fetch!(address_hash_to_block_number, address_hash)
-        end
+            _ ->
+              Map.fetch!(address_hash_to_block_number, address_hash)
+          end
 
-      %{hash_data: address_hash, block_quantity: integer_to_quantity(block_number)}
-    end)
+        %{hash_data: address_hash, block_quantity: integer_to_quantity(block_number)}
+      end
+    )
   end
 
   defp balances_params_to_fetch_balances_params_set(balances_params) do
-    Enum.into(balances_params, MapSet.new(), fn %{address_hash: address_hash, block_number: block_number} ->
-      %{hash_data: address_hash, block_quantity: integer_to_quantity(block_number)}
-    end)
+    Enum.into(
+      balances_params,
+      MapSet.new(),
+      fn %{address_hash: address_hash, block_number: block_number} ->
+        %{hash_data: address_hash, block_quantity: integer_to_quantity(block_number)}
+      end
+    )
   end
 end

@@ -31,7 +31,7 @@ defmodule Explorer.Chain.Import.Runner.Address.TokenBalancesTest do
         value: value,
         value_fetched_at: value_fetched_at,
         token_id: 11,
-        token_type: "ERC-20"
+        token_type: "KRC-20"
       }
 
       assert {:ok,
@@ -73,7 +73,7 @@ defmodule Explorer.Chain.Import.Runner.Address.TokenBalancesTest do
         value: nil,
         value_fetched_at: value_fetched_at,
         token_id: nil,
-        token_type: "ERC-20"
+        token_type: "KRC-20"
       }
 
       assert {:ok,
@@ -101,7 +101,7 @@ defmodule Explorer.Chain.Import.Runner.Address.TokenBalancesTest do
     end
   end
 
-  test "does not nillifies existing value ERC-1155" do
+  test "does not nillifies existing value KRC-1155" do
     address = insert(:address)
     token = insert(:token)
 
@@ -126,7 +126,7 @@ defmodule Explorer.Chain.Import.Runner.Address.TokenBalancesTest do
       value: nil,
       value_fetched_at: value_fetched_at,
       token_id: 11,
-      token_type: "ERC-1155"
+      token_type: "KRC-1155"
     }
 
     assert {:ok,

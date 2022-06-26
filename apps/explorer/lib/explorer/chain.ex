@@ -2450,6 +2450,7 @@ defmodule Explorer.Chain do
   def address_to_transaction_count(address) do
     if contract?(address) do
       incoming_transaction_count = address_to_incoming_transaction_count(address.hash)
+      Logger.info("Total incoming transaction count #{incoming_transaction_count}")
 
       if incoming_transaction_count == 0 do
         total_transactions_sent_by_address(address.hash)
@@ -3072,6 +3073,21 @@ defmodule Explorer.Chain do
 
     Block
     |> where(consensus: true, number: ^number)
+    |> join_associations(necessity_by_association)
+    |> Repo.one()
+    |> case do
+      nil -> {:error, :not_found}
+      block -> {:ok, block}
+    end
+  end
+
+  @spec number_to_valid_block(Block.block_number(), [necessity_by_association_option]) ::
+          {:ok, Block.t()} | {:error, :not_found}
+  def number_to_valid_block(number, options \\ []) when is_list(options) do
+    necessity_by_association = Keyword.get(options, :necessity_by_association, %{})
+
+    Block
+    |> where(number: ^number)
     |> join_associations(necessity_by_association)
     |> Repo.one()
     |> case do
@@ -4577,7 +4593,7 @@ defmodule Explorer.Chain do
     nft_tokens =
       from(
         token in Token,
-        where: token.type == ^"KRC-721" or token.type == ^"ERC-1155",
+        where: token.type == ^"KRC-721" or token.type == ^"KRC-1155",
         select: token.contract_address_hash
       )
 
@@ -5187,7 +5203,7 @@ defmodule Explorer.Chain do
       {"0xf907fc5b" <> _params, ^zero_wei} ->
         :erc20
 
-      # check for ERC-20 or for old ERC-721, ERC-1155 token versions
+      # check for KRC-20 or for old KRC-721, KRC-1155 token versions
       {unquote(TokenTransfer.transfer_function_signature()) <> params, ^zero_wei} ->
         types = [:address, {:uint, 256}]
 
@@ -5230,8 +5246,7 @@ defmodule Explorer.Chain do
       case token_transfer.token do
         %Token{type: "KRC-20"} -> :erc20
         %Token{type: "KRC-721"} -> :erc721
-        %Token{type: "ERC-1155"} -> :erc1155
-        _ -> nil
+        %Token{type: "KRC-1155"} -> :erc1155
       end
     else
       :erc20
@@ -6062,14 +6077,17 @@ defmodule Explorer.Chain do
     end
   end
 
-  @spec get_token_icon_url_by(String.t(), String.t()) :: String.t() | nil
+  @spec get_token_icon_url_by(String.t(), String.t()) :: String.t()
   def get_token_icon_url_by(_chain_id, address_hash) do
     try_url =
       "https://raw.githubusercontent.com/kardiachain/token-assets/master/tokens/#{address_hash}/logo.png"
 
+    %HTTPoison.Response{status_code: status_code} = HTTPoison.get!(try_url)
+
+    if status_code == 200 do
       try_url
     else
-      nil
+      "https://raw.githubusercontent.com/kardiachain/token-assets/master/tokens/default.png"
     end
   end
 

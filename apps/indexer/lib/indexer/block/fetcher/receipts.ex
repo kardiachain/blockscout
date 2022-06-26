@@ -13,60 +13,127 @@ defmodule Indexer.Block.Fetcher.Receipts do
         %Block.Fetcher{json_rpc_named_arguments: json_rpc_named_arguments} = state,
         transaction_params
       ) do
-    Logger.info("Fetching transaction receipts", count: Enum.count(transaction_params))
+    Logger.info("Fetching transaction receipts with total entity #{Enum.count(transaction_params)}")
     stream_opts = [max_concurrency: state.receipts_concurrency, timeout: :infinity]
 
     transaction_params
     |> Enum.chunk_every(state.receipts_batch_size)
     |> Task.async_stream(&EthereumJSONRPC.fetch_transaction_receipts(&1, json_rpc_named_arguments), stream_opts)
-    |> Enum.reduce_while({:ok, %{logs: [], receipts: []}}, fn
-      {:ok, {:ok, %{logs: logs, receipts: receipts}}}, {:ok, %{logs: acc_logs, receipts: acc_receipts}} ->
-        {:cont, {:ok, %{logs: acc_logs ++ logs, receipts: acc_receipts ++ receipts}}}
+    |> Enum.reduce_while(
+         {:ok, %{logs: [], receipts: []}},
+         fn
+           {:ok, {:ok, %{logs: logs, receipts: receipts}}}, {:ok, %{logs: acc_logs, receipts: acc_receipts}} ->
+             {:cont, {:ok, %{logs: acc_logs ++ logs, receipts: acc_receipts ++ receipts}}}
 
-      {:ok, {:error, reason}}, {:ok, _acc} ->
-        {:halt, {:error, reason}}
+           {:ok, {:error, _reason}}, {:ok, %{logs: acc_logs, receipts: acc_receipts}} ->
+             {:cont, {:ok, %{logs: acc_logs, receipts: acc_receipts}}}
 
-      {:error, reason}, {:ok, _acc} ->
-        {:halt, {:error, reason}}
-    end)
+           # Look like RPC call error,
+           {:error, _reason}, {:ok, %{logs: acc_logs, receipts: acc_receipts}} ->
+             {:cont, {:ok, %{logs: acc_logs, receipts: acc_receipts}}}
+         end
+       )
     |> case do
-      {:ok, receipt_params} -> {:ok, set_block_number_to_logs(receipt_params, transaction_params)}
-      other -> other
-    end
+         {:ok, receipt_params} -> {:ok, set_block_number_to_logs(receipt_params, transaction_params)}
+         #{:skip, _empty} -> {:skip, transaction_params}
+         other -> other
+       end
   end
 
+  # ngdlong | Process duplicate tx if any
   def put(transactions_params, receipts_params) when is_list(transactions_params) and is_list(receipts_params) do
-    transaction_hash_to_receipt_params =
-      Enum.into(receipts_params, %{}, fn %{transaction_hash: transaction_hash} = receipt_params ->
-        {transaction_hash, receipt_params}
+    group_txs =
+      transactions_params
+      |> Enum.group_by(&(&1.hash))
+
+    {_, grouped_transaction_params} =
+      Enum.map_reduce(group_txs, [], fn x, acc ->
+        {hash, list} = x
+        if Enum.count(list) == 2 do
+          Logger.info("Duplicate tx with hash #{inspect(hash)}")
+          Logger.info("Details:  #{inspect(list)}")
+        end
+        {x, [List.first(list) | acc]}
       end)
 
-    Enum.map(transactions_params, fn %{hash: transaction_hash} = transaction_params ->
-      receipts_params = Map.fetch!(transaction_hash_to_receipt_params, transaction_hash)
-      merged_params = Map.merge(transaction_params, receipts_params)
+    #Logger.info("############grouped_transaction_params #{inspect(grouped_transaction_params)}")
 
-      if transaction_params[:created_contract_address_hash] && is_nil(receipts_params[:created_contract_address_hash]) do
-        Map.put(merged_params, :created_contract_address_hash, transaction_params[:created_contract_address_hash])
-      else
-        merged_params
-      end
-    end)
+    transaction_hash_to_receipt_params =
+      Enum.into(
+        receipts_params,
+        %{},
+        fn %{transaction_hash: transaction_hash} = receipt_params ->
+          {transaction_hash, receipt_params}
+        end
+      )
+
+    final_txs_params =
+      Enum.map(
+        grouped_transaction_params,
+        fn %{hash: transaction_hash} = grouped_transaction_params ->
+          # do not drop error if hash not exist in receipts
+          merged_params =
+            if Map.has_key?(transaction_hash_to_receipt_params, transaction_hash) do
+              receipts_params = Map.fetch!(transaction_hash_to_receipt_params, transaction_hash)
+              Map.merge(grouped_transaction_params, receipts_params)
+            else
+              grouped_transaction_params
+            end
+          # Check if receipts status is success, then put block_number && block_hash from receipt
+#          merged_params =
+#            if receipts_params[:status]
+
+          merged_params =
+            if grouped_transaction_params[:created_contract_address_hash] && is_nil(
+              receipts_params[:created_contract_address_hash]
+            ) do
+              Map.put(merged_params, :created_contract_address_hash, grouped_transaction_params[:created_contract_address_hash])
+            else
+              merged_params
+            end
+          Logger.info("grouped_transaction_params #{inspect(grouped_transaction_params)}")
+          Logger.info("merged_params #{inspect(merged_params)}")
+          merged_params =
+            if is_nil(grouped_transaction_params[:gas_used]) && is_nil(merged_params[:gas_used])do
+              Map.put(merged_params, :gas_used, 0)
+            else
+              merged_params
+            end
+
+          merged_params =
+            if is_nil(grouped_transaction_params[:cumulative_gas_used])&& is_nil(merged_params[:cumulative_gas_used]) do
+              Map.put(merged_params, :cumulative_gas_used, 0)
+            else
+              merged_params
+            end
+
+          merged_params
+        end
+      )
+    Logger.info("final_txs_params #{inspect(final_txs_params)}")
+    final_txs_params
   end
 
   defp set_block_number_to_logs(%{logs: logs} = params, transaction_params) do
     logs_with_block_numbers =
-      Enum.map(logs, fn %{transaction_hash: transaction_hash, block_number: block_number} = log_params ->
-        if is_nil(block_number) do
-          transaction =
-            Enum.find(transaction_params, fn transaction ->
-              transaction[:hash] == transaction_hash
-            end)
+      Enum.map(
+        logs,
+        fn %{transaction_hash: transaction_hash, block_number: block_number} = log_params ->
+          if is_nil(block_number) do
+            transaction =
+              Enum.find(
+                transaction_params,
+                fn transaction ->
+                  transaction[:hash] == transaction_hash
+                end
+              )
 
-          %{log_params | block_number: transaction[:block_number]}
-        else
-          log_params
+            %{log_params | block_number: transaction[:block_number]}
+          else
+            log_params
+          end
         end
-      end)
+      )
 
     %{params | logs: logs_with_block_numbers}
   end

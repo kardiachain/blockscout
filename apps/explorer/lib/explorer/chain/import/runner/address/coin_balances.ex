@@ -75,7 +75,7 @@ defmodule Explorer.Chain.Import.Runner.Address.CoinBalances do
     ordered_changes_list =
       changes_list
       |> Enum.sort_by(&{&1.address_hash, &1.block_number})
-      |> Enum.dedup()
+      |> Enum.uniq
 
     {:ok, _} =
       Import.insert_changes_list(

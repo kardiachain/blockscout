@@ -54,4 +54,7 @@ RUN cd apps/explorer/ && \
     npm install && \
     apk update && apk del --force-broken-world alpine-sdk gmp-dev automake libtool inotify-tools autoconf python3
 
+# Clean
+RUN mix phx.digest.clean
+
 RUN mix phx.digest

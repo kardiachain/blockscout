@@ -32,8 +32,8 @@ defmodule Indexer.Block.Catchup.Fetcher do
   # These are all the *default* values for options.
   # DO NOT use them directly in the code.  Get options from `state`.
 
-  @blocks_batch_size 10
-  @blocks_concurrency 10
+  @blocks_batch_size 5
+  @blocks_concurrency 40
   @sequence_name :block_catchup_sequencer
 
   defstruct blocks_batch_size: @blocks_batch_size,
@@ -93,7 +93,7 @@ defmodule Indexer.Block.Catchup.Fetcher do
             |> Stream.map(&Enum.count/1)
             |> Enum.sum()
 
-          Logger.debug(fn -> "Missed blocks in ranges." end,
+          Logger.info(fn -> "Missed blocks in ranges." end,
             missing_block_range_count: range_count,
             missing_block_count: missing_block_count
           )

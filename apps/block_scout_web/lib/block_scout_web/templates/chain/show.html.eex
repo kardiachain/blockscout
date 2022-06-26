@@ -96,7 +96,7 @@
               <%= nil %>
             <% average_block_time -> %>
               <div class="dashboard-banner-network-stats-item dashboard-banner-network-stats-item-1">
-                <span class="dashboard-banner-network-stats-label">
+                <span class="dashboard-banner-network-stats-label text-muted">
                   <%= gettext "Average block time" %>
                 </span>
                 <span class="dashboard-banner-network-stats-value" data-selector="average-block-time">
@@ -105,7 +105,7 @@
               </div>
           <% end %>
           <div class="dashboard-banner-network-stats-item dashboard-banner-network-stats-item-2">
-            <span class="dashboard-banner-network-stats-label">
+            <span class="dashboard-banner-network-stats-label text-muted">
               <%= gettext "Total transactions" %>
             </span>
             <div class="d-flex">
@@ -126,7 +126,7 @@
             </div>
           </div>
           <div class="dashboard-banner-network-stats-item dashboard-banner-network-stats-item-3">
-            <span class="dashboard-banner-network-stats-label">
+            <span class="dashboard-banner-network-stats-label text-muted">
               <%= gettext "Total blocks" %>
             </span>
             <span class="dashboard-banner-network-stats-value" data-selector="block-count">
@@ -134,7 +134,7 @@
             </span>
           </div>
           <div class="dashboard-banner-network-stats-item dashboard-banner-network-stats-item-4">
-            <span class="dashboard-banner-network-stats-label">
+            <span class="dashboard-banner-network-stats-label text-muted">
               <%= gettext "Wallet addresses" %>
             </span>
             <span class="dashboard-banner-network-stats-value" data-selector="address-count">

@@ -81,6 +81,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
           block_hash = Map.get(result, "blockHash")
 
           if block_hash do
+
             Logger.debug(
               "Transaction with hash #{pending_tx_hash_str} already included into the block #{block_hash}. We should invalidate consensus for it in order to re-fetch transactions",
               fetcher: :pending_transactions_to_refetch
@@ -104,7 +105,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
       end
     end)
 
-    Logger.debug("Pending transactions are sanitized",
+    Logger.info("Pending transactions are sanitized",
       fetcher: :pending_transactions_to_refetch
     )
   end
@@ -152,6 +153,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
 
   defp invalidate_block(block_number, block_hash, consensus, pending_tx, tx) do
     if consensus do
+      Logger.info("Block with #{block_number} should invalidate")
       Blocks.invalidate_consensus_blocks([block_number])
     else
       {:ok, hash} = Hash.cast(block_hash)
@@ -168,7 +170,7 @@ defmodule Indexer.PendingTransactionsSanitizer do
 
       Repo.update(changeset)
 
-      Logger.debug(
+      Logger.info(
         "Pending tx with hash #{"0x" <> Base.encode16(pending_tx.hash.bytes, case: :lower)} assigned to block ##{block_number} with hash #{block_hash}"
       )
     end

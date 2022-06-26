@@ -266,7 +266,8 @@ defmodule EthereumJSONRPC do
       |> json_rpc(json_rpc_named_arguments)
 
     case result do
-      {:ok, bin_number} -> {:ok, String.to_integer(bin_number)}
+      {:ok, _bin_number} -> {:ok, String.to_integer("0")}
+      # always return 0
       other -> other
     end
   end

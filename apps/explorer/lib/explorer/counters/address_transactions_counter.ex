@@ -3,6 +3,7 @@ defmodule Explorer.Counters.AddressTransactionsCounter do
   Caches Address transactions counter.
   """
   use GenServer
+  require Logger
 
   alias Ecto.Changeset
   alias Explorer.{Chain, Repo}
@@ -42,7 +43,9 @@ defmodule Explorer.Counters.AddressTransactionsCounter do
   end
 
   def fetch(address) do
+    Logger.info("Load address transaction with address #{address}")
     if cache_expired?(address) do
+      Logger.info("Update cache")
       update_cache(address)
     end
 

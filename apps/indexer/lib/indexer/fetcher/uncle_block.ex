@@ -26,7 +26,9 @@ defmodule Indexer.Fetcher.UncleBlock do
     max_batch_size: 10,
     max_concurrency: 10,
     task_supervisor: Indexer.Fetcher.UncleBlock.TaskSupervisor,
-    metadata: [fetcher: :block_uncle]
+    metadata: [
+      fetcher: :block_uncle
+    ]
   ]
 
   @doc """

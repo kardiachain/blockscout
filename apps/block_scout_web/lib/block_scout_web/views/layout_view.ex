@@ -27,11 +27,11 @@ defmodule BlockScoutWeb.LayoutView do
   end
 
   def subnetwork_title do
-    Keyword.get(application_config(), :subnetwork) || "Aris Mainnet"
+    Keyword.get(application_config(), :subnetwork) || "Galaxias Mainnet"
   end
 
   def network_title do
-    Keyword.get(application_config(), :network) || "POA"
+    Keyword.get(application_config(), :network) || "KardiaChain"
   end
 
   defp application_config do
@@ -97,7 +97,7 @@ defmodule BlockScoutWeb.LayoutView do
           nil
 
         release_link_env_var == "" || release_link_env_var == nil ->
-          "https://github.com/blockscout/blockscout/releases/tag/" <> version
+          "https://github.com/kardiachain/blockscout/releases/tag/" <> version
 
         true ->
           release_link_env_var

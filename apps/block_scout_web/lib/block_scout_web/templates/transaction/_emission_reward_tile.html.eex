@@ -15,7 +15,6 @@
         class: "text-truncate") %>
       <span class="text-nowrap">
         <%= @emission_funds |> BlockScoutWeb.AddressView.address_partial_selector(nil, @current_address) |> BlockScoutWeb.RenderHelpers.render_partial() %>
-        &rarr;
         <%= @validator |> BlockScoutWeb.AddressView.address_partial_selector(nil, @current_address) |> BlockScoutWeb.RenderHelpers.render_partial() %>
       </span>
       <span class="d-flex flex-md-row flex-column mt-3 mt-md-0">

@@ -7,6 +7,8 @@ defmodule Indexer.Supervisor do
 
   alias Indexer.{
     Block,
+    CalcLpTokensTotalLiqudity,
+#    EmptyBlocksSanitizer,
     PendingOpsCleaner,
     PendingTransactionsSanitizer
   }
@@ -26,14 +28,14 @@ defmodule Indexer.Supervisor do
     TokenBalance,
     TokenInstance,
     TokenTotalSupplyOnDemand,
-    TokenUpdater,
-    UncleBlock
+    TokenUpdater
+    #UncleBlock
   }
 
   alias Indexer.Temporary.{
     BlocksTransactionsMismatch,
-    UncatalogedTokenTransfers,
-    UnclesWithoutIndex
+    UncatalogedTokenTransfers
+#    UnclesWithoutIndex
   }
 
   def child_spec([]) do
@@ -107,7 +109,7 @@ defmodule Indexer.Supervisor do
        ]},
 
       # Async catchup fetchers
-      {UncleBlock.Supervisor, [[block_fetcher: block_fetcher, memory_monitor: memory_monitor]]},
+      #{UncleBlock.Supervisor, [[block_fetcher: block_fetcher, memory_monitor: memory_monitor]]},
       {BlockReward.Supervisor, [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
       {InternalTransaction.Supervisor,
        [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
@@ -122,14 +124,14 @@ defmodule Indexer.Supervisor do
 
       # Out-of-band fetchers
       {CoinBalanceOnDemand.Supervisor, [json_rpc_named_arguments]},
-      {EmptyBlocksSanitizer.Supervisor, [[json_rpc_named_arguments: json_rpc_named_arguments]]},
+      #{EmptyBlocksSanitizer.Supervisor, [[json_rpc_named_arguments: json_rpc_named_arguments]]},
       {TokenTotalSupplyOnDemand.Supervisor, [json_rpc_named_arguments]},
       {PendingTransactionsSanitizer, [[json_rpc_named_arguments: json_rpc_named_arguments]]},
 
       # Temporary workers
       {UncatalogedTokenTransfers.Supervisor, [[]]},
-      {UnclesWithoutIndex.Supervisor,
-       [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
+#      {UnclesWithoutIndex.Supervisor,
+#       [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
       {BlocksTransactionsMismatch.Supervisor,
        [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
       {PendingOpsCleaner, [[], []]}

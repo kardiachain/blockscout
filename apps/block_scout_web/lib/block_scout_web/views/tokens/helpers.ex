@@ -40,7 +40,7 @@ defmodule BlockScoutWeb.Tokens.Helpers do
     {:ok, :erc721_instance}
   end
 
-  defp do_token_transfer_amount(%Token{type: "ERC-1155", decimals: decimals}, amount, amounts, _token_id, token_ids) do
+  defp do_token_transfer_amount(%Token{type: "KRC-1155", decimals: decimals}, amount, amounts, _token_id, token_ids) do
     if amount do
       {:ok, :erc1155_instance, CurrencyHelpers.format_according_to_decimals(amount, decimals)}
     else

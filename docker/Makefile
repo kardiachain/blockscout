@@ -347,6 +347,12 @@ endif
 ifdef DISPLAY_TOKEN_ICONS
 	BLOCKSCOUT_CONTAINER_PARAMS += -e 'DISPLAY_TOKEN_ICONS=$(DISPLAY_TOKEN_ICONS)'
 endif
+ifdef RE_CAPTCHA_SECRET_KEY
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'RE_CAPTCHA_SECRET_KEY=$(RE_CAPTCHA_SECRET_KEY)'
+endif
+ifdef RE_CAPTCHA_CLIENT_KEY
+	BLOCKSCOUT_CONTAINER_PARAMS += -e 'RE_CAPTCHA_CLIENT_KEY=$(RE_CAPTCHA_CLIENT_KEY)'
+endif
 ifdef SHOW_TENDERLY_LINK
 	BLOCKSCOUT_CONTAINER_PARAMS += -e 'SHOW_TENDERLY_LINK=$(SHOW_TENDERLY_LINK)'
 endif
@@ -406,6 +412,12 @@ ifdef FETCH_REWARDS_WAY
 endif
 
 ifdef FULLSTACK
+HAS_BLOCKSCOUT_IMAGE := $(shell docker images | grep -sw ${DOCKER_IMAGE})
+build:
+	@echo "==> Checking for blockscout image $(DOCKER_IMAGE)"
+ifdef HAS_BLOCKSCOUT_INDEX_IMAGE
+	@echo "==> Image exist. Using $(DOCKER_IMAGE)"
+ifdef FULLSTACK
 HAS_BLOCKSCOUT_IMAGE := $(shell docker images | grep -sw "${BS_CONTAINER_IMAGE} ")
 build:
 	@echo "==> Checking for blockscout image $(BS_CONTAINER_IMAGE)"
@@ -445,6 +457,37 @@ rebuild_web:
 	@docker build --build-arg COIN="$(COIN)" -f ./web.Dockerfile -t $(WEB_DOCKER_IMAGE) ../
 
 endif
+else
+HAS_BLOCKSCOUT_INDEX_IMAGE := $(shell docker images | grep -sw ${INDEX_DOCKER_IMAGE})
+build_index:
+	@echo "==> Checking for blockscout image $(INDEX_DOCKER_IMAGE)"
+ifdef HAS_BLOCKSCOUT_INDEX_IMAGE
+	@echo "==> Image exist. Using $(INDEX_DOCKER_IMAGE)"
+else
+	@echo "==> No image found trying to build one..."
+	@docker build --build-arg COIN="$(COIN)" -f ./index.Dockerfile -t $(INDEX_DOCKER_IMAGE) ../
+endif
+
+rebuild_index:
+	@echo "==> Rebuild indexer docker image..."
+	@docker build --build-arg COIN="$(COIN)" -f ./index.Dockerfile -t $(INDEX_DOCKER_IMAGE) ../
+
+HAS_BLOCKSCOUT_WEB_IMAGE := $(shell docker images | grep -sw ${WEB_DOCKER_IMAGE})
+build_web:
+	@echo "==> Checking for blockscout image $(WEB_DOCKER_IMAGE)"
+ifdef HAS_BLOCKSCOUT_WEB_IMAGE
+	@echo "==> Image exist. Using $(WEB_DOCKER_IMAGE)"
+else
+	@echo "==> No image found trying to build one..."
+	@docker build --build-arg COIN="$(COIN)" -f ./web.Dockerfile -t $(WEB_DOCKER_IMAGE) ../
+endif
+
+rebuild_web:
+	@echo "==> Rebuild web docker image..."
+	@docker build --build-arg COIN="$(COIN)" -f ./web.Dockerfile -t $(WEB_DOCKER_IMAGE) ../
+
+endif
+
 
 
 migrate_only:
@@ -453,6 +496,16 @@ ifdef FULLSTACK
 	@docker run --rm \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					$(BS_CONTAINER_IMAGE) /bin/sh -c "echo $$MIX_ENV && mix do ecto.create, ecto.migrate"
+
+else
+	@echo "==> Running indexer migrations"
+ifdef FULLSTACK
+	@echo "==> Running fullstack migrations"
+	@docker run --rm \
+					$(BLOCKSCOUT_CONTAINER_PARAMS) \
+					$(INDEX_DOCKER_IMAGE) /bin/sh -c "echo $$MIX_ENV && mix do ecto.create, ecto.migrate"
+
+endif
 
 else
 	@echo "==> Running indexer migrations"
@@ -498,19 +551,20 @@ endif
 
 start: build postgres
 	@echo "==> Starting blockscout"
-	@docker run -d -v $(HOME)/logs:/opt/app/logs --name $(BS_CONTAINER_NAME) \
+	@docker rm -f blockscout_indexer blockscout
+	@docker run -d -v $(HOME)/logs:/opt/app/logs --log-opt max-size=300m --name $(BS_CONTAINER_NAME) \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					$(DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 
 index: build_index
 	@echo "==> Starting blockscout indexer"
-	@docker run -d -v $(HOME)/logs:/opt/app/logs --name $(BS_INDEXER_CONTAINER_NAME) \
+	@docker run -d -v $(HOME)/logs:/opt/app/logs --log-opt max-size=300m --name $(BS_INDEXER_CONTAINER_NAME) \
 					$(BLOCKSCOUT_CONTAINER_PARAMS) \
 					$(INDEX_DOCKER_IMAGE) /bin/sh -c "mix do ecto.create, ecto.migrate; mix phx.server"
 
 web: build_web
 	@echo "==> Starting blockscout web"
-	@docker run -d --name $(BS_WEB_CONTAINER_NAME) \
+	@docker run -d --log-opt max-size=300m --name $(BS_WEB_CONTAINER_NAME) \
                                         $(BLOCKSCOUT_CONTAINER_PARAMS) \
                                         -p 4000:4000 \
                                         $(WEB_DOCKER_IMAGE) \

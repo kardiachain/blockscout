@@ -65,6 +65,12 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/views/transaction_view.ex:349
+#: lib/block_scout_web/templates/stakes/_metatags.html.eex:2
+msgid "KardiaChain %{subnetwork} Staking DApp"
+msgstr ""
+
+#, elixir-format
+#: lib/block_scout_web/views/transaction_view.ex:350
 msgid "(Awaiting internal transactions for status)"
 msgstr ""
 
@@ -158,7 +164,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/address/overview.html.eex:165
-msgid "Address balance in xDAI (doesn't include ERC20, ERC721, ERC1155 tokens)."
+msgid "Address balance."
 msgstr ""
 
 #, elixir-format
@@ -334,6 +340,27 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/layout/_footer.html.eex:20
+msgid "KardiaChain Network explorer."
+msgstr ""
+
+#, elixir-format
+#: lib/block_scout_web/templates/stakes/_stakes_top.html.eex:45
+msgid "Bridge STAKE to Ethereum"
+msgstr ""
+
+#, elixir-format
+#: lib/block_scout_web/templates/bridged_tokens/index.html.eex:7
+msgid "Bridged Tokens from "
+msgstr ""
+
+#, elixir-format
+#: lib/block_scout_web/templates/layout/_topnav.html.eex:82
+msgid "Bridged from BSC"
+msgstr ""
+
+#, elixir-format
+#: lib/block_scout_web/templates/layout/_topnav.html.eex:76
+msgid "Bridged from Ethereum"
 msgid "KardiaChain Network explorer."
 msgstr ""
 
@@ -805,13 +832,13 @@ msgid "KRC-1155 "
 msgstr ""
 
 #, elixir-format
-#: lib/block_scout_web/views/transaction_view.ex:212
-msgid "KRC-20 "
+#: lib/block_scout_web/views/transaction_view.ex:221
+msgid "KRC-20"
 msgstr ""
 
 #, elixir-format
-#: lib/block_scout_web/views/transaction_view.ex:213
-msgid "ERC-721 "
+#: lib/block_scout_web/views/transaction_view.ex:222
+msgid "KRC-721"
 msgstr ""
 
 #, elixir-format
@@ -1199,7 +1226,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/transaction/overview.html.eex:305
-msgid "List of ERC-1155 tokens created in the transaction."
+msgid "List of KRC-1155 tokens created in the transaction."
 msgstr ""
 
 #, elixir-format
@@ -1829,7 +1856,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/smart_contract/_functions.html.eex:41
-msgid "The fallback function is executed on a call to the contract if none of the other functions match the given function signature, or if no data was supplied at all and there is no receive Ether function. The fallback function always receives data, but in order to also receive Ether it must be marked payable."
+msgid "The fallback function is executed on a call to the contract if none of the other functions match the given function signature, or if no data was supplied at all and there is no receive KAI function. The fallback function always receives data, but in order to also receive KAI it must be marked payable."
 msgstr ""
 
 #, elixir-format
@@ -1854,7 +1881,7 @@ msgstr ""
 
 #, elixir-format
 #: lib/block_scout_web/templates/smart_contract/_functions.html.eex:43
-msgid "The receive function is executed on a call to the contract with empty calldata. This is the function that is executed on plain Ether transfers (e.g. via .send() or .transfer()). If no such function exists, but a payable fallback function exists, the fallback function will be called on a plain Ether transfer. If neither a receive Ether nor a payable fallback function is present, the contract cannot receive Ether through regular transactions and throws an exception."
+msgid "The receive function is executed on a call to the contract with empty calldata. This is the function that is executed on plain KAI transfers (e.g. via .send() or .transfer()). If no such function exists, but a payable fallback function exists, the fallback function will be called on a plain KAI transfer. If neither a receive KAI nor a payable fallback function is present, the contract cannot receive KAI through regular transactions and throws an exception."
 msgstr ""
 
 #, elixir-format
