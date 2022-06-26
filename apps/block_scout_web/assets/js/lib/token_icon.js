@@ -66,6 +66,7 @@ function appendTokenIcon ($tokenIconContainer, chainID, addressHash, foreignChai
   const iconSize = size || 20
   let tokenIconURL = null
   tokenIconURL = getTokenIconUrl(null, addressHash)
+  const tokenIconURL = getTokenIconUrl(chainID.toString(), addressHash)
   if (displayTokenIcons) {
     checkLink(tokenIconURL)
       .then(checkTokenIconLink => {
