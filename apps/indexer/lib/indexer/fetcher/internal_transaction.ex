@@ -123,20 +123,23 @@ defmodule Indexer.Fetcher.InternalTransaction do
         end
     end
     |> case do
-      {:ok, internal_transactions_params} ->
-        import_internal_transaction(internal_transactions_params, filtered_unique_numbers)
+         {:ok, internal_transactions_params} ->
+           import_internal_transaction(internal_transactions_params, filtered_unique_numbers)
 
       {:error, reason} ->
-        Logger.error(fn -> ["failed to fetch internal transactions for blocks: ", inspect(reason)] end,
-          error_count: filtered_unique_numbers_count
-        )
+        Logger.error(fn -> ["failed to fetch internal transactions for blocks: ",
+                 inspect(reason)
+               ]
+             end,
+             error_count: filtered_unique_numbers_count
+           )
 
-        # re-queue the de-duped entries
-        {:retry, filtered_unique_numbers}
+           # re-queue the de-duped entries
+           {:retry, filtered_unique_numbers}
 
-      :ignore ->
-        :ok
-    end
+         :ignore ->
+           :ok
+       end
   end
 
   def import_first_trace(internal_transactions_params) do
