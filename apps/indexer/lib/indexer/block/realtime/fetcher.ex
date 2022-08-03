@@ -547,6 +547,15 @@ defmodule Indexer.Block.Realtime.Fetcher do
     )
   end
 
+  defp log_import_timings(%{blocks: [%{number: number, timestamp: timestamp}]}, fetch_duration, time_before) do
+    node_delay = Timex.diff(time_before, timestamp, :seconds)
+
+    Logger.info("Block #{number} fetching duration: #{fetch_duration / 1_000_000}s. Node delay: #{node_delay}s.")
+  end
+
+  defp log_import_timings(_inserted, _duration, _time_before), do: nil
+
+
   defp balances_params_to_fetch_balances_params_set(balances_params) do
     Enum.into(
       balances_params,
