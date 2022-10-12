@@ -9,6 +9,9 @@
 /*.ez
 /logs
 
+# mix dialyzer artifacts
+/priv/plts
+
 # Generated on crash by the VM
 erl_crash.dump
 
@@ -37,12 +40,19 @@ screenshots/
 # Sobelow
 .sobelow
 
-# osx 
+# osx
 .DS_Store
 
 # mix phx.gen.cert self-signed certs for dev
 /apps/block_scout_web/priv/cert
-/.idea/
+/docker-compose/postgres-data
+/docker-compose/tmp
+
+.idea/
+*.iml
+
+.vscode
+
 /make_env.sh
 /migrate_db.sh
 /block_scout.iml
@@ -50,3 +60,4 @@ screenshots/
 /apps/ethereum_jsonrpc/ethereum_jsonrpc.iml
 /apps/explorer/explorer.iml
 /apps/indexer/indexer.iml
+
