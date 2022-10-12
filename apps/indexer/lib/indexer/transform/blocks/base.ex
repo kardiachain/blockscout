@@ -9,6 +9,6 @@ defmodule Indexer.Transform.Blocks.Base do
 
   @impl Blocks
   def transform(block) when is_map(block) do
-    Map.put(block, :miner_hash, String.downcase(block[:miner_hash]))
+    block
   end
 end
