@@ -6,16 +6,16 @@ defmodule Explorer.Chain.Token do
 
   The following types of tokens are indexed:
 
-  * KRC-20
-  * KRC-721
-  * KRC-1155
+  * ERC-20
+  * ERC-721
+  * ERC-1155
 
   ## Token Specifications
 
-  * [KRC-20](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md)
-  * [KRC-721](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md)
-  * [KRC-777](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-777.md)
-  * [KRC-1155](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md)
+  * [ERC-20](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md)
+  * [ERC-721](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md)
+  * [ERC-777](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-777.md)
+  * [ERC-1155](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md)
   """
 
   use Explorer.Schema
@@ -24,6 +24,7 @@ defmodule Explorer.Chain.Token do
 
   alias Ecto.Changeset
   alias Explorer.Chain.{Address, Hash, Token}
+  alias Explorer.SmartContract.Helper
 
   @typedoc """
   * `name` - Name of the token
@@ -36,7 +37,6 @@ defmodule Explorer.Chain.Token do
   * `contract_address_hash` - Address hash foreign key
   * `holder_count` - the number of `t:Explorer.Chain.Address.t/0` (except the burn address) that have a
     `t:Explorer.Chain.CurrentTokenBalance.t/0` `value > 0`.  Can be `nil` when data not migrated.
-  * `bridged` - Flag for bridged tokens from other chain
   """
   @type t :: %Token{
           name: String.t(),
@@ -48,7 +48,6 @@ defmodule Explorer.Chain.Token do
           contract_address: %Ecto.Association.NotLoaded{} | Address.t(),
           contract_address_hash: Hash.Address.t(),
           holder_count: non_neg_integer() | nil,
-          bridged: boolean(),
           skip_metadata: boolean()
         }
 
@@ -77,7 +76,6 @@ defmodule Explorer.Chain.Token do
     field(:type, :string)
     field(:cataloged, :boolean)
     field(:holder_count, :integer)
-    field(:bridged, :boolean)
     field(:skip_metadata, :boolean)
 
     belongs_to(
@@ -93,7 +91,7 @@ defmodule Explorer.Chain.Token do
   end
 
   @required_attrs ~w(contract_address_hash type)a
-  @optional_attrs ~w(cataloged decimals name symbol total_supply bridged skip_metadata)a
+  @optional_attrs ~w(cataloged decimals name symbol total_supply skip_metadata)a
 
   @doc false
   def changeset(%Token{} = token, params \\ %{}) do
@@ -102,6 +100,8 @@ defmodule Explorer.Chain.Token do
     |> validate_required(@required_attrs)
     |> foreign_key_constraint(:contract_address)
     |> trim_name()
+    |> sanitize_token_input(:name)
+    |> sanitize_token_input(:symbol)
     |> unique_constraint(:contract_address_hash)
   end
 
@@ -111,6 +111,18 @@ defmodule Explorer.Chain.Token do
     case get_change(changeset, :name) do
       nil -> changeset
       name -> put_change(changeset, :name, String.trim(name))
+    end
+  end
+
+  defp sanitize_token_input(%Changeset{valid?: false} = changeset, _), do: changeset
+
+  defp sanitize_token_input(%Changeset{valid?: true} = changeset, key) do
+    case get_change(changeset, key) do
+      nil ->
+        changeset
+
+      property ->
+        put_change(changeset, key, Helper.sanitize_input(property))
     end
   end
 

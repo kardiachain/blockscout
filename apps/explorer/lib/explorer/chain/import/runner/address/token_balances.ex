@@ -10,6 +10,7 @@ defmodule Explorer.Chain.Import.Runner.Address.TokenBalances do
   alias Ecto.{Changeset, Multi, Repo}
   alias Explorer.Chain.Address.TokenBalance
   alias Explorer.Chain.Import
+  alias Explorer.Prometheus.Instrumenter
 
   @behaviour Import.Runner
 
@@ -42,7 +43,12 @@ defmodule Explorer.Chain.Import.Runner.Address.TokenBalances do
       |> Map.put(:timestamps, timestamps)
 
     Multi.run(multi, :address_token_balances, fn repo, _ ->
-      insert(repo, changes_list, insert_options)
+      Instrumenter.block_import_stage_runner(
+        fn -> insert(repo, changes_list, insert_options) end,
+        :block_referencing,
+        :token_blances,
+        :address_token_balances
+      )
     end)
   end
 
@@ -176,6 +182,7 @@ defmodule Explorer.Chain.Import.Runner.Address.TokenBalances do
         set: [
           value: fragment("EXCLUDED.value"),
           value_fetched_at: fragment("EXCLUDED.value_fetched_at"),
+          token_type: fragment("EXCLUDED.token_type"),
           inserted_at: fragment("LEAST(EXCLUDED.inserted_at, ?)", token_balance.inserted_at),
           updated_at: fragment("GREATEST(EXCLUDED.updated_at, ?)", token_balance.updated_at)
         ]

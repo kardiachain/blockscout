@@ -11,8 +11,8 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
   import Ecto.Changeset
   import Ecto.Query, only: [from: 2, limit: 2, offset: 2, order_by: 3, preload: 2]
 
-  alias Explorer.{Chain, PagingOptions}
-  alias Explorer.Chain.{Address, Block, BridgedToken, Hash, Token}
+  alias Explorer.{Chain, PagingOptions, Repo}
+  alias Explorer.Chain.{Address, Block, Hash, Token}
 
   @default_paging_options %PagingOptions{page_size: 50}
 
@@ -23,7 +23,7 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
    *  `token_contract_address_hash` - The contract address hash foreign key.
    *  `block_number` - The block's number that the transfer took place.
    *  `value` - The value that's represents the balance.
-   *  `token_id` - The token_id of the transferred token (applicable for KRC-1155 and KRC-721 tokens)
+   *  `token_id` - The token_id of the transferred token (applicable for ERC-1155 and ERC-721 tokens)
    *  `token_type` - The type of the token
   """
   @type t :: %__MODULE__{
@@ -163,12 +163,10 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
       ctb in __MODULE__,
       where: ctb.address_hash == ^address_hash,
       where: ctb.value > 0,
-      left_join: bt in BridgedToken,
-      on: ctb.token_contract_address_hash == bt.home_token_contract_address_hash,
       left_join: t in Token,
       on: ctb.token_contract_address_hash == t.contract_address_hash,
       preload: :token,
-      select: {ctb, bt, t},
+      select: {ctb, t},
       order_by: [desc: ctb.value, asc: t.type, asc: t.name]
     )
   end
@@ -188,25 +186,33 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
   Builds an `t:Ecto.Query.t/0` to fetch the current balance of the given address for the given token.
   """
   def last_token_balance(address_hash, token_contract_address_hash) do
-    from(
-      tb in __MODULE__,
-      where: tb.token_contract_address_hash == ^token_contract_address_hash,
-      where: tb.address_hash == ^address_hash,
-      select: tb.value
-    )
+    query =
+      from(
+        tb in __MODULE__,
+        where: tb.token_contract_address_hash == ^token_contract_address_hash,
+        where: tb.address_hash == ^address_hash,
+        select: tb.value
+      )
+
+    query
+    |> Repo.one()
   end
 
   @doc """
   Builds an `t:Ecto.Query.t/0` to fetch the current balance of the given address for the given token and token_id
   """
   def last_token_balance_1155(address_hash, token_contract_address_hash, token_id) do
-    from(
-      ctb in __MODULE__,
-      where: ctb.token_contract_address_hash == ^token_contract_address_hash,
-      where: ctb.address_hash == ^address_hash,
-      where: ctb.token_id == ^token_id,
-      select: ctb.value
-    )
+    query =
+      from(
+        ctb in __MODULE__,
+        where: ctb.token_contract_address_hash == ^token_contract_address_hash,
+        where: ctb.address_hash == ^address_hash,
+        where: ctb.token_id == ^token_id,
+        select: ctb.value
+      )
+
+    query
+    |> Repo.one()
   end
 
   @doc """
@@ -226,7 +232,7 @@ defmodule Explorer.Chain.Address.CurrentTokenBalance do
   end
 
   @doc """
-  Builds an `t:Ecto.Query.t/0` to fetch holders of the particular token_id in KRC-1155
+  Builds an `t:Ecto.Query.t/0` to fetch holders of the particular token_id in ERC-1155
   """
   def token_holders_by_token_id_query(token_contract_address_hash, token_id) do
     from(

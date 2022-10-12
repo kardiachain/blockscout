@@ -11,6 +11,7 @@ defmodule Explorer.Chain.Import.Runner.Address.CurrentTokenBalances do
   alias Explorer.Chain.Address.CurrentTokenBalance
   alias Explorer.Chain.{Hash, Import}
   alias Explorer.Chain.Import.Runner.Tokens
+  alias Explorer.Prometheus.Instrumenter
 
   @behaviour Import.Runner
 
@@ -107,8 +108,7 @@ defmodule Explorer.Chain.Import.Runner.Address.CurrentTokenBalances do
       |> Map.put(:timestamps, timestamps)
 
     # Enforce ShareLocks tables order (see docs: sharelocks.md)
-    multi
-    |> Multi.run(:acquire_contract_address_tokens, fn repo, _ ->
+    run_func = fn repo ->
       token_contract_address_hashes_and_ids =
         changes_list
         |> Enum.map(fn change ->
@@ -119,22 +119,44 @@ defmodule Explorer.Chain.Import.Runner.Address.CurrentTokenBalances do
         |> Enum.uniq()
 
       Tokens.acquire_contract_address_tokens(repo, token_contract_address_hashes_and_ids)
+    end
+
+    multi
+    |> Multi.run(:acquire_contract_address_tokens, fn repo, _ ->
+      Instrumenter.block_import_stage_runner(
+        fn -> run_func.(repo) end,
+        :block_following,
+        :current_token_balances,
+        :acquire_contract_address_tokens
+      )
     end)
     |> Multi.run(:address_current_token_balances, fn repo, _ ->
-      insert(repo, changes_list, insert_options)
+      Instrumenter.block_import_stage_runner(
+        fn -> insert(repo, changes_list, insert_options) end,
+        :block_following,
+        :current_token_balances,
+        :acquire_contract_address_tokens
+      )
     end)
     |> Multi.run(:address_current_token_balances_update_token_holder_counts, fn repo,
                                                                                 %{
                                                                                   address_current_token_balances:
                                                                                     upserted_balances
                                                                                 } ->
-      token_holder_count_deltas = upserted_balances_to_holder_count_deltas(upserted_balances)
+      Instrumenter.block_import_stage_runner(
+        fn ->
+          token_holder_count_deltas = upserted_balances_to_holder_count_deltas(upserted_balances)
 
-      # ShareLocks order already enforced by `acquire_contract_address_tokens` (see docs: sharelocks.md)
-      Tokens.update_holder_counts_with_deltas(
-        repo,
-        token_holder_count_deltas,
-        insert_options
+          # ShareLocks order already enforced by `acquire_contract_address_tokens` (see docs: sharelocks.md)
+          Tokens.update_holder_counts_with_deltas(
+            repo,
+            token_holder_count_deltas,
+            insert_options
+          )
+        end,
+        :block_following,
+        :current_token_balances,
+        :acquire_contract_address_tokens
       )
     end)
   end
@@ -147,7 +169,7 @@ defmodule Explorer.Chain.Import.Runner.Address.CurrentTokenBalances do
   def timeout, do: @timeout
 
   defp valid_holder?(value) do
-    not is_nil(value) and Decimal.cmp(value, 0) == :gt
+    not is_nil(value) and Decimal.compare(value, 0) == :gt
   end
 
   # Assumes existence of old_value field with previous value or nil
@@ -322,6 +344,7 @@ defmodule Explorer.Chain.Import.Runner.Address.CurrentTokenBalances do
           value: fragment("EXCLUDED.value"),
           value_fetched_at: fragment("EXCLUDED.value_fetched_at"),
           old_value: current_token_balance.value,
+          token_type: fragment("EXCLUDED.token_type"),
           inserted_at: fragment("LEAST(EXCLUDED.inserted_at, ?)", current_token_balance.inserted_at),
           updated_at: fragment("GREATEST(EXCLUDED.updated_at, ?)", current_token_balance.updated_at)
         ]

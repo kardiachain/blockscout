@@ -22,11 +22,6 @@ defmodule Explorer.Chain.Wei do
 
   alias Explorer.Chain.Wei
 
-  @derive {Jason.Encoder,
-           except: [
-             :__meta__
-           ]}
-
   defstruct ~w(value)a
 
   use Ecto.Type
@@ -269,5 +264,11 @@ end
 defimpl Inspect, for: Explorer.Chain.Wei do
   def inspect(wei, _) do
     "#Explorer.Chain.Wei<#{Decimal.to_string(wei.value)}>"
+  end
+end
+
+defimpl Jason.Encoder, for: Explorer.Chain.Wei do
+  def encode(wei, _) do
+    Decimal.to_string(wei.value)
   end
 end
