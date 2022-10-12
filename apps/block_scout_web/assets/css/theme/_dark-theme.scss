@@ -1,9 +1,14 @@
-$body-dark: #1c1d31; // body background
-$dark-bg: #22223a; // hero shade
-$dark-light-bg: #282945; // pills bg shade
-$dark-light: #313355; // tile light top share
-$labels-dark: #8a8dba; // header nav, labels
+$body-dark: #181818; // body background
+$dark-bg: #2A2B40; // hero shade
+$dark-light: #434343; // tile light top share
+$dark-light-bg: #3a3b3c; // pills bg shade
+$dark-darker-bg: #252525;
+$labels-dark: #fcfcfc; // header nav, labels
 $dark-stakes-banned-background: #3e314c;
+
+$box-line-bg: #3a3b3c;
+$box-line-bg-hover: #828DA0;
+$box-line-border: #9AA3B2;
 
 // Switcher
 .dark-mode-changer {
@@ -66,8 +71,8 @@ $dark-stakes-banned-background: #3e314c;
 		}
 	}
 	.navbar.navbar-primary .form-control {
-		background-color: $dark-bg;
-		border-color: $dark-bg;
+		background-color: $dark-light-bg;
+		border-color: $box-line-border;
 		color: #fff;
 		&::placeholder {
 			color: $labels-dark;
@@ -91,14 +96,14 @@ $dark-stakes-banned-background: #3e314c;
 		color: #fff;
 	}
 	.footer-list ul li::before {
-		background-color: $dark-secondary;
+		background-color: $dark-primary;
 	}
 
 	// hero stats
 
 	.layout-container .dashboard-banner-container {
 		background-image: none;
-		background-color: $dark-bg !important;
+		background-color: $dark-darker-bg !important;
 	}
 	.dashboard-banner-network-plain-container,
 	.dashboard-banner-network-plain-container::after {
@@ -162,7 +167,7 @@ $dark-stakes-banned-background: #3e314c;
 	.card-tab {
 		background-color: transparent;
 		&:hover:not(.active) {
-			background-color: rgba($dark-primary, .15);
+			background-color: rgba($dark-light, .15);
 			color: $dark-primary;
 		}
 		&.active {
@@ -172,7 +177,7 @@ $dark-stakes-banned-background: #3e314c;
 	}
 
 	.card-background-1 {
-		background-color: $dark-primary-alternate;
+		background-color: $dark-light;
 	}
 
 	// Components
@@ -225,7 +230,7 @@ $dark-stakes-banned-background: #3e314c;
 	.tile span[data-address-hash],
 	.tile a[data-test=token_link] { color: $dark-primary; }
 	.fade-up-blocks-chain .tile-type-block-animation .tile-type-line-up {
-		background-color: $dark-primary;
+		background-color: $box-line-border;
 	}
 	.tile.tile-type-block {
 		border-left-color: $dark-primary
@@ -234,9 +239,9 @@ $dark-stakes-banned-background: #3e314c;
 		color: $dark-primary;
 	}
 	.tile.tile-type-block .tile-transaction-type-block {
-		border-right-color: $dark-primary;
-		border-top-color: $dark-primary;
-		border-bottom-color: $dark-primary;
+		border-right-color: $box-line-border;
+		border-top-color: $box-line-border;
+		border-bottom-color: $box-line-border;
 	}
 	.tile .progress {
 		background-color: rgba(#fff, .2);
@@ -251,12 +256,12 @@ $dark-stakes-banned-background: #3e314c;
 	// btns
 
 	.btn-line {
-		background-color: transparent;
-		border-color: $dark-primary;
-		color: $dark-primary;
+		background-color: $box-line-bg;
+		border-color: $box-line-border;
+		color: $labels-dark;
 		&:hover {
-			border-color: $dark-primary;
-			background-color: $dark-primary;
+			border-color: $box-line-border;
+			background-color: $box-line-bg-hover;
 			color: #fff;
 		}
 	}

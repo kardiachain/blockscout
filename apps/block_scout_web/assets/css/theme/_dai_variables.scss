@@ -25,9 +25,9 @@ $dashboard-stats-item-border-color: $secondary; // stat border
 
 $dashboard-banner-gradient-start: $primary; // gradient begin
 
-$dashboard-banner-gradient-end: $secondary; // gradient end
+$dashboard-banner-gradient-end: lighten($primary, 5); // gradient end
 
-$dashboard-banner-network-plain-container-background-color: $secondary; // stats bg
+$dashboard-banner-network-plain-container-background-color: #20446e; // stats bg
 
 
 // navigation
@@ -123,8 +123,10 @@ $modal-status-graph-success: $secondary;
 $stakes-progress-graph-color: $secondary;
 
 // Dark theme
-$dark-primary: $secondary;
-$dark-primary-alternate: $secondary;
+$dark-primary: $15bba6;
+$dark-primary-alternate: $15bba6;
+$dark-secondary: #93d7ff;
+$dark-tertiary: #5a77ff;
 $labels-dark: #A6BCF5;
 $body-dark: #1c1d31; // body background
 $dashboard-line-color-market-dark-theme: $secondary;
