@@ -3,6 +3,9 @@ defmodule BlockScoutWeb.WebRouter do
   Router for web app
   """
   use BlockScoutWeb, :router
+  require Ueberauth
+
+  alias BlockScoutWeb.Plug.CheckAccountWeb
 
   pipeline :browser do
     plug(:accepts, ["html"])
@@ -11,6 +14,69 @@ defmodule BlockScoutWeb.WebRouter do
     plug(:protect_from_forgery)
     plug(BlockScoutWeb.CSPHeader)
     plug(BlockScoutWeb.ChecksumAddress)
+  end
+
+  pipeline :account do
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_flash)
+    plug(CheckAccountWeb)
+    plug(:protect_from_forgery)
+    plug(BlockScoutWeb.CSPHeader)
+    plug(BlockScoutWeb.ChecksumAddress)
+  end
+
+  if Mix.env() == :dev do
+    forward("/sent_emails", Bamboo.SentEmailViewerPlug)
+  end
+
+  scope "/auth", BlockScoutWeb do
+    pipe_through(:account)
+
+    get("/profile", Account.AuthController, :profile)
+    get("/logout", Account.AuthController, :logout)
+    get("/:provider", Account.AuthController, :request)
+    get("/:provider/callback", Account.AuthController, :callback)
+  end
+
+  scope "/account", BlockScoutWeb do
+    pipe_through(:account)
+
+    resources("/tag_address", Account.TagAddressController,
+      only: [:index, :new, :create, :delete],
+      as: :tag_address
+    )
+
+    resources("/tag_transaction", Account.TagTransactionController,
+      only: [:index, :new, :create, :delete],
+      as: :tag_transaction
+    )
+
+    resources("/watchlist", Account.WatchlistController,
+      only: [:show],
+      singleton: true,
+      as: :watchlist
+    )
+
+    resources("/watchlist_address", Account.WatchlistAddressController,
+      only: [:new, :create, :edit, :update, :delete],
+      as: :watchlist_address
+    )
+
+    resources("/api_key", Account.ApiKeyController,
+      only: [:new, :create, :edit, :update, :delete, :index],
+      as: :api_key
+    )
+
+    resources("/custom_abi", Account.CustomABIController,
+      only: [:new, :create, :edit, :update, :delete, :index],
+      as: :custom_abi
+    )
+
+    resources("/public_tags_request", Account.PublicTagsRequestController,
+      only: [:new, :create, :edit, :update, :delete, :index],
+      as: :public_tags_request
+    )
   end
 
   # Disallows Iframes (write routes)
@@ -40,17 +106,16 @@ defmodule BlockScoutWeb.WebRouter do
 
     resources("/blocks", BlockController, as: :blocks, only: [:index])
 
-    resources "/blocks", BlockController, as: :block_secondary, only: [:show], param: "hash_or_number" do
+    resources "/blocks", BlockController,
+      as: :block_secondary,
+      only: [:show],
+      param: "hash_or_number" do
       resources("/transactions", BlockTransactionController, only: [:index], as: :transaction)
     end
 
     get("/reorgs", BlockController, :reorg, as: :reorg)
 
     get("/uncles", BlockController, :uncle, as: :uncle)
-
-    get("/validators", StakesController, :index, as: :validators, assigns: %{filter: :validator})
-    get("/active-pools", StakesController, :index, as: :active_pools, assigns: %{filter: :active})
-    get("/inactive-pools", StakesController, :index, as: :inactive_pools, assigns: %{filter: :inactive})
 
     resources("/pending-transactions", PendingTransactionController, only: [:index])
 
@@ -84,8 +149,6 @@ defmodule BlockScoutWeb.WebRouter do
     resources("/accounts", AddressController, only: [:index])
 
     resources("/tokens", TokensController, only: [:index])
-
-    resources("/bridged-tokens", BridgedTokensController, only: [:index, :show])
 
     resources "/address", AddressController, only: [:show] do
       resources("/transactions", AddressTransactionController, only: [:index], as: :transaction)
@@ -140,10 +203,24 @@ defmodule BlockScoutWeb.WebRouter do
       )
 
       resources(
-        "/verify-via-json",
+        "/verify-via-metadata-json",
         AddressContractVerificationViaJsonController,
         only: [:new],
         as: :verify_contract_via_json
+      )
+
+      resources(
+        "/verify-via-standard-json-input",
+        AddressContractVerificationViaStandardJsonInputController,
+        only: [:new],
+        as: :verify_contract_via_standard_json_input
+      )
+
+      resources(
+        "/verify-via-multi-part-files",
+        AddressContractVerificationViaMultiPartFilesController,
+        only: [:new],
+        as: :verify_contract_via_multi_part_files
       )
 
       resources(
@@ -229,9 +306,30 @@ defmodule BlockScoutWeb.WebRouter do
 
       resources(
         "/read-contract",
-        Tokens.ReadContractController,
+        Tokens.ContractController,
         only: [:index],
         as: :read_contract
+      )
+
+      resources(
+        "/write-contract",
+        Tokens.ContractController,
+        only: [:index],
+        as: :write_contract
+      )
+
+      resources(
+        "/read-proxy",
+        Tokens.ContractController,
+        only: [:index],
+        as: :read_proxy
+      )
+
+      resources(
+        "/write-proxy",
+        Tokens.ContractController,
+        only: [:index],
+        as: :write_proxy
       )
 
       resources(
@@ -287,9 +385,30 @@ defmodule BlockScoutWeb.WebRouter do
 
       resources(
         "/read-contract",
-        Tokens.ReadContractController,
+        Tokens.ContractController,
         only: [:index],
         as: :read_contract
+      )
+
+      resources(
+        "/write-contract",
+        Tokens.ContractController,
+        only: [:index],
+        as: :write_contract
+      )
+
+      resources(
+        "/read-proxy",
+        Tokens.ContractController,
+        only: [:index],
+        as: :read_proxy
+      )
+
+      resources(
+        "/write-proxy",
+        Tokens.ContractController,
+        only: [:index],
+        as: :write_proxy
       )
 
       resources(
@@ -351,8 +470,6 @@ defmodule BlockScoutWeb.WebRouter do
     get("/search-results", SearchController, :search_results)
 
     get("/csv-export", CsvExportController, :index)
-
-    post("/captcha", CaptchaController, :index)
 
     get("/transactions-csv", AddressTransactionController, :transactions_csv)
 

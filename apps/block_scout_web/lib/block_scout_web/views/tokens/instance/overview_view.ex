@@ -12,6 +12,7 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
   import BlockScoutWeb.APIDocsView, only: [blockscout_url: 1, blockscout_url: 2]
 
   @tabs ["token-transfers", "metadata"]
+  @stub_image "/images/controller.svg"
 
   def token_name?(%Token{name: nil}), do: false
   def token_name?(%Token{name: _}), do: true
@@ -22,25 +23,46 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
   def total_supply?(%Token{total_supply: nil}), do: false
   def total_supply?(%Token{total_supply: _}), do: true
 
-  def media_src(nil), do: "/images/controller.svg"
+  def media_src(instance, high_quality_media? \\ nil)
+  def media_src(nil, _), do: @stub_image
 
-  def media_src(instance) do
-    result =
-      cond do
-        instance.metadata && instance.metadata["image_url"] ->
-          retrieve_image(instance.metadata["image_url"])
-
-        instance.metadata && instance.metadata["image"] ->
-          retrieve_image(instance.metadata["image"])
-
-        instance.metadata && instance.metadata["properties"]["image"]["description"] ->
-          instance.metadata["properties"]["image"]["description"]
-
-        true ->
-          media_src(nil)
-      end
+  def media_src(instance, high_quality_media?) do
+    result = get_media_src(instance.metadata, high_quality_media?)
 
     if String.trim(result) == "", do: media_src(nil), else: result
+  end
+
+  defp get_media_src(nil, _), do: media_src(nil)
+
+  defp get_media_src(metadata, high_quality_media?) do
+    cond do
+      metadata["animation_url"] && high_quality_media? ->
+        retrieve_image(metadata["animation_url"])
+
+      metadata["image_url"] ->
+        retrieve_image(metadata["image_url"])
+
+      metadata["image"] ->
+        retrieve_image(metadata["image"])
+
+      metadata["properties"]["image"]["description"] ->
+        metadata["properties"]["image"]["description"]
+
+      true ->
+        media_src(nil)
+    end
+  end
+
+  def media_type("data:image/" <> _data) do
+    "image"
+  end
+
+  def media_type("data:video/" <> _data) do
+    "video"
+  end
+
+  def media_type("data:" <> _data) do
+    nil
   end
 
   def media_type(media_src) when not is_nil(media_src) do
@@ -48,20 +70,10 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
 
     mime_type =
       if ext == "" do
-        case HTTPoison.get(media_src) do
-          {:ok, %HTTPoison.Response{body: body, status_code: 200}} ->
-            {:ok, path} = Briefly.create()
-
-            File.write!(path, body)
-
-            case FileInfo.get_info([path]) do
-              %{^path => %FileInfo.Mime{subtype: subtype}} ->
-                subtype
-                |> MIME.type()
-
-              _ ->
-                nil
-            end
+        case HTTPoison.head(media_src, [], follow_redirect: true) do
+          {:ok, %HTTPoison.Response{status_code: 200, headers: headers}} ->
+            headers_map = Map.new(headers, fn {key, value} -> {String.downcase(key), value} end)
+            headers_map["content-type"]
 
           _ ->
             nil
@@ -150,8 +162,15 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
     |> tab_name()
   end
 
+  defp retrieve_image(image) when is_nil(image), do: @stub_image
+
   defp retrieve_image(image) when is_map(image) do
     image["description"]
+  end
+
+  defp retrieve_image(image) when is_list(image) do
+    image_url = image |> Enum.at(0)
+    retrieve_image(image_url)
   end
 
   defp retrieve_image(image_url) do
@@ -162,11 +181,11 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
 
   defp compose_ipfs_url(image_url) do
     cond do
-      image_url =~ "ipfs://ipfs" ->
+      image_url =~ ~r/^ipfs:\/\/ipfs/ ->
         "ipfs://ipfs" <> ipfs_uid = image_url
         "https://ipfs.io/ipfs/" <> ipfs_uid
 
-      image_url =~ "ipfs://" ->
+      image_url =~ ~r/^ipfs:\/\// ->
         "ipfs://" <> ipfs_uid = image_url
         "https://ipfs.io/ipfs/" <> ipfs_uid
 

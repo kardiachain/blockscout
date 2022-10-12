@@ -1,8 +1,8 @@
 defmodule BlockScoutWeb.TransactionView do
-  require Logger
   use BlockScoutWeb, :view
 
   alias BlockScoutWeb.{AccessHelpers, AddressView, BlockView, TabHelpers}
+  alias BlockScoutWeb.Account.AuthController
   alias BlockScoutWeb.Cldr.Number
   alias Explorer.{Chain, CustomContractsHelpers, Repo}
   alias Explorer.Chain.Block.Reward
@@ -12,7 +12,7 @@ defmodule BlockScoutWeb.TransactionView do
   alias Timex.Duration
 
   import BlockScoutWeb.Gettext
-  import BlockScoutWeb.AddressView, only: [from_address_hash: 1, short_token_id: 2]
+  import BlockScoutWeb.AddressView, only: [from_address_hash: 1, short_token_id: 2, tag_name_to_label: 1]
   import BlockScoutWeb.Tokens.Helpers
 
   @tabs ["token-transfers", "internal-transactions", "logs", "raw-trace"]
@@ -210,9 +210,9 @@ defmodule BlockScoutWeb.TransactionView do
 
   def token_type_name(type) do
     case type do
-      :erc20 -> gettext("KRC-20 ")
-      :erc721 -> gettext("KRC-721 ")
-      :erc1155 -> gettext("KRC-1155 ")
+      :erc20 -> gettext("ERC-20 ")
+      :erc721 -> gettext("ERC-721 ")
+      :erc1155 -> gettext("ERC-1155 ")
       _ -> ""
     end
   end
@@ -302,9 +302,6 @@ defmodule BlockScoutWeb.TransactionView do
 
   def contract_creation?(_), do: false
 
-  #  def utf8_encode() do
-  #  end
-
   def fee(%Transaction{} = transaction) do
     {_, value} = Chain.fee(transaction, :wei)
     value
@@ -332,6 +329,8 @@ defmodule BlockScoutWeb.TransactionView do
     transaction |> Chain.transaction_to_revert_reason() |> decoded_revert_reason(transaction)
   end
 
+  def get_pure_transaction_revert_reason(nil), do: nil
+
   def get_pure_transaction_revert_reason(transaction), do: Chain.transaction_to_revert_reason(transaction)
 
   def empty_exchange_rate?(exchange_rate) do
@@ -350,9 +349,9 @@ defmodule BlockScoutWeb.TransactionView do
       :pending -> gettext("Pending")
       :awaiting_internal_transactions -> gettext("(Awaiting internal transactions for status)")
       :success -> gettext("Success")
-      {:error, :awaiting_internal_transactions} -> gettext("Error")
+      {:error, :awaiting_internal_transactions} -> gettext("Error: (Awaiting internal transactions for reason)")
       # The pool of possible error reasons is unknown or even if it is enumerable, so we can't translate them
-      {:error, reason} when is_binary(reason) -> gettext("Error")
+      {:error, reason} when is_binary(reason) -> gettext("Error: %{reason}", reason: reason)
     end
   end
 
@@ -394,8 +393,7 @@ defmodule BlockScoutWeb.TransactionView do
   def gas_used_perc(%Transaction{gas_used: nil}), do: nil
 
   def gas_used_perc(%Transaction{gas_used: gas_used, gas: gas}) do
-    Logger.info("---------Check gas used perc #{gas_used} and gas #{gas}")
-    if Decimal.cmp(gas, 0) == :gt do
+    if Decimal.compare(gas, 0) == :gt do
       gas_used
       |> Decimal.div(gas)
       |> Decimal.mult(100)
@@ -553,7 +551,7 @@ defmodule BlockScoutWeb.TransactionView do
 
     case Integer.parse(string_value) do
       {integer, ""} -> integer
-      _ -> 0
+      _ -> 2040
     end
   end
 
@@ -567,5 +565,34 @@ defmodule BlockScoutWeb.TransactionView do
 
   defp template_to_string(template) when is_tuple(template) do
     safe_to_string(template)
+  end
+
+  # Function decodes revert reason of the transaction
+  @spec decoded_revert_reason(Transaction.t() | nil) :: binary() | nil
+  def decoded_revert_reason(transaction) do
+    revert_reason = get_pure_transaction_revert_reason(transaction)
+
+    case revert_reason do
+      "0x" <> hex_part ->
+        proccess_hex_revert_reason(hex_part)
+
+      hex_part ->
+        proccess_hex_revert_reason(hex_part)
+    end
+  end
+
+  # Function converts hex revert reason to the binary
+  @spec proccess_hex_revert_reason(nil) :: nil
+  defp proccess_hex_revert_reason(nil), do: nil
+
+  @spec proccess_hex_revert_reason(binary()) :: binary()
+  defp proccess_hex_revert_reason(hex_revert_reason) do
+    case Integer.parse(hex_revert_reason, 16) do
+      {number, ""} ->
+        :binary.encode_unsigned(number)
+
+      _ ->
+        hex_revert_reason
+    end
   end
 end

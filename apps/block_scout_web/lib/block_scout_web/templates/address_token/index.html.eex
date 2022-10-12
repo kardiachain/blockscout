@@ -1,7 +1,7 @@
 <section class="container">
   <% is_proxy = BlockScoutWeb.AddressView.smart_contract_is_proxy?(@address) %>
 
-  <%= render BlockScoutWeb.AddressView, "overview.html", address: @address, is_proxy: is_proxy, conn: @conn, exchange_rate: @exchange_rate, coin_balance_status: @coin_balance_status, counters_path: @counters_path %>
+  <%= render BlockScoutWeb.AddressView, "overview.html", address: @address, is_proxy: is_proxy, conn: @conn, exchange_rate: @exchange_rate, coin_balance_status: @coin_balance_status, counters_path: @counters_path, tags: @tags %>
 
   <section id="tokens">
     <div class="card">
@@ -23,6 +23,9 @@
                     <tr>
                         <th class="stakes-table-th">
                             <div class="stakes-table-th-content">&nbsp;</div>
+                        </th>
+                        <th class="stakes-table-th">
+                            <div>&nbsp;</div>
                         </th>
                         <th class="stakes-table-th">
                             <div class="stakes-table-th-content">Asset</div>
@@ -48,7 +51,7 @@
                     </tr>
                 </thead>
                 <tbody data-items data-selector="address-tokens-list">
-                    <%= render BlockScoutWeb.CommonComponentsView, "_table-loader.html", columns_num: 8 %>
+                    <%= render BlockScoutWeb.CommonComponentsView, "_table-loader.html", columns_num: 9 %>
                 </tbody>
             </table>
         </div>

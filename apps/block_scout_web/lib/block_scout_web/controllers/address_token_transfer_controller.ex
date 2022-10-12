@@ -1,6 +1,9 @@
 defmodule BlockScoutWeb.AddressTokenTransferController do
   use BlockScoutWeb, :controller
 
+  import BlockScoutWeb.Account.AuthController, only: [current_user: 1]
+  import BlockScoutWeb.Models.GetAddressTags, only: [get_address_tags: 2]
+
   alias BlockScoutWeb.{AccessHelpers, Controller, TransactionView}
   alias Explorer.ExchangeRates.Token
   alias Explorer.{Chain, Market}
@@ -16,6 +19,9 @@ defmodule BlockScoutWeb.AddressTokenTransferController do
       [created_contract_address: :names] => :optional,
       [from_address: :names] => :optional,
       [to_address: :names] => :optional,
+      [created_contract_address: :smart_contract] => :optional,
+      [from_address: :smart_contract] => :optional,
+      [to_address: :smart_contract] => :optional,
       [token_transfers: :token] => :optional,
       [token_transfers: :to_address] => :optional,
       [token_transfers: :from_address] => :optional,
@@ -106,7 +112,8 @@ defmodule BlockScoutWeb.AddressTokenTransferController do
         exchange_rate: Market.get_exchange_rate(Explorer.coin()) || Token.null(),
         current_path: Controller.current_full_path(conn),
         token: token,
-        counters_path: address_path(conn, :address_counters, %{"id" => Address.checksum(address_hash)})
+        counters_path: address_path(conn, :address_counters, %{"id" => Address.checksum(address_hash)}),
+        tags: get_address_tags(address_hash, current_user(conn))
       )
     else
       {:restricted_access, _} ->
@@ -197,7 +204,8 @@ defmodule BlockScoutWeb.AddressTokenTransferController do
         exchange_rate: Market.get_exchange_rate(Explorer.coin()) || Token.null(),
         filter: params["filter"],
         current_path: Controller.current_full_path(conn),
-        counters_path: address_path(conn, :address_counters, %{"id" => Address.checksum(address_hash)})
+        counters_path: address_path(conn, :address_counters, %{"id" => Address.checksum(address_hash)}),
+        tags: get_address_tags(address_hash, current_user(conn))
       )
     else
       {:restricted_access, _} ->

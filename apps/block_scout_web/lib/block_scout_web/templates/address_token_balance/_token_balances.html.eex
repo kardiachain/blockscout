@@ -19,13 +19,13 @@
     <%= if @conn.request_path |> String.contains?("/tokens") do %>
       <a href="#tokens" style="text-decoration: none;">
         <span class="btn-wallet-icon">
-          <i class="fas fa-wallet " style="line-height: 31px;"></i>
+          <i class="fa-solid fa-wallet " style="line-height: 31px;"></i>
         </span>
       </a>
     <% else %>
       <a href="<%= AccessHelpers.get_path(@conn, :address_token_path, :index, @address_hash) %>#tokens" style="text-decoration: none;">
         <span class="btn-wallet-icon">
-          <i class="fas fa-wallet" style="line-height: 31px;"></i>
+          <i class="fa-solid fa-wallet" style="line-height: 31px;"></i>
         </span>
       </a>
     <% end %>
@@ -47,30 +47,30 @@
               placeholder: gettext("Search tokens")
             ) %>
       </div>
-      <%= if Enum.any?(@token_balances, fn {token_balance, _, _} -> token_balance.token.type == "KRC-721" end) do %>
+      <%= if Enum.any?(@token_balances, fn {token_balance, _} -> token_balance.token.type == "ERC-721" end) do %>
         <%= render(
               "_tokens.html",
               conn: @conn,
-              token_balances: filter_by_type(@token_balances, "KRC-721"),
-              type: "KRC-721"
+              token_balances: filter_by_type(@token_balances, "ERC-721"),
+              type: "ERC-721"
             ) %>
       <% end %>
 
-      <%= if Enum.any?(@token_balances, fn {token_balance, _, _} -> token_balance.token.type == "KRC-1155" end) do %>
+      <%= if Enum.any?(@token_balances, fn {token_balance, _} -> token_balance.token.type == "ERC-1155" end) do %>
         <%= render(
               "_tokens.html",
               conn: @conn,
-              token_balances: filter_by_type(@token_balances, "KRC-1155"),
-              type: "KRC-1155"
+              token_balances: filter_by_type(@token_balances, "ERC-1155"),
+              type: "ERC-1155"
             ) %>
       <% end %>
 
-      <%= if Enum.any?(@token_balances, fn {token_balance, _, _} -> token_balance.token.type == "KRC-20" end) do %>
+      <%= if Enum.any?(@token_balances, fn {token_balance, _} -> token_balance.token.type == "ERC-20" end) do %>
         <%= render(
               "_tokens.html",
               conn: @conn,
-              token_balances: filter_by_type(@token_balances, "KRC-20"),
-              type: "KRC-20"
+              token_balances: filter_by_type(@token_balances, "ERC-20"),
+              type: "ERC-20"
             ) %>
       <% end %>
     </div>

@@ -4,11 +4,14 @@ defmodule BlockScoutWeb.AddressView do
   require Logger
 
   alias BlockScoutWeb.{AccessHelpers, LayoutView}
-  alias Explorer.{Chain, CustomContractsHelpers}
+  alias Explorer.Account.CustomABI
+  alias Explorer.{Chain, CustomContractsHelpers, Repo}
   alias Explorer.Chain.{Address, Hash, InternalTransaction, SmartContract, Token, TokenTransfer, Transaction, Wei}
   alias Explorer.Chain.Block.Reward
   alias Explorer.ExchangeRates.Token, as: TokenExchangeRate
   alias Explorer.SmartContract.{Helper, Writer}
+
+  import BlockScoutWeb.Account.AuthController, only: [current_user: 1]
 
   @dialyzer :no_match
 
@@ -132,7 +135,7 @@ defmodule BlockScoutWeb.AddressView do
       do: ""
 
   def balance_percentage(%Address{fetched_coin_balance: balance}, total_supply) do
-    if Decimal.cmp(total_supply, 0) == :gt do
+    if Decimal.compare(total_supply, 0) == :gt do
       balance
       |> Wei.to(:ether)
       |> Decimal.div(Decimal.new(total_supply))
@@ -176,16 +179,31 @@ defmodule BlockScoutWeb.AddressView do
   end
 
   @doc """
-  Returns the primary name of an address if available.
+  Returns the primary name of an address if available. If there is no names on address function performs preload of names association.
   """
-  def primary_name(%Address{names: [_ | _] = address_names}) do
+  def primary_name(_, second_time? \\ false)
+
+  def primary_name(%Address{names: [_ | _] = address_names}, _second_time?) do
     case Enum.find(address_names, &(&1.primary == true)) do
-      nil -> nil
-      %Address.Name{name: name} -> name
+      nil ->
+        %Address.Name{name: name} = Enum.at(address_names, 0)
+        name
+
+      %Address.Name{name: name} ->
+        name
     end
   end
 
-  def primary_name(%Address{names: _}), do: nil
+  def primary_name(%Address{names: _} = address, false) do
+    primary_name(Repo.preload(address, [:names]), true)
+  end
+
+  def primary_name(%Address{names: _}, true), do: nil
+
+  def implementation_name(%Address{smart_contract: %{implementation_name: implementation_name}}),
+    do: implementation_name
+
+  def implementation_name(_), do: nil
 
   def primary_validator_metadata(%Address{names: [_ | _] = address_names}) do
     case Enum.find(address_names, &(&1.primary == true)) do
@@ -268,8 +286,7 @@ defmodule BlockScoutWeb.AddressView do
   end
 
   def trimmed_hash(address) when is_binary(address) do
-    addr = Address.checksum(address)
-    "#{String.slice(addr, 0..5)}-#{String.slice(addr, -4..-1)}"
+    "#{String.slice(address, 0..7)}–#{String.slice(address, -6..-1)}"
   end
 
   def trimmed_hash(_), do: ""
@@ -353,7 +370,7 @@ defmodule BlockScoutWeb.AddressView do
   defp tab_name(["read-proxy"]), do: gettext("Read Proxy")
   defp tab_name(["write-contract"]), do: gettext("Write Contract")
   defp tab_name(["write-proxy"]), do: gettext("Write Proxy")
-  defp tab_name(["coin-balances"]), do: gettext("Balance History")
+  defp tab_name(["coin-balances"]), do: gettext("Coin Balance History")
   defp tab_name(["validations"]), do: gettext("Blocks Validated")
   defp tab_name(["logs"]), do: gettext("Logs")
 
@@ -433,19 +450,32 @@ defmodule BlockScoutWeb.AddressView do
 
   def smart_contract_is_gnosis_safe_proxy?(_address), do: false
 
-  def is_omni_bridge?(nil), do: false
-
-  def is_omni_bridge?(address_hash) do
-    address_hash_str = "0x" <> Base.encode16(address_hash.bytes, case: :lower)
-
-    address_hash_str == String.downcase(System.get_env("ETH_OMNI_BRIDGE_MEDIATOR", "")) ||
-      address_hash_str == String.downcase(System.get_env("BSC_OMNI_BRIDGE_MEDIATOR", ""))
+  def tag_name_to_label(tag_name) do
+    tag_name
+    |> String.replace(" ", "-")
   end
 
-  def is_amb_bridge?(nil), do: false
-
-  def is_amb_bridge?(address_hash) do
-    address_hash_str = "0x" <> Base.encode16(address_hash.bytes, case: :lower)
-    String.downcase(System.get_env("AMB_BRIDGE_MEDIATORS", "")) =~ address_hash_str
+  def fetch_custom_abi(conn, address_hash) do
+    if current_user = current_user(conn) do
+      CustomABI.get_custom_abi_by_identity_id_and_address_hash(address_hash, current_user.id)
+    end
   end
+
+  def has_address_custom_abi_with_read_functions?(conn, address_hash) do
+    custom_abi = fetch_custom_abi(conn, address_hash)
+
+    check_custom_abi_for_having_read_functions(custom_abi)
+  end
+
+  def check_custom_abi_for_having_read_functions(custom_abi),
+    do: !is_nil(custom_abi) && Enum.any?(custom_abi.abi, &is_read_function?(&1))
+
+  def has_address_custom_abi_with_write_functions?(conn, address_hash) do
+    custom_abi = fetch_custom_abi(conn, address_hash)
+
+    check_custom_abi_for_having_write_functions(custom_abi)
+  end
+
+  def check_custom_abi_for_having_write_functions(custom_abi),
+    do: !is_nil(custom_abi) && Enum.any?(custom_abi.abi, &Writer.write_function?(&1))
 end

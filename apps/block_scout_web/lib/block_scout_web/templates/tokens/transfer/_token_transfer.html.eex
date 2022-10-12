@@ -8,47 +8,36 @@
     </div>
     <!-- Content -->
     <div class="col-md-7 col-lg-8 d-flex flex-column pr-2 pr-sm-2 pr-md-0">
-      <span>
-        <div class="text-truncate d-flex">
-          <b>Hash&nbsp;</b>
-          <%= render BlockScoutWeb.TransactionView, "_link.html", transaction_hash: @token_transfer.transaction_hash %>
-        </div>
-      </span>
-      <span>
-        <div class="text-truncate d-flex">
-          <b>From&nbsp;</b>
-          <%= link to: address_token_transfers_path(@conn, :index, Address.checksum(@token_transfer.from_address), Address.checksum(@token.contract_address_hash)), "data-test": "address_hash_link" do %>
+      <%= render BlockScoutWeb.TransactionView, "_link.html", transaction_hash: @token_transfer.transaction_hash %>
+      <span class="text-nowrap">
+        <%= link to: address_token_transfers_path(@conn, :index, Address.checksum(@token_transfer.from_address), Address.checksum(@token.contract_address_hash)), "data-test": "address_hash_link" do %>
             <%= render(
                   BlockScoutWeb.AddressView,
                   "_responsive_hash.html",
                   address: @token_transfer.from_address,
                   contract: BlockScoutWeb.AddressView.contract?(@token_transfer.from_address),
-                  use_custom_tooltip: false,
-                  trimmed: false,
-                  truncate: true
+                  use_custom_tooltip: false
                 ) %>
-          <% end %>
-          <b>&nbsp;To&nbsp;</b>
-          <%= link to: address_token_transfers_path(@conn, :index, Address.checksum(@token_transfer.to_address), Address.checksum(@token.contract_address_hash)), "data-test": "address_hash_link" do %>
+        <% end %>
+        &rarr;
+        <%= link to: address_token_transfers_path(@conn, :index, Address.checksum(@token_transfer.to_address), Address.checksum(@token.contract_address_hash)), "data-test": "address_hash_link" do %>
             <%= render(
                   BlockScoutWeb.AddressView,
                   "_responsive_hash.html",
                   address: @token_transfer.to_address,
                   contract: BlockScoutWeb.AddressView.contract?(@token_transfer.to_address),
-                  use_custom_tooltip: false,
-                  trimmed: false,
-                  truncate: true
+                  use_custom_tooltip: false
                 ) %>
-          <% end %>
-          <b>&nbsp;For&nbsp;</b>
-          <span class="tile-title">
-            <%= render BlockScoutWeb.TransactionView, "_total_transfers.html", Map.put(assigns, :transfer, @token_transfer) %>
-          </span>
-        </div>
+        <% end %>
+      </span>
+      <span class="d-flex flex-md-row flex-column mt-3 mt-md-0">
+        <span class="tile-title">
+          <%= render BlockScoutWeb.TransactionView, "_total_transfers.html", Map.put(assigns, :transfer, @token_transfer) %>
+        </span>
       </span>
     </div>
     <!-- Block info -->
-    <div class="col-md-3 col-lg-2 d-flex flex-row flex-md-column flex-nowrap text-md-right mt-3 mt-md-0">
+    <div class="col-md-3 col-lg-2 d-flex flex-row flex-md-column flex-nowrap justify-content-center text-md-right mt-3 mt-md-0">
       <span class="mr-2 mr-md-0 order-1">
         <%= link(
           gettext("Block #%{number}", number: @token_transfer.block_number),
