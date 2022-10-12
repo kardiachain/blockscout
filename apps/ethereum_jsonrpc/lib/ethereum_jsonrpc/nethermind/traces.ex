@@ -1,10 +1,10 @@
-defmodule EthereumJSONRPC.Besu.Traces do
+defmodule EthereumJSONRPC.Nethermind.Traces do
   @moduledoc """
   Trace returned by
   [`trace_replayTransaction`](https://openethereum.github.io/JSONRPC-trace-module#trace_replaytransaction).
   """
 
-  alias EthereumJSONRPC.Besu.Trace
+  alias EthereumJSONRPC.Nethermind.Trace
 
   def elixir_to_params(elixir) when is_list(elixir) do
     Enum.map(elixir, &Trace.elixir_to_params/1)
