@@ -45,9 +45,9 @@ $tile-body-a-color: #5959d8 !default;
 
     .tile-transaction-type-block {
       background-color: rgba($color, 0.1);
-      // border-bottom: 1px solid $color;
-      // border-right: 1px solid $color;
-      // border-top: 1px solid $color;
+      border-bottom: 1px solid $color;
+      border-right: 1px solid $color;
+      border-top: 1px solid $color;
       color: $color;
     }
   }
@@ -144,6 +144,15 @@ $tile-body-a-color: #5959d8 !default;
   background-color: $gray-100;
   border-left: 1px solid $border-color;
   box-shadow: none;
+}
+
+.tile-code {
+  border-radius: 4px;
+  border: 1px solid $border-color;
+  flex-grow: 1;
+  font-size: 12px;
+  line-height: 1.4rem;
+  padding: $tile-padding;
 }
 
 .tile-function-response {
@@ -589,7 +598,8 @@ $cube-quantity: 5;
 }
 
 .view-original-token-container {
-  margin-top: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   font-size: 12px;
 }
 

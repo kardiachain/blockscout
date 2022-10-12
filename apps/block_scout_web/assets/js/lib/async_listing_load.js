@@ -1,6 +1,6 @@
 import $ from 'jquery'
-import map from 'lodash/map'
-import merge from 'lodash/merge'
+import map from 'lodash.map'
+import merge from 'lodash.merge'
 import URI from 'urijs'
 import humps from 'humps'
 import listMorph from '../lib/list_morph'
@@ -42,7 +42,7 @@ import '../app'
  *
  */
 
-var enableFirstLoading = true
+let enableFirstLoading = true
 
 export const asyncInitialState = {
   /* it will consider any query param in the current URI as paging */
@@ -107,7 +107,7 @@ export function asyncReducer (state = asyncInitialState, action) {
         emptyResponse: action.items.length === 0,
         items: action.items,
         nextPagePath: action.nextPagePath,
-        prevPagePath: prevPagePath
+        prevPagePath
       })
     }
     case 'NAVIGATE_TO_OLDER': {
@@ -234,7 +234,7 @@ export const elements = {
       $el.show()
       $el.attr('disabled', false)
 
-      var url
+      let url
       if (blockParam !== null) {
         url = firstPageHref + '?block_type=' + blockParam
       } else {
@@ -305,7 +305,7 @@ export const elements = {
  */
 export function createAsyncLoadStore (reducer, initialState, itemKey) {
   const state = merge(asyncInitialState, initialState)
-  const store = createStore(reduceReducers(asyncReducer, reducer, state))
+  const store = createStore(reduceReducers(state, asyncReducer, reducer))
 
   if (typeof itemKey !== 'undefined') {
     store.dispatch({
@@ -367,12 +367,14 @@ function firstPageLoad (store) {
 
 const $element = $('[data-async-load]')
 if ($element.length) {
-  if (Object.prototype.hasOwnProperty.call($element.data(), 'noFirstLoading')) {
-    enableFirstLoading = false
-  }
-  if (enableFirstLoading) {
-    const store = createStore(asyncReducer)
-    connectElements({ store, elements })
-    firstPageLoad(store)
+  if (!Object.prototype.hasOwnProperty.call($element.data(), 'noSelfCalls')) {
+    if (Object.prototype.hasOwnProperty.call($element.data(), 'noFirstLoading')) {
+      enableFirstLoading = false
+    }
+    if (enableFirstLoading) {
+      const store = createStore(asyncReducer)
+      connectElements({ store, elements })
+      firstPageLoad(store)
+    }
   }
 }

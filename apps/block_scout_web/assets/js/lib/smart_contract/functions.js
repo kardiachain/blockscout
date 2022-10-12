@@ -1,9 +1,10 @@
 import $ from 'jquery'
-import { getContractABI, getMethodInputs, prepareMethodArgs } from './common_helpers'
-import { walletEnabled, connectToWallet, shouldHideConnectButton, callMethod, queryMethod } from './write'
+import { connectSelector, disconnectSelector, getContractABI, getMethodInputs, prepareMethodArgs } from './common_helpers'
+import { queryMethod, callMethod } from './interact'
+import { walletEnabled, connectToWallet, disconnectWallet, web3ModalInit } from './connect.js'
 import '../../pages/address'
 
-const loadFunctions = (element) => {
+const loadFunctions = (element, isCustomABI) => {
   const $element = $(element)
   const url = $element.data('url')
   const hash = $element.data('hash')
@@ -12,43 +13,17 @@ const loadFunctions = (element) => {
 
   $.get(
     url,
-    { hash: hash, type: type, action: action },
+    { hash, type, action, is_custom_abi: isCustomABI },
     response => $element.html(response)
   )
     .done(function () {
-      const $connect = $('[connect-metamask]')
-      const $connectTo = $('[connect-to]')
-      const $connectedTo = $('[connected-to]')
-      const $reconnect = $('[re-connect-metamask]')
+      document.querySelector(connectSelector) && document.querySelector(connectSelector).addEventListener('click', connectToWallet)
+      document.querySelector(disconnectSelector) && document.querySelector(disconnectSelector).addEventListener('click', disconnectWallet)
+      web3ModalInit(connectToWallet)
 
-      window.kardiachain && window.kardiachain.on('accountsChanged', function (accounts) {
-        if (accounts.length === 0) {
-          showConnectElements($connect, $connectTo, $connectedTo)
-        } else {
-          showConnectedToElements($connect, $connectTo, $connectedTo, accounts[0])
-        }
-      })
+      const selector = isCustomABI ? '[data-function-custom]' : '[data-function]'
 
-      shouldHideConnectButton()
-        .then(({ shouldHide, account }) => {
-          if (shouldHide && account) {
-            showConnectedToElements($connect, $connectTo, $connectedTo, account)
-          } else if (shouldHide) {
-            hideConnectButton($connect, $connectTo, $connectedTo)
-          } else {
-            showConnectElements($connect, $connectTo, $connectedTo)
-          }
-        })
-
-      $connect.on('click', () => {
-        connectToWallet()
-      })
-
-      $reconnect.on('click', () => {
-        connectToWallet()
-      })
-
-      $('[data-function]').each((_, element) => {
+      $(selector).each((_, element) => {
         readWriteFunction(element)
       })
 
@@ -75,30 +50,6 @@ const loadFunctions = (element) => {
     })
 }
 
-function showConnectedToElements ($connect, $connectTo, $connectedTo, account) {
-  $connectTo.addClass('hidden')
-  $connect.removeClass('hidden')
-  $connectedTo.removeClass('hidden')
-  setConnectToAddress(account)
-}
-
-function setConnectToAddress (account) {
-  const $connectedToAddress = $('[connected-to-address]')
-  $connectedToAddress.html(`<a href='/address/${account}'>${account}</a>`)
-}
-
-function showConnectElements ($connect, $connectTo, $connectedTo) {
-  $connectTo.removeClass('hidden')
-  $connect.removeClass('hidden')
-  $connectedTo.addClass('hidden')
-}
-
-function hideConnectButton ($connect, $connectTo, $connectedTo) {
-  $connectTo.removeClass('hidden')
-  $connect.addClass('hidden')
-  $connectedTo.addClass('hidden')
-}
-
 const readWriteFunction = (element) => {
   const $element = $(element)
   const $form = $element.find('[data-function-form]')
@@ -106,8 +57,11 @@ const readWriteFunction = (element) => {
   const $responseContainer = $element.find('[data-function-response]')
 
   $form.on('submit', (event) => {
-    const action = $form.data('action')
     event.preventDefault()
+    const action = $form.data('action')
+    const $errorContainer = $form.parent().find('[input-parse-error-container]')
+
+    $errorContainer.hide()
 
     const $functionInputs = $form.find('input[name=function_input]')
     const $functionName = $form.find('input[name=function_name]')
@@ -119,11 +73,18 @@ const readWriteFunction = (element) => {
       const contractAbi = getContractABI($form)
       const inputs = getMethodInputs(contractAbi, functionName)
       const $methodId = $form.find('input[name=method_id]')
-      const args = prepareMethodArgs($functionInputs, inputs)
+      try {
+        var args = prepareMethodArgs($functionInputs, inputs)
+      } catch (exception) {
+        $errorContainer.show()
+        $errorContainer.text(exception)
+        return
+      }
       const type = $('[data-smart-contract-functions]').data('type')
+      const isCustomABI = $form.data('custom-abi')
 
       walletEnabled()
-        .then((isWalletEnabled) => queryMethod(isWalletEnabled, url, $methodId, args, type, functionName, $responseContainer))
+        .then((isWalletEnabled) => queryMethod(isWalletEnabled, url, $methodId, args, type, functionName, $responseContainer, isCustomABI))
     } else if (action === 'write') {
       const explorerChainId = $form.data('chainId')
       walletEnabled()
@@ -135,5 +96,11 @@ const readWriteFunction = (element) => {
 const container = $('[data-smart-contract-functions]')
 
 if (container.length) {
-  loadFunctions(container)
+  loadFunctions(container, false)
+}
+
+const customABIContainer = $('[data-smart-contract-functions-custom]')
+
+if (customABIContainer.length) {
+  loadFunctions(customABIContainer, true)
 }

@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import omit from 'lodash/omit'
+import omit from 'lodash.omit'
 import URI from 'urijs'
 import humps from 'humps'
 import numeral from 'numeral'
@@ -80,6 +80,15 @@ export function reducer (state = initialState, action) {
         fetchedCoinBalanceBlockNumber: action.msg.fetchedCoinBalanceBlockNumber
       })
     }
+    case 'RECEIVED_NEW_CURRENT_COIN_BALANCE': {
+      if (state.initialBlockNumber && action.msg.currentCoinBalanceBlockNumber < state.initialBlockNumber) return
+      return Object.assign({}, state, {
+        currentCoinBalance: action.msg.currentCoinBalanceHtml,
+        currentCoinBalanceBlockNumber: action.msg.currentCoinBalanceBlockNumberHtml,
+        initialBlockNumber: state.newBlockNumber,
+        newBlockNumber: action.msg.currentCoinBalanceBlockNumber
+      })
+    }
     default:
       return state
   }
@@ -98,7 +107,7 @@ function loadTokenBalance (blockNumber) {
 const elements = {
   '[data-selector="channel-disconnected-message"]': {
     render ($el, state) {
-      if (state.channelDisconnected) $el.show()
+      if (state.channelDisconnected && !window.loading) $el.show()
     }
   },
   '[data-selector="balance-card"]': {
@@ -117,9 +126,9 @@ const elements = {
       return { transactionCount: numeral($el.text()).value() }
     },
     render ($el, state, oldState) {
-      if (state.countersFetched && state.transactionCount) {
+      if (state.countersFetched) {
         if (oldState.transactionCount === state.transactionCount) return
-        const transactionsDSName = (state.transactionCount > 1) ? ' Transactions' : ' Transaction'
+        const transactionsDSName = (state.transactionCount === 1) ? ' Transaction' : ' Transactions'
         $el.empty().append(numeral(state.transactionCount).format() + transactionsDSName)
       }
     }
@@ -129,9 +138,9 @@ const elements = {
       return { tokenTransferCount: numeral($el.text()).value() }
     },
     render ($el, state, oldState) {
-      if (state.countersFetched && state.tokenTransferCount) {
+      if (state.countersFetched) {
         if (oldState.tokenTransferCount === state.tokenTransferCount) return
-        const transfersDSName = (state.tokenTransferCount > 1) ? ' Transfers' : ' Transfer'
+        const transfersDSName = (state.tokenTransferCount === 1) ? ' Transfer' : ' Transfers'
         $el.empty().append(numeral(state.tokenTransferCount).format() + transfersDSName)
       }
     }
@@ -141,7 +150,7 @@ const elements = {
       return { gasUsageCount: numeral($el.text()).value() }
     },
     render ($el, state, oldState) {
-      if (state.countersFetched && state.gasUsageCount) {
+      if (state.countersFetched) {
         if (oldState.gasUsageCount === state.gasUsageCount) return
         $el.empty().append(numeral(state.gasUsageCount).format())
       }
@@ -187,6 +196,24 @@ const elements = {
         $('[data-test="address-tokens-panel-crc-total-worth-container"]').addClass('d-none')
       }
     }
+  },
+  '[data-selector="current-coin-balance"]': {
+    render ($el, state, oldState) {
+      if (!state.newBlockNumber || state.newBlockNumber <= oldState.newBlockNumber) return
+      $el.empty().append(state.currentCoinBalance)
+      updateAllCalculatedUsdValues()
+    }
+  },
+  '[data-selector="last-balance-update"]': {
+    render ($el, state, oldState) {
+      if (!state.newBlockNumber || state.newBlockNumber <= oldState.newBlockNumber) return
+      $el.empty().append(state.currentCoinBalanceBlockNumber)
+    }
+  },
+  '[data-last-balance-update]': {
+    load ($el) {
+      return { initialBlockNumber: numeral($el.data('last-balance-update')).value() }
+    }
   }
 }
 
@@ -204,6 +231,29 @@ function loadCounters (store) {
 
 const $addressDetailsPage = $('[data-page="address-details"]')
 if ($addressDetailsPage.length) {
+  const pathParts = window.location.pathname.split('/')
+  const shouldScroll = pathParts.includes('transactions') ||
+  pathParts.includes('token-transfers') ||
+  pathParts.includes('tokens') ||
+  pathParts.includes('internal-transactions') ||
+  pathParts.includes('coin-balances') ||
+  pathParts.includes('logs') ||
+  pathParts.includes('validations') ||
+  pathParts.includes('contracts') ||
+  pathParts.includes('decompiled-contracts') ||
+  pathParts.includes('read-contract') ||
+  pathParts.includes('read-proxy') ||
+  pathParts.includes('write-contract') ||
+  pathParts.includes('write-proxy')
+
+  if (shouldScroll) {
+    location.href = '#address-tabs'
+  }
+
+  window.onbeforeunload = () => {
+    window.loading = true
+  }
+
   const store = createStore(reducer)
   const addressHash = $addressDetailsPage[0].dataset.pageAddressHash
   const { filter, blockNumber } = humps.camelizeKeys(URI(window.location).query(true))
@@ -239,6 +289,12 @@ if ($addressDetailsPage.length) {
       msg: humps.camelizeKeys(msg)
     })
   })
+  addressChannel.on('current_coin_balance', (msg) => {
+    store.dispatch({
+      type: 'RECEIVED_NEW_CURRENT_COIN_BALANCE',
+      msg: humps.camelizeKeys(msg)
+    })
+  })
 
   const blocksChannel = socket.channel(`blocks:${addressHash}`, {})
   blocksChannel.join()
@@ -250,11 +306,12 @@ if ($addressDetailsPage.length) {
     msg: humps.camelizeKeys(msg)
   }))
 
-  addressChannel.push('get_balance', {})
-    .receive('ok', (msg) => store.dispatch({
-      type: 'RECEIVED_UPDATED_BALANCE',
-      msg: humps.camelizeKeys(msg)
-    }))
+  // following lines causes double /token-balances request
+  // addressChannel.push('get_balance', {})
+  //   .receive('ok', (msg) => store.dispatch({
+  //     type: 'RECEIVED_UPDATED_BALANCE',
+  //     msg: humps.camelizeKeys(msg)
+  //   }))
 
   loadCounters(store)
 
