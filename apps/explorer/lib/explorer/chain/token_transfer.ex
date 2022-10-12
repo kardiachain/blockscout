@@ -43,12 +43,12 @@ defmodule Explorer.Chain.TokenTransfer do
   * `:to_address_hash` - Address hash foreign key
   * `:token_contract_address` - The `t:Explorer.Chain.Address.t/0` of the token's contract.
   * `:token_contract_address_hash` - Address hash foreign key
-  * `:token_id` - ID of the token (applicable to KRC-721 tokens)
+  * `:token_id` - ID of the token (applicable to ERC-721 tokens)
   * `:transaction` - The `t:Explorer.Chain.Transaction.t/0` ledger
   * `:transaction_hash` - Transaction foreign key
   * `:log_index` - Index of the corresponding `t:Explorer.Chain.Log.t/0` in the transaction.
-  * `:amounts` - Tokens transferred amounts in case of batched transfer in KRC-1155
-  * `:token_ids` - IDs of the tokens (applicable to KRC-1155 tokens)
+  * `:amounts` - Tokens transferred amounts in case of batched transfer in ERC-1155
+  * `:token_ids` - IDs of the tokens (applicable to ERC-1155 tokens)
   """
   @type t :: %TokenTransfer{
           amount: Decimal.t() | nil,
@@ -177,7 +177,7 @@ defmodule Explorer.Chain.TokenTransfer do
       from(
         tt in TokenTransfer,
         where: tt.token_contract_address_hash == ^token_address_hash,
-        where: tt.token_id == ^token_id,
+        where: tt.token_id == ^token_id or fragment("? @> ARRAY[?::decimal]", tt.token_ids, ^Decimal.new(token_id)),
         where: not is_nil(tt.block_number),
         preload: [{:transaction, :block}, :token, :from_address, :to_address],
         order_by: [desc: tt.block_number]
@@ -206,7 +206,9 @@ defmodule Explorer.Chain.TokenTransfer do
     query =
       from(
         tt in TokenTransfer,
-        where: tt.token_contract_address_hash == ^token_address_hash and tt.token_id == ^token_id,
+        where:
+          tt.token_contract_address_hash == ^token_address_hash and
+            (tt.token_id == ^token_id or fragment("? @> ARRAY[?::decimal]", tt.token_ids, ^Decimal.new(token_id))),
         select: fragment("COUNT(*)")
       )
 
@@ -305,7 +307,7 @@ defmodule Explorer.Chain.TokenTransfer do
 
   @doc """
   Innventory tab query.
-  A token KRC-721 is considered unique because it corresponds to the possession
+  A token ERC-721 is considered unique because it corresponds to the possession
   of a specific asset.
 
   To find out its current owner, it is necessary to look at the token last

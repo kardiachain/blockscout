@@ -10,6 +10,7 @@ defmodule Explorer.Chain.Import.Runner.Address.CoinBalancesDaily do
   alias Ecto.{Changeset, Multi, Repo}
   alias Explorer.Chain.Address.CoinBalanceDaily
   alias Explorer.Chain.{Hash, Import, Wei}
+  alias Explorer.Prometheus.Instrumenter
 
   @behaviour Import.Runner
 
@@ -44,7 +45,12 @@ defmodule Explorer.Chain.Import.Runner.Address.CoinBalancesDaily do
       |> Map.put(:timestamps, timestamps)
 
     Multi.run(multi, :address_coin_balances_daily, fn repo, _ ->
-      insert(repo, changes_list, insert_options)
+      Instrumenter.block_import_stage_runner(
+        fn -> insert(repo, changes_list, insert_options) end,
+        :address_referencing,
+        :coin_balances_daily,
+        :address_coin_balances_daily
+      )
     end)
   end
 
@@ -78,12 +84,9 @@ defmodule Explorer.Chain.Import.Runner.Address.CoinBalancesDaily do
           [change | acc]
         else
           target_item =
-            Enum.find(
-              acc,
-              fn item ->
-                item.day == change.day && item.address_hash == change.address_hash
-              end
-            )
+            Enum.find(acc, fn item ->
+              item.day == change.day && item.address_hash == change.address_hash
+            end)
 
           if target_item do
             if Map.has_key?(change, :value) && Map.has_key?(target_item, :value) && change.value > target_item.value do
