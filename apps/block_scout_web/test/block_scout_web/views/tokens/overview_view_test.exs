@@ -67,13 +67,13 @@ defmodule BlockScoutWeb.Tokens.OverviewViewTest do
 
   describe "display_inventory?/1" do
     test "returns true when token is unique" do
-      token = insert(:token, type: "KRC-721")
+      token = insert(:token, type: "ERC-721")
 
       assert OverviewView.display_inventory?(token) == true
     end
 
     test "returns false when token is not unique" do
-      token = insert(:token, type: "KRC-20")
+      token = insert(:token, type: "ERC-20")
 
       assert OverviewView.display_inventory?(token) == false
     end
@@ -94,7 +94,8 @@ defmodule BlockScoutWeb.Tokens.OverviewViewTest do
               "stateMutability" => "view",
               "type" => "function"
             }
-          ]
+          ],
+          contract_code_md5: "123"
         )
 
       address = insert(:address, smart_contract: smart_contract)
@@ -118,7 +119,8 @@ defmodule BlockScoutWeb.Tokens.OverviewViewTest do
               "stateMutability" => "nonpayable",
               "type" => "function"
             }
-          ]
+          ],
+          contract_code_md5: "123"
         )
 
       address = insert(:address, smart_contract: smart_contract)
@@ -147,7 +149,7 @@ defmodule BlockScoutWeb.Tokens.OverviewViewTest do
 
       result = OverviewView.total_supply_usd(token)
 
-      assert Decimal.cmp(result, Decimal.new(200)) == :eq
+      assert Decimal.compare(result, Decimal.new(200)) == :eq
     end
 
     test "takes decimals into account" do
@@ -159,7 +161,7 @@ defmodule BlockScoutWeb.Tokens.OverviewViewTest do
 
       result = OverviewView.total_supply_usd(token)
 
-      assert Decimal.cmp(result, Decimal.new(20)) == :eq
+      assert Decimal.compare(result, Decimal.new(20)) == :eq
     end
   end
 end
