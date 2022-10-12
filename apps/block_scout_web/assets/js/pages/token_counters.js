@@ -51,7 +51,7 @@ const elements = {
   '[token-holder-count]': {
     render ($el, state) {
       if (state.tokenHolderCount) {
-        $el.empty().text(state.tokenHolderCount + ' Holders')
+        $el.empty().text(state.tokenHolderCount + ' Addresses')
         return $el.show()
       }
     }

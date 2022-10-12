@@ -45,9 +45,9 @@ $tile-body-a-color: #5959d8 !default;
 
     .tile-transaction-type-block {
       background-color: rgba($color, 0.1);
-      // border-bottom: 1px solid $color;
-      // border-right: 1px solid $color;
-      // border-top: 1px solid $color;
+      border-bottom: 1px solid $color;
+      border-right: 1px solid $color;
+      border-top: 1px solid $color;
       color: $color;
     }
   }
