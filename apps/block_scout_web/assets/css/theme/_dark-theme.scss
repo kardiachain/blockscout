@@ -1086,7 +1086,7 @@ $box-line-border: #9AA3B2;
 .dark-theme-applied .dropdown-item.active:not(.header), .dark-theme-applied .dropdown-item:not(.header):hover, .dark-theme-applied .dropdown-item:not(.header):focus {
     background-image: none;
     width: 100%;
-    background-color: #3f426c !important;
+    background-color: $dark-primary !important;
 }
 
 @media (max-width: 991.98px) {
@@ -1095,7 +1095,7 @@ $box-line-border: #9AA3B2;
 	.dark-theme-applied .navbar.navbar-primary .navbar-nav .nav-link:focus {
 		background-image: none;
 		width: 100%;
-		background-color: #35335d !important;
+		background-color: $dark-primary !important;
 		color: white;
 		border: none;
 	}
@@ -1130,6 +1130,6 @@ $box-line-border: #9AA3B2;
 }
 
 .dark-theme-applied .btn-no-border-link-to-tems {
-	border-color: $dark-primary;
-	color: $dark-primary;
+	border-color: $dark-primary !important;
+	color: $dark-primary !important;
 }
