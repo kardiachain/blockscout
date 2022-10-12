@@ -676,4 +676,14 @@ defmodule EthereumJSONRPC.Block do
   defp entry_to_elixir({"l1BlockNumber", _}) do
     {:ignore, :ignore}
   end
+
+  # bitcoinMergedMiningCoinbaseTransaction bitcoinMergedMiningHeader bitcoinMergedMiningMerkleProof hashForMergedMining - RSK https://github.com/blockscout/blockscout/pull/2934
+  # committedSeals committee pastCommittedSeals proposerSeal round - Autonity network https://github.com/blockscout/blockscout/pull/3480
+  # blockGasCost extDataGasUsed - sgb/ava https://github.com/blockscout/blockscout/pull/5301
+  # blockExtraData extDataHash - Avalanche https://github.com/blockscout/blockscout/pull/5348
+  # vrf vrfProof - Harmony
+  # ...
+  defp entry_to_elixir({_, _}) do
+    {:ignore, :ignore}
+  end
 end

@@ -4,7 +4,7 @@ defmodule EthereumJSONRPC do
 
   ## Configuration
 
-  Configuration for parity URLs can be provided with the following mix config:
+  Configuration for Nethermind URLs can be provided with the following mix config:
 
       config :ethereum_jsonrpc,
         url: "http://localhost:8545",
@@ -167,9 +167,9 @@ defmodule EthereumJSONRPC do
     ]}
   """
   @spec execute_contract_functions([Contract.call()], [map()], json_rpc_named_arguments) :: [Contract.call_result()]
-  def execute_contract_functions(functions, abi, json_rpc_named_arguments) do
+  def execute_contract_functions(functions, abi, json_rpc_named_arguments, leave_error_as_map \\ false) do
     if Enum.count(functions) > 0 do
-      Contract.execute_contract_functions(functions, abi, json_rpc_named_arguments)
+      Contract.execute_contract_functions(functions, abi, json_rpc_named_arguments, leave_error_as_map)
     else
       []
     end
@@ -184,7 +184,18 @@ defmodule EthereumJSONRPC do
         ) :: {:ok, FetchedBalances.t()} | {:error, reason :: term}
   def fetch_balances(params_list, json_rpc_named_arguments)
       when is_list(params_list) and is_list(json_rpc_named_arguments) do
-    id_to_params = id_to_params(params_list)
+    filtered_params =
+      if Application.get_env(:ethereum_jsonrpc, :disable_archive_balances?) do
+        params_list
+        |> Enum.filter(fn
+          %{block_quantity: "latest"} -> true
+          _ -> false
+        end)
+      else
+        params_list
+      end
+
+    id_to_params = id_to_params(filtered_params)
 
     with {:ok, responses} <-
            id_to_params
@@ -219,13 +230,7 @@ defmodule EthereumJSONRPC do
   @spec fetch_beneficiaries([block_number], json_rpc_named_arguments) ::
           {:ok, FetchedBeneficiaries.t()} | {:error, reason :: term} | :ignore
   def fetch_beneficiaries(block_numbers, json_rpc_named_arguments) when is_list(block_numbers) do
-    min_block = first_block_to_fetch()
-
-    filtered_block_numbers =
-      block_numbers
-      |> Enum.filter(fn block_number ->
-        block_number >= min_block
-      end)
+    filtered_block_numbers = block_numbers_in_range(block_numbers)
 
     Keyword.fetch!(json_rpc_named_arguments, :variant).fetch_beneficiaries(
       filtered_block_numbers,
@@ -272,8 +277,7 @@ defmodule EthereumJSONRPC do
       |> json_rpc(json_rpc_named_arguments)
 
     case result do
-      {:ok, _bin_number} -> {:ok, String.to_integer("0")}
-      # always return 0
+      {:ok, bin_number} -> {:ok, String.to_integer(bin_number)}
       other -> other
     end
   end
@@ -311,18 +315,21 @@ defmodule EthereumJSONRPC do
   Fetches internal transactions for entire blocks from variant API.
   """
   def fetch_block_internal_transactions(block_numbers, json_rpc_named_arguments) when is_list(block_numbers) do
-    min_block = first_block_to_fetch()
-
-    filtered_block_numbers =
-      block_numbers
-      |> Enum.filter(fn block_number ->
-        block_number >= min_block
-      end)
+    filtered_block_numbers = block_numbers_in_range(block_numbers)
 
     Keyword.fetch!(json_rpc_named_arguments, :variant).fetch_block_internal_transactions(
       filtered_block_numbers,
       json_rpc_named_arguments
     )
+  end
+
+  def block_numbers_in_range(block_numbers) do
+    min_block = first_block_to_fetch(:trace_first_block)
+
+    block_numbers
+    |> Enum.filter(fn block_number ->
+      block_number >= min_block
+    end)
   end
 
   @doc """
@@ -457,7 +464,6 @@ defmodule EthereumJSONRPC do
   end
 
   # We can only depend on implementations supporting 64-bit integers:
-  # * Parity only supports u64 (https://github.com/paritytech/jsonrpc-core/blob/f2c61edb817e344d92ab3baf872fa77d1602430a/src/id.rs#L13)
   # * Ganache only supports u32 (https://github.com/trufflesuite/ganache-core/issues/190)
   def unique_request_id do
     <<unique_request_id::big-integer-size(4)-unit(8)>> = :crypto.strong_rand_bytes(4)
@@ -489,8 +495,8 @@ defmodule EthereumJSONRPC do
     end
   end
 
-  defp first_block_to_fetch do
-    string_value = Application.get_env(:indexer, :first_block)
+  def first_block_to_fetch(config) do
+    string_value = Application.get_env(:indexer, config)
 
     case Integer.parse(string_value) do
       {integer, ""} -> integer
