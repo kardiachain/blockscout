@@ -335,6 +335,59 @@ defmodule EthereumJSONRPC.Block do
     }
   end
 
+  # Kai: a response from eth_getblockbyhash for uncle blocks is without `totalDifficulty` param
+  def elixir_to_params(
+        %{
+          "difficulty" => difficulty,
+          "extraData" => extra_data,
+          "gasLimit" => gas_limit,
+          "gasUsed" => gas_used,
+          "hash" => hash,
+          "commitHash" => commit_hash,
+          "evidenceHash" => evidence_hash,
+          "nextValidatorHash" => next_validator_hash,
+          "validatorHash" => validator_hash,
+#          "logsBloom" => logs_bloom,
+          "miner" => miner_hash,
+          "number" => number,
+          "parentHash" => parent_hash,
+          "receiptsRoot" => receipts_root,
+          "rewards" => block_rewards,
+          "sha3Uncles" => sha3_uncles,
+          "size" => size,
+          "stateRoot" => state_root,
+          "timestamp" => timestamp,
+          "transactionsRoot" => transactions_root,
+          "uncles" => uncles
+        } = elixir
+      ) do
+    %{
+      difficulty: difficulty,
+      extra_data: extra_data,
+      gas_limit: gas_limit,
+      gas_used: gas_used,
+      hash: hash,
+      commit_hash: commit_hash,
+      evidence_hash: evidence_hash,
+      next_validator_hash: next_validator_hash,
+      validator_hash: validator_hash,
+      logs_bloom: Map.get(elixir, "logsBloom", "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"),
+      miner_hash: miner_hash,
+      mix_hash: Map.get(elixir, "mixHash", "0x0"),
+      nonce: Map.get(elixir, "nonce", 0),
+      number: number,
+      parent_hash: parent_hash,
+      receipts_root: receipts_root,
+      block_rewards: Map.get(elixir, "rewards", "0x0"),
+      sha3_uncles: sha3_uncles,
+      size: size,
+      state_root: state_root,
+      timestamp: timestamp,
+      transactions_root: transactions_root,
+      uncles: uncles
+    }
+  end
+
   # Geth: a response from eth_getblockbyhash for uncle blocks is without `totalDifficulty` param
   def elixir_to_params(
         %{
