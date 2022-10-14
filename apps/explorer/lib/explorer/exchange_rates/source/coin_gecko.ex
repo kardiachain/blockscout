@@ -8,6 +8,8 @@ defmodule Explorer.ExchangeRates.Source.CoinGecko do
 
   import Source, only: [to_decimal: 1]
 
+  require Logger
+
   @behaviour Source
 
   @impl Source
@@ -27,6 +29,7 @@ defmodule Explorer.ExchangeRates.Source.CoinGecko do
     market_cap_data_usd = market_data && market_data["market_cap"] && market_data["market_cap"]["usd"]
     total_volume_data_usd = market_data && market_data["total_volume"] && market_data["total_volume"]["usd"]
 
+    token =
     [
       %Token{
         available_supply: to_decimal(circulating_supply_data),
@@ -41,6 +44,8 @@ defmodule Explorer.ExchangeRates.Source.CoinGecko do
         volume_24h_usd: to_decimal(total_volume_data_usd)
       }
     ]
+    Logger.info("Fetch token data #{token}}")
+    token
   end
 
   @impl Source
