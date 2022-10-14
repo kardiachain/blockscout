@@ -1594,13 +1594,13 @@ msgstr ""
 #: lib/block_scout_web/templates/chain/_block.html.eex:16
 #, elixir-autogen, elixir-format
 msgid "Miner"
-msgstr ""
+msgstr "Proposer"
 
 #: lib/block_scout_web/views/block_view.ex:61
 #: lib/block_scout_web/views/block_view.ex:66
 #, elixir-autogen, elixir-format
 msgid "Miner Reward"
-msgstr ""
+msgstr "Proposer Reward"
 
 #: lib/block_scout_web/templates/common_components/_minimal_proxy_pattern.html.eex:3
 #, elixir-autogen, elixir-format
