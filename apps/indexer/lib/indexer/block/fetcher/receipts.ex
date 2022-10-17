@@ -36,6 +36,8 @@ defmodule Indexer.Block.Fetcher.Receipts do
   end
 
   def put(transactions_params, receipts_params) when is_list(transactions_params) and is_list(receipts_params) do
+    Logger.info("Transaction params #{inspect(transactions_params)}")
+    Logger.info("Receipts params #{inspect(receipts_params)}")
     transaction_hash_to_receipt_params =
       Enum.into(receipts_params, %{}, fn %{transaction_hash: transaction_hash} = receipt_params ->
         {transaction_hash, receipt_params}
