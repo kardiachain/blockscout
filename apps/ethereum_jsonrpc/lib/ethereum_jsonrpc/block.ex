@@ -443,6 +443,61 @@ defmodule EthereumJSONRPC.Block do
     }
   end
 
+  # Custom: a response from eth_getblockbyhash for uncle blocks is without `totalDifficulty` param
+  def elixir_to_params(
+        %{
+          "commitHash" => commit_hash,
+          "consensusHash" => consensus_hash,
+          "difficulty" => difficulty,
+          "evidenceHash" => evidence_hash,
+          "extraData" => extra_data,
+          "gasLimit" => gas_limit,
+          "gasUsed" => gas_used,
+          "hash" => hash,
+          #"logsBloom" => logs_bloom,
+          "miner" => miner_hash,
+          #"mixHash" => mix_hash,
+          "nextValidatorHash" => next_validator_hash,
+          "nonce" => nonce,
+          "numTxs" => num_txs,
+          "number" => number,
+          "parentHash" => parent_hash,
+          "receiptsRoot" => receipts_root,
+          "rewards" => block_rewards,
+          "size" => size,
+          "stateRoot" => state_root,
+          "timestamp" => timestamp,
+          "transactionsRoot" => transactions_root,
+          "validatorHash" => validator_hash,
+        } = elixir
+      ) do
+    %{
+      commit_hash: commit_hash,
+      consensus_hash: consensus_hash,
+      difficulty: difficulty,
+      evidence_hash: evidence_hash,
+      extra_data: extra_data,
+      gas_limit: gas_limit,
+      gas_used: gas_used,
+      hash: hash,
+      logs_bloom: Map.get(elixir, "logsBloom", "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"),
+      miner_hash: miner_hash,
+      mix_hash: Map.get(elixir, "mixHash", "0x0"),
+      next_validator_hash: next_validator_hash,
+      nonce: Map.get(elixir, "nonce", 0),
+      num_txs: num_txs,
+      number: number,
+      parent_hash: parent_hash,
+      receipts_root: receipts_root,
+      block_rewards: block_rewards,
+      size: size,
+      state_root: state_root,
+      timestamp: timestamp,
+      transactions_root: transactions_root,
+      validator_hash: validator_hash
+    }
+  end
+
   @doc """
   Get `t:EthereumJSONRPC.Transactions.elixir/0` from `t:elixir/0`
 
