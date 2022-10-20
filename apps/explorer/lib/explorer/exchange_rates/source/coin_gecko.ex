@@ -44,7 +44,7 @@ defmodule Explorer.ExchangeRates.Source.CoinGecko do
         volume_24h_usd: to_decimal(total_volume_data_usd)
       }
     ]
-    Logger.info("Fetch token data #{token}}")
+    Logger.info("Fetch token data #{inspect(token)}}")
     token
   end
 
