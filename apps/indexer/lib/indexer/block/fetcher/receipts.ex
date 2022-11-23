@@ -15,7 +15,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
       ) do
     Logger.info("Fetching transaction receipts", count: Enum.count(transaction_params))
     stream_opts = [max_concurrency: state.receipts_concurrency, timeout: :infinity]
-    Logger.info("Transaction params #{inspect(transaction_params)}")
+#    Logger.info("Transaction params #{inspect(transaction_params)}")
     transaction_params
     |> Enum.chunk_every(state.receipts_batch_size)
     |> Task.async_stream(&EthereumJSONRPC.fetch_transaction_receipts(&1, json_rpc_named_arguments), stream_opts)
@@ -36,8 +36,7 @@ defmodule Indexer.Block.Fetcher.Receipts do
   end
 
   def put(transactions_params, receipts_params) when is_list(transactions_params) and is_list(receipts_params) do
-
-    Logger.info("Receipts params #{inspect(receipts_params)}")
+#    Logger.info("Receipts params #{inspect(receipts_params)}")
     transaction_hash_to_receipt_params =
       Enum.into(receipts_params, %{}, fn %{transaction_hash: transaction_hash} = receipt_params ->
         {transaction_hash, receipt_params}
