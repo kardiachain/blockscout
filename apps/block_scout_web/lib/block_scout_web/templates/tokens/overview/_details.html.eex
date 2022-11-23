@@ -142,7 +142,7 @@
               <%= gettext("Token type") %>
             </dt>
             <dd class="col-sm-8 col-md-8 col-lg-9">
-              <%= gettext(@token.type) %>
+              <%= @token.type %>
             </dd>
           </dl>
         </div>
