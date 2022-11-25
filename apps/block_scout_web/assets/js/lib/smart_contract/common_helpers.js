@@ -141,7 +141,7 @@ export const getCurrentAccountFromWCPromise = (provider) => {
 
 export const getCurrentAccountFromMMPromise = () => {
   return new Promise((resolve, reject) => {
-    window.kardiachain.request({ method: 'eth_accounts' })
+    window.ethereum.request({ method: 'eth_accounts' })
       .then(accounts => {
         const account = accounts[0] ? accounts[0].toLowerCase() : null
         resolve(account)

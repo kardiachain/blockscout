@@ -57,7 +57,8 @@ if ($transactionDetailsPage.length) {
   pathParts.includes('token-transfers') ||
   pathParts.includes('logs') ||
   pathParts.includes('token-transfers') ||
-  pathParts.includes('raw-trace')
+  pathParts.includes('raw-trace') ||
+  pathParts.includes('state')
   if (shouldScroll) {
     document.getElementById('transaction-tabs').scrollIntoView()
   }
@@ -76,7 +77,7 @@ if ($transactionDetailsPage.length) {
 
   $('.js-cancel-transaction').on('click', (event) => {
     const btn = $(event.target)
-    if (!window.kardiachain) {
+    if (!window.ethereum) {
       btn
         .attr('data-original-title', `Please unlock ${btn.data('from')} account in Metamask`)
         .tooltip('show')
@@ -88,7 +89,7 @@ if ($transactionDetailsPage.length) {
       }, 3000)
       return
     }
-    const { chainId: walletChainIdHex } = window.kardiachain
+    const { chainId: walletChainIdHex } = window.ethereum
     compareChainIDs(btn.data('chainId'), walletChainIdHex)
       .then(() => {
         const txParams = {
@@ -97,7 +98,7 @@ if ($transactionDetailsPage.length) {
           value: 0,
           nonce: btn.data('nonce').toString()
         }
-        window.kardiachain.request({
+        window.ethereum.request({
           method: 'eth_sendTransaction',
           params: [txParams]
         })
