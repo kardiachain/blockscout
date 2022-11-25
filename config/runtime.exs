@@ -32,7 +32,8 @@ config :indexer, Indexer.Fetcher.EmptyBlocksSanitizer, batch_size: indexer_empty
 config :block_scout_web, :footer,
   chat_link: System.get_env("FOOTER_CHAT_LINK", "https://discord.gg/blockscout"),
   forum_link: System.get_env("FOOTER_FORUM_LINK", "https://forum.poa.network/c/blockscout"),
-  github_link: System.get_env("FOOTER_GITHUB_LINK", "https://github.com/blockscout/blockscout")
+  github_link: System.get_env("FOOTER_GITHUB_LINK", "https://github.com/blockscout/blockscout"),
+  enable_forum_link: System.get_env("FOOTER_ENABLE_FORUM_LINK", "false") == "true"
 
 ######################
 ### BlockScout Web ###
@@ -86,7 +87,7 @@ config :block_scout_web,
   webapp_url: System.get_env("WEBAPP_URL"),
   api_url: System.get_env("API_URL"),
   apps_menu: if(System.get_env("APPS_MENU", "false") == "true", do: true, else: false),
-  external_apps: System.get_env("EXTERNAL_APPS"),
+  apps: System.get_env("APPS") || System.get_env("EXTERNAL_APPS"),
   gas_price: System.get_env("GAS_PRICE", nil),
   restricted_list: System.get_env("RESTRICTED_LIST", nil),
   restricted_list_key: System.get_env("RESTRICTED_LIST_KEY", nil),
@@ -98,6 +99,7 @@ config :block_scout_web,
   max_length_to_show_string_without_trimming: System.get_env("MAX_STRING_LENGTH_WITHOUT_TRIMMING", "2040"),
   re_captcha_secret_key: System.get_env("RE_CAPTCHA_SECRET_KEY", nil),
   re_captcha_client_key: System.get_env("RE_CAPTCHA_CLIENT_KEY", nil),
+  new_tags: System.get_env("NEW_TAGS"),
   chain_id: System.get_env("CHAIN_ID"),
   json_rpc: System.get_env("JSON_RPC"),
   verification_max_libraries: verification_max_libraries
@@ -167,6 +169,8 @@ config :block_scout_web,
 config :block_scout_web, BlockScoutWeb.Chain.Address.CoinBalance,
   # days
   coin_balance_history_days: System.get_env("COIN_BALANCE_HISTORY_DAYS", "10")
+
+config :block_scout_web, BlockScoutWeb.API.V2, enabled: System.get_env("API_V2_ENABLED") == "true"
 
 ########################
 ### Ethereum JSONRPC ###
@@ -320,6 +324,10 @@ config :explorer, Explorer.Chain.Cache.Transactions,
   ttl_check_interval: if(disable_indexer == "true", do: :timer.seconds(1), else: false),
   global_ttl: if(disable_indexer == "true", do: :timer.seconds(5))
 
+config :explorer, Explorer.Chain.Cache.TransactionsApiV2,
+  ttl_check_interval: if(disable_indexer == "true", do: :timer.seconds(1), else: false),
+  global_ttl: if(disable_indexer == "true", do: :timer.seconds(5))
+
 config :explorer, Explorer.Chain.Cache.Accounts,
   ttl_check_interval: if(disable_indexer == "true", do: :timer.seconds(1), else: false),
   global_ttl: if(disable_indexer == "true", do: :timer.seconds(5))
@@ -352,6 +360,15 @@ config :explorer, Explorer.Account,
     sender: System.get_env("ACCOUNT_SENDGRID_SENDER"),
     template: System.get_env("ACCOUNT_SENDGRID_TEMPLATE")
   ]
+
+{token_id_migration_first_block, _} = Integer.parse(System.get_env("TOKEN_ID_MIGRATION_FIRST_BLOCK", "0"))
+{token_id_migration_concurrency, _} = Integer.parse(System.get_env("TOKEN_ID_MIGRATION_CONCURRENCY", "1"))
+{token_id_migration_batch_size, _} = Integer.parse(System.get_env("TOKEN_ID_MIGRATION_BATCH_SIZE", "500"))
+
+config :explorer, :token_id_migration,
+  first_block: token_id_migration_first_block,
+  concurrency: token_id_migration_concurrency,
+  batch_size: token_id_migration_batch_size
 
 ###############
 ### Indexer ###
@@ -391,6 +408,13 @@ config :indexer,
   trace_first_block: System.get_env("TRACE_FIRST_BLOCK") || "",
   trace_last_block: System.get_env("TRACE_LAST_BLOCK") || "",
   fetch_rewards_way: System.get_env("FETCH_REWARDS_WAY", "trace_block")
+
+{receipts_batch_size, _} = Integer.parse(System.get_env("INDEXER_RECEIPTS_BATCH_SIZE", "250"))
+{receipts_concurrency, _} = Integer.parse(System.get_env("INDEXER_RECEIPTS_CONCURRENCY", "10"))
+
+config :indexer,
+  receipts_batch_size: receipts_batch_size,
+  receipts_concurrency: receipts_concurrency
 
 config :indexer, Indexer.Fetcher.PendingTransaction.Supervisor,
   disabled?:
@@ -438,6 +462,9 @@ config :indexer, Indexer.Supervisor, enabled: System.get_env("DISABLE_INDEXER") 
 
 config :indexer, Indexer.Block.Realtime.Supervisor, enabled: System.get_env("DISABLE_REALTIME_INDEXER") != "true"
 
+config :indexer, Indexer.Fetcher.TokenInstance.Supervisor,
+  disabled?: System.get_env("DISABLE_TOKEN_INSTANCE_FETCHER", "false") == "true"
+
 blocks_catchup_fetcher_batch_size_default_str = "10"
 blocks_catchup_fetcher_concurrency_default_str = "10"
 
@@ -450,6 +477,24 @@ blocks_catchup_fetcher_concurrency_default_str = "10"
 config :indexer, Indexer.Block.Catchup.Fetcher,
   batch_size: blocks_catchup_fetcher_batch_size,
   concurrency: blocks_catchup_fetcher_concurrency
+
+{internal_transaction_fetcher_batch_size, _} =
+  Integer.parse(System.get_env("INDEXER_INTERNAL_TRANSACTIONS_BATCH_SIZE", "10"))
+
+{internal_transaction_fetcher_concurrency, _} =
+  Integer.parse(System.get_env("INDEXER_INTERNAL_TRANSACTIONS_CONCURRENCY", "4"))
+
+config :indexer, Indexer.Fetcher.InternalTransaction,
+  batch_size: internal_transaction_fetcher_batch_size,
+  concurrency: internal_transaction_fetcher_concurrency
+
+{coin_balance_fetcher_batch_size, _} = Integer.parse(System.get_env("INDEXER_COIN_BALANCES_BATCH_SIZE", "500"))
+
+{coin_balance_fetcher_concurrency, _} = Integer.parse(System.get_env("INDEXER_COIN_BALANCES_CONCURRENCY", "4"))
+
+config :indexer, Indexer.Fetcher.CoinBalance,
+  batch_size: coin_balance_fetcher_batch_size,
+  concurrency: coin_balance_fetcher_concurrency
 
 Code.require_file("#{config_env()}.exs", "config/runtime")
 

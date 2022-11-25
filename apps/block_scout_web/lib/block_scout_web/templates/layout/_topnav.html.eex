@@ -47,6 +47,9 @@
                       to: pending_transaction_path(@conn, :index)
                     ) %>
               <% end %>
+              <%= link(gettext("Verified contracts"),
+                    to: verified_contracts_path(@conn, :index),
+                    class: "dropdown-item #{tab_status("reorgs", @conn.request_path)}")%>
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -84,12 +87,16 @@
             </a>
             <div class="dropdown-menu" aria-labeledby="navbarAppsDropdown">
               <%= if apps_menu == true do %>
-                <%= for %{url: url, title: title} <- external_apps_list() do %> 
-                    <a href="<%= url %>" class="dropdown-item" target="_blank"><%= title %>
-                      <span class="external-link-icon">
-                        <%= render BlockScoutWeb.IconsView, "_external_link.html" %>
-                      </span>
-                    </a>
+                <%= for %{url: url, title: title} = app <- apps_list() do %>
+                    <%= if Map.has_key?(app, :embedded?) && app.embedded? do %>
+                      <a href="<%= url %>" class="dropdown-item" target="_self"><%= title %></a>
+                    <% else %>
+                      <a href="<%= url %>" class="dropdown-item" target="_blank"><%= title %>
+                        <span class="external-link-icon">
+                          <%= render BlockScoutWeb.IconsView, "_external_link.html" %>
+                        </span>
+                      </a>
+                    <% end %>
                 <% end %>
               <% end %>
             </div>

@@ -48,6 +48,9 @@ $box-line-border: #9AA3B2;
 				background-color: $dark-light-bg;
 			}
 		}
+		.nav-submenu {
+			color: $labels-dark;
+		}
 	}
 	.navbar-brand .navbar-logo {
 		filter: brightness(0) invert(1);
