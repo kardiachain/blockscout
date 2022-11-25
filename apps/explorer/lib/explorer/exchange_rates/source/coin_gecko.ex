@@ -17,7 +17,7 @@ defmodule Explorer.ExchangeRates.Source.CoinGecko do
     market_data = json_data["market_data"]
 
     last_updated = get_last_updated(market_data)
-    current_price = get_current_price(market_data)¡
+    current_price = get_current_price(market_data)
 
     id = json_data["id"]
 
