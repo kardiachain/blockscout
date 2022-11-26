@@ -44,6 +44,7 @@
         <ul>
           <li><a href="/graphiql" rel="noreferrer" class="footer-link"><%= gettext("GraphQL") %></a></li>
           <li><a href="/api-docs" rel="noreferrer" class="footer-link"><%= gettext("API Documents") %></a></li>
+          <%= render BlockScoutWeb.LayoutView, "_add_chain_to_mm.html" %>
         </ul>
       </div>
 
