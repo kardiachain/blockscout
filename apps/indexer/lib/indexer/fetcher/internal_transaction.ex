@@ -164,7 +164,7 @@ defmodule Indexer.Fetcher.InternalTransaction do
   end
 
   defp fetch_block_internal_transactions_by_transactions(unique_numbers, json_rpc_named_arguments) do
-    Logger.info("fetch_block_internal_transactions_by_transactions", inspect(unique_numbers))
+    Logger.info("fetch_block_internal_transactions_by_transactions")
     Enum.reduce(unique_numbers, {:ok, []}, fn
       block_number, {:ok, acc_list} ->
         block_number
