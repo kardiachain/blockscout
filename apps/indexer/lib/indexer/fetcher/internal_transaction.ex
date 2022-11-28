@@ -21,8 +21,8 @@ defmodule Indexer.Fetcher.InternalTransaction do
 
   @behaviour BufferedTask
 
-  @max_batch_size 5
-  @max_concurrency 2
+  @max_batch_size 10
+  @max_concurrency 4
   @defaults [
     flush_interval: :timer.seconds(3),
     max_concurrency: @max_concurrency,
@@ -103,7 +103,7 @@ defmodule Indexer.Fetcher.InternalTransaction do
     filtered_unique_numbers_count = Enum.count(filtered_unique_numbers)
     Logger.metadata(count: filtered_unique_numbers_count)
 
-    Logger.debug("fetching internal transactions for blocks")
+    Logger.info("fetching internal transactions for blocks")
 
     json_rpc_named_arguments
     |> Keyword.fetch!(:variant)
@@ -164,6 +164,7 @@ defmodule Indexer.Fetcher.InternalTransaction do
   end
 
   defp fetch_block_internal_transactions_by_transactions(unique_numbers, json_rpc_named_arguments) do
+    Logger.info("fetch_block_internal_transactions_by_transactions", inspect(unique_numbers))
     Enum.reduce(unique_numbers, {:ok, []}, fn
       block_number, {:ok, acc_list} ->
         block_number
