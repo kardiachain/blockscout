@@ -70,6 +70,31 @@
             </div>
           </li>
         <% end %>
+        <li class="nav-item dropdown">
+          <a href="#" role="button" id="navbarTokensDropdown" class="nav-link topnav-nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="nav-link-icon">
+                <%= render BlockScoutWeb.IconsView, "_apps_icon.html" %>
+              </span>
+            <%= gettext("Others") %>
+          </a>
+          <div class="dropdown-menu" aria-labeledby="navbarTransactionsDropdown">
+            <%= link(
+                    gettext("Old Explorer"),
+                    class: "dropdown-item #{tab_status("old-explorer", @conn.request_path)}",
+                    to: "https://legacy-explorer.kardiachain.io"
+                  ) %>
+            <%= link(
+                    gettext("Staking"),
+                    class: "dropdown-item #{tab_status("staking", @conn.request_path)}",
+                    to: "https://staking.kardiachain.io"
+                  ) %>
+            <%= link(
+                    gettext("Web Wallet"),
+                    class: "dropdown-item #{tab_status("web-wallet", @conn.request_path)}",
+                    to: "https://legacy-explorer.kardiachain.io/wallet-login"
+                  ) %>
+          </div>
+        </li>
         <%= if apps_menu == true do %>
           <li class="nav-item dropdown">
             <a href="#" role="button" id="navbarAppsDropdown" class="nav-link topnav-nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
