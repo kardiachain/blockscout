@@ -1854,7 +1854,7 @@ msgstr ""
 #: lib/block_scout_web/views/transaction_view.ex:387
 #, elixir-autogen, elixir-format
 msgid "Pending"
-msgstr ""
+msgstr "View Pending Txs"
 
 #: lib/block_scout_web/templates/pending_transaction/index.html.eex:5
 #, elixir-autogen, elixir-format
@@ -2873,7 +2873,7 @@ msgstr ""
 #: lib/block_scout_web/templates/layout/_topnav.html.eex:52
 #, elixir-autogen, elixir-format
 msgid "Validated"
-msgstr ""
+msgstr "View Validated Txs"
 
 #: lib/block_scout_web/templates/transaction/index.html.eex:12
 #, elixir-autogen, elixir-format
