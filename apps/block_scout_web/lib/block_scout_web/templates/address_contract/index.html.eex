@@ -113,7 +113,7 @@
                 <%= gettext "Copy Source Code" %>
               </button>
             </div>
-            <pre class="tile-muted tile-code mb-4" id="code_viewer_<%= index %>"><%= additional_source.contract_source_code %><pre>
+            <pre class="tile-muted tile-code mb-4" id="code_viewer_<%= index %>"><%= additional_source.contract_source_code %></pre>
           </section>
         <% end)%>
 
