@@ -31,7 +31,7 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
     if String.trim(result) == "", do: media_src(nil)
     cond do
       String.starts_with?(result, "http://") or String.starts_with?(result, "https://") -> result
-      true -> "https://ipfs.com/ipfs/" <> " " <> result
+      true -> "https://ipfs.com/ipfs/" <>  result
     end
   end
 
