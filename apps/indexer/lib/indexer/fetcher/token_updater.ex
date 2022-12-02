@@ -85,7 +85,6 @@ defmodule Indexer.Fetcher.TokenUpdater do
   end
 
   def update_metadata(%Token{} = token, metadata) do
-    Logger.info("Metadata", inspect(metadata))
     Chain.update_token(%{token | updated_at: DateTime.utc_now()}, metadata)
   end
 end
