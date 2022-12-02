@@ -28,8 +28,11 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
 
   def media_src(instance, high_quality_media?) do
     result = get_media_src(instance.metadata, high_quality_media?)
-
-    if String.trim(result) == "", do: media_src(nil), else: result
+    if String.trim(result) == "", do: media_src(nil)
+    cond do
+      String.starts_with?(result, "http://") or String.starts_with?(result, "https://") -> result
+      true -> "https://ipfs.com/ipfs/" <> " " <> result
+    end
   end
 
   defp get_media_src(nil, _), do: media_src(nil)
