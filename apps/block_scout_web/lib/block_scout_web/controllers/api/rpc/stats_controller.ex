@@ -42,6 +42,12 @@ defmodule BlockScoutWeb.API.RPC.StatsController do
     render(conn, "ethsupply.json", total_supply: cached_wei_total_supply)
   end
 
+  def wallets(conn, _params) do
+    total_wallets = Chain.address_estimated_count()
+
+    render(conn, "total_wallet.json", total_wallet: total_wallets)
+  end
+
   def coinsupply(conn, _params) do
     cached_coin_total_supply_wei = AddressSumMinusBurnt.get_sum_minus_burnt()
 
