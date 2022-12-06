@@ -20,8 +20,8 @@ defmodule BlockScoutWeb.LayoutViewTest do
       assert LayoutView.logo() == "custom/logo.png"
     end
 
-    test "use the default logo when there is no env configured for it" do
-      assert LayoutView.logo() == "/images/kardiachain_logo.svg"
+    test "logo is nil when there is no env configured for it" do
+      assert LayoutView.logo() == nil
     end
   end
 
@@ -33,7 +33,7 @@ defmodule BlockScoutWeb.LayoutViewTest do
     end
 
     test "use the default subnetwork title when there is no env configured for it" do
-      assert LayoutView.subnetwork_title() == "Aris Mainnet"
+      assert LayoutView.subnetwork_title() == "Sokol"
     end
   end
 

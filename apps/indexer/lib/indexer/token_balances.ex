@@ -51,7 +51,7 @@ defmodule Indexer.TokenBalances do
       token_balances
       |> Enum.filter(fn request ->
         if Map.has_key?(request, :token_type) do
-          request.token_type !== "KRC-1155"
+          request.token_type !== "ERC-1155"
         else
           true
         end
@@ -61,7 +61,7 @@ defmodule Indexer.TokenBalances do
       token_balances
       |> Enum.filter(fn request ->
         if Map.has_key?(request, :token_type) do
-          request.token_type == "KRC-1155"
+          request.token_type == "ERC-1155"
         else
           false
         end

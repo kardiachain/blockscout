@@ -94,7 +94,7 @@ defmodule Indexer.Fetcher.ContractCode do
               tracer: Tracer
             )
   def run(entries, json_rpc_named_arguments) do
-    Logger.info("Fetching created_contract_code for transactions")
+    Logger.debug("fetching created_contract_code for transactions")
 
     entries
     |> Enum.map(&params/1)

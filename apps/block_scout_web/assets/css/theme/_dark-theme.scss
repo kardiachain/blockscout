@@ -1,7 +1,5 @@
 $body-dark: #181818; // body background
 $dark-bg: #2A2B40; // hero shade
-// $dark-light-bg: #212121; // pills bg shade
-// $dark-light: #3a3b3c; // tile light top share
 $dark-light: #434343; // pills bg shade
 $dark-light-bg: #3a3b3c; // tile light top share
 $dark-darker-bg: #252525;
@@ -81,7 +79,7 @@ $box-line-border: #9AA3B2;
 		}
 	}
 	.navbar.navbar-primary .navbar-toggler .navbar-toggler-icon {
-
+		filter: invert(1);
 	}
 
 	// footer
@@ -105,7 +103,7 @@ $box-line-border: #9AA3B2;
 
 	.layout-container .dashboard-banner-container {
 		background-image: none;
-		background-color: $dark-light !important;
+		background-color: $dark-darker-bg !important;
 	}
 	.dashboard-banner-network-plain-container,
 	.dashboard-banner-network-plain-container::after {
@@ -116,7 +114,7 @@ $box-line-border: #9AA3B2;
 		color: $labels-dark;
 	}
 	.dashboard-banner-network-stats-item::before {
-		background-color: $dark-light;
+		background-color: $dark-secondary;
 	}
 	.dashboard-banner-chart-legend .dashboard-banner-chart-legend-item {
 		&.price-per-day {
@@ -124,19 +122,19 @@ $box-line-border: #9AA3B2;
 			  background-color: $dark-primary;
 			}
 		  }
-
+	  
 		  &.gas-price-oracle {
 			&::before {
 			  background-color: $dark-primary;
 			}
 		  }
-
+	  
 		  &.market-cap-per-day {
 			&::before {
 			  background-color:$dark-secondary;
 			}
 		  }
-
+	  
 		  &.tx-per-day {
 			&::before {
 			  background-color: $dashboard-line-color-transactions;
@@ -169,7 +167,7 @@ $box-line-border: #9AA3B2;
 	.card-tab {
 		background-color: transparent;
 		&:hover:not(.active) {
-			background-color: #2A2B40;
+			background-color: rgba($dark-light, .15);
 			color: $dark-primary;
 		}
 		&.active {
@@ -235,7 +233,7 @@ $box-line-border: #9AA3B2;
 		background-color: $box-line-border;
 	}
 	.tile.tile-type-block {
-		border-left-color: $box-line-bg;
+		border-left-color: $dark-primary
 	}
 	.tile.tile-type-block .tile-status-label {
 		color: $dark-primary;
@@ -262,8 +260,8 @@ $box-line-border: #9AA3B2;
 		border-color: $box-line-border;
 		color: $labels-dark;
 		&:hover {
-			background-color: $box-line-bg-hover;
 			border-color: $box-line-border;
+			background-color: $box-line-bg-hover;
 			color: #fff;
 		}
 	}
@@ -444,62 +442,6 @@ $box-line-border: #9AA3B2;
 	.tooltip-pale-color.bs-tooltip-left .arrow::before,
 	.tooltip-pale-color.bs-tooltip-auto[x-placement^="left"] .arrow::before {
 		border-left-color: rgba(#fff, 0.5) !important;
-	}
-
-	//network select
-	.network-selector-overlay {
-		background-color: rgba($dark-bg, .9);
-	}
-	.network-selector {
-		background-color: $dark-light-bg;
-	}
-	.network-selector-title {
-		color: #fff;
-	}
-	.network-selector-text {
-		color: $labels-dark;
-	}
-	.network-selector-close path {
-		fill: #fff;
-	}
-	.network-selector-search-container {
-		background-color: $dark-light;
-	}
-	.network-selector-search-container path {
-		fill: $labels-dark;
-	}
-	.network-selector-search-input {
-		color: #fff !important;
-		&::placeholder {
-			color: $labels-dark;
-		}
-	}
-	.network-selector-tab {
-		color: $labels-dark;
-		&:hover, &.active {
-			color: #fff;
-		}
-		&.active {
-			&:after {
-				background-color: $dark-primary;
-			}
-		}
-	}
-	.network-selector-item,
-	.network-selector-tabs-container {
-		border-bottom-color: darken($labels-dark, 30);
-	}
-	.network-selector-item-title {
-		color: #fff;
-	}
-	.network-selector-item-type {
-		color: $labels-dark;
-	}
-	.radio .radio-icon {
-		border-color: $labels-dark
-	}
-	.network-selector-item-url:hover .network-selector-item-type {
-		color: #fff;
 	}
 
 	//coin dropdown
@@ -1188,6 +1130,6 @@ $box-line-border: #9AA3B2;
 }
 
 .dark-theme-applied .btn-no-border-link-to-tems {
-	border-color: $dark-primary;
-	color: $dark-primary;
+	border-color: $dark-primary !important;
+	color: $dark-primary !important;
 }

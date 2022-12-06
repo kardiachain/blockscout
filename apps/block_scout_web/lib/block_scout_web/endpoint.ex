@@ -2,7 +2,7 @@ defmodule BlockScoutWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :block_scout_web
   use Absinthe.Phoenix.Endpoint
 
-  if Application.get_env(:block_scout_web, :sql_sandbox) do
+  if Application.compile_env(:block_scout_web, :sql_sandbox) do
     plug(Phoenix.Ecto.SQL.Sandbox, repo: Explorer.Repo)
   end
 
@@ -59,16 +59,18 @@ defmodule BlockScoutWeb.Endpoint do
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
+
   plug(
     Plug.Session,
-    store: :cookie,
+    store: BlockScoutWeb.Plug.RedisCookie,
     key: "_explorer_key",
-    signing_salt: "iC2ksJHS"
+    signing_salt: "iC2ksJHS",
+    same_site: "Lax"
   )
 
   use SpandexPhoenix
 
-  #plug(BlockScoutWeb.Prometheus.Exporter)
+  plug(BlockScoutWeb.Prometheus.Exporter)
 
   # 'x-apollo-tracing' header for https://www.graphqlbin.com to work with our GraphQL endpoint
   plug(CORSPlug, headers: ["x-apollo-tracing" | CORSPlug.defaults()[:headers]])

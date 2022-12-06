@@ -1,6 +1,6 @@
 defmodule BlockScoutWeb.ChainView do
   use BlockScoutWeb, :view
-
+  require Logger
   require Decimal
   import Number.Currency, only: [number_to_currency: 2]
 
@@ -9,18 +9,22 @@ defmodule BlockScoutWeb.ChainView do
 
   defp market_cap(:standard, %{available_supply: available_supply, usd_value: usd_value})
        when is_nil(available_supply) or is_nil(usd_value) do
+    Logger.info("Calculate market cap with nil avail supply")
     Decimal.new(0)
   end
 
   defp market_cap(:standard, %{available_supply: available_supply, usd_value: usd_value}) do
+    Logger.info("Calculate market cap with avail supply", supply: inspect(available_supply), usd: inspect(usd_value))
     Decimal.mult(available_supply, usd_value)
   end
 
   defp market_cap(:standard, exchange_rate) do
+    Logger.info("Get in market_cap here")
     exchange_rate.market_cap_usd
   end
 
   defp market_cap(module, exchange_rate) do
+    Logger.info("Get in market_cap here 2")
     module.market_cap(exchange_rate)
   end
 

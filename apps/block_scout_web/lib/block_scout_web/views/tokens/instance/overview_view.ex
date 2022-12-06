@@ -28,8 +28,11 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
 
   def media_src(instance, high_quality_media?) do
     result = get_media_src(instance.metadata, high_quality_media?)
-
-    if String.trim(result) == "", do: media_src(nil), else: result
+    if String.trim(result) == "", do: media_src(nil)
+    cond do
+      String.starts_with?(result, "http://") or String.starts_with?(result, "https://") -> result
+      true -> "https://ipfs.io/ipfs/" <>  result
+    end
   end
 
   defp get_media_src(nil, _), do: media_src(nil)
@@ -53,25 +56,27 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
     end
   end
 
+  def media_type("data:image/" <> _data) do
+    "image"
+  end
+
+  def media_type("data:video/" <> _data) do
+    "video"
+  end
+
+  def media_type("data:" <> _data) do
+    nil
+  end
+
   def media_type(media_src) when not is_nil(media_src) do
     ext = media_src |> Path.extname() |> String.trim()
 
     mime_type =
       if ext == "" do
-        case HTTPoison.get(media_src) do
-          {:ok, %HTTPoison.Response{body: body, status_code: 200}} ->
-            {:ok, path} = Briefly.create()
-
-            File.write!(path, body)
-
-            case FileInfo.get_info([path]) do
-              %{^path => %FileInfo.Mime{subtype: subtype}} ->
-                subtype
-                |> MIME.type()
-
-              _ ->
-                nil
-            end
+        case HTTPoison.head(media_src, [], follow_redirect: true) do
+          {:ok, %HTTPoison.Response{status_code: 200, headers: headers}} ->
+            headers_map = Map.new(headers, fn {key, value} -> {String.downcase(key), value} end)
+            headers_map["content-type"]
 
           _ ->
             nil

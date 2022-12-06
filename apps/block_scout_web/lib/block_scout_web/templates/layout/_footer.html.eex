@@ -1,5 +1,19 @@
 <footer class="footer">
   <div class="footer-body container">
+    <!-- Logo -->
+    <div class="row footer-logo-row">
+      <div class="col-md-12">
+        <%= link to: webapp_url(@conn), class: "footer-brand" do %>
+          <%= if logo_footer() do %>
+            <img class="footer-logo" src="<%= static_path(@conn, logo_footer()) %>" alt="<%= subnetwork_title() %>" />
+          <% end %>
+          <%= if logo_text() do %>
+            <span class="logo-text in-footer <%= unless logo_footer(), do: "no-logo" %>"> <%= logo_text() %> </span>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
     <% other_explorers = other_explorers() %>
     <% col_size = if Enum.empty?(other_explorers), do: 3, else: 2 %>
 
@@ -19,8 +33,9 @@
       <div class="col-xs-12 col-md-4 col-lg-<%= col_size %> footer-list">
         <h3>References</h3>
         <ul>
-          <li><a href="https://github.com/kardiachain/kardiascan/issues" rel="noreferrer" class="footer-link"><%= gettext("Report bugs or contribute") %></a></li>
+          <li><a href="https://github.com/kardiachain/blockscout/issues" rel="noreferrer" class="footer-link"><%= gettext("Report bugs or contribute") %></a></li>
           <li><a href="https://t.me/kardiatechsupport" rel="noreferrer" class="footer-link"><%= gettext("Tech support") %></a></li>
+          <li>License by<a href="https://github.com/blockscout/blockscout/blob/master/LICENSE">&nbsp;BlockScout</a></li>
         </ul>
       </div>
 
@@ -29,6 +44,7 @@
         <ul>
           <li><a href="/graphiql" rel="noreferrer" class="footer-link"><%= gettext("GraphQL") %></a></li>
           <li><a href="/api-docs" rel="noreferrer" class="footer-link"><%= gettext("API Documents") %></a></li>
+          <%= render BlockScoutWeb.LayoutView, "_add_chain_to_mm.html" %>
         </ul>
       </div>
 

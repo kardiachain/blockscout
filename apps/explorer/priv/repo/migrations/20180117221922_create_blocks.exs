@@ -7,12 +7,7 @@ defmodule Explorer.Repo.Migrations.CreateBlocks do
       add(:difficulty, :numeric, precision: 50)
       add(:gas_limit, :numeric, precision: 100, null: false)
       add(:gas_used, :numeric, precision: 100, null: false)
-      add(:block_rewards, :numeric, precision: 100, null: false)
       add(:hash, :bytea, null: false, primary_key: true)
-      add(:commit_hash, :bytea, null: false)
-      add(:validator_hash, :bytea, null: false)
-      add(:next_validator_hash, :bytea, null: false)
-      add(:transactions_root, :bytea, null: false)
       add(:miner_hash, references(:addresses, column: :hash, type: :bytea), null: false)
       add(:nonce, :bytea, null: false)
       add(:number, :bigint, null: false)
@@ -22,7 +17,7 @@ defmodule Explorer.Repo.Migrations.CreateBlocks do
 
       add(:size, :integer, null: false)
       add(:timestamp, :utc_datetime_usec, null: false)
-      add(:total_difficulty, :numeric, precision: 50, default: 0)
+      add(:total_difficulty, :numeric, precision: 50)
 
       timestamps(null: false, type: :utc_datetime_usec)
     end

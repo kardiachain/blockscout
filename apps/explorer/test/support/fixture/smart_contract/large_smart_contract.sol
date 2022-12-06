@@ -729,7 +729,7 @@ interface IERC721 {
 
 
 /**
- * @title KRC-721 Non-Fungible Token Standard, optional enumeration extension
+ * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
  * @dev See https://eips.ethereum.org/EIPS/eip-721
  */
 interface IERC721Enumerable {
@@ -740,7 +740,7 @@ interface IERC721Enumerable {
 
 
 /**
- * @title KRC-721 Non-Fungible Token Standard, optional metadata extension
+ * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
  * @dev See https://eips.ethereum.org/EIPS/eip-721
  */
 interface IERC721Metadata {
@@ -778,7 +778,7 @@ interface IERC721Receiver {
 
 /**
  * @title ERC1412 Batch Transfers For Non-Fungible Tokens
- * @dev the KRC-165 identifier for this interface is 0x2b89bcaa
+ * @dev the ERC-165 identifier for this interface is 0x2b89bcaa
  */
 interface IERC1412 {
   /// @notice Transfers the ownership of multiple NFTs from one address to another address
@@ -803,8 +803,8 @@ interface IERC1412 {
 interface IERC165 {
     /**
      * @notice Query if a contract implements an interface
-     * @param interfaceId The interface identifier, as specified in KRC-165
-     * @dev Interface identification is specified in KRC-165. This function
+     * @param interfaceId The interface identifier, as specified in ERC-165
+     * @dev Interface identification is specified in ERC-165. This function
      * uses less than 30,000 gas.
      */
     function supportsInterface(bytes4 interfaceId) external view returns (bool);
@@ -1332,7 +1332,7 @@ contract ERC721 is ERC165, IERC721 {
 
 
 /**
- * @title KRC-721 Non-Fungible Token with optional enumeration extension logic
+ * @title ERC-721 Non-Fungible Token with optional enumeration extension logic
  * @dev See https://eips.ethereum.org/EIPS/eip-721
  */
 contract ERC721Enumerable is ERC165, ERC721, IERC721Enumerable {

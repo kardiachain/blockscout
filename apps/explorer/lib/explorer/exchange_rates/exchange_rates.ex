@@ -13,7 +13,7 @@ defmodule Explorer.ExchangeRates do
   alias Explorer.Counters.Helper
   alias Explorer.ExchangeRates.{Source, Token}
 
-  @interval Helper.cache_period_default_in_minutes("CACHE_EXCHANGE_RATES_PERIOD", 60)
+  @interval Helper.cache_period_default_in_minutes("CACHE_EXCHANGE_RATES_PERIOD", 10)
   @table_name :exchange_rates
 
   @impl GenServer
@@ -79,7 +79,7 @@ defmodule Explorer.ExchangeRates do
   end
 
   defp schedule_next_consolidation do
-    Process.send_after(self(), :update, :timer.minutes(5))
+    Process.send_after(self(), :update, :timer.minutes(1))
   end
 
   @doc """

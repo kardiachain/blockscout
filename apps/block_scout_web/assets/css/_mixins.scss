@@ -31,16 +31,16 @@
     justify-content: center;
     padding-left: calc(1rem + 4px);
     padding-right: 1rem;
-    padding-top: calc(1rem + 2px);
     position: relative;
 
     &::before {
       background-color: $border-color;
       border-radius: 2px;
       content: "";
-      height: 60%;
+      height: 100%;
       left: 0;
       position: absolute;
+      top: 0;
       width: 4px;
     }
   }
