@@ -485,7 +485,7 @@ defmodule EthereumJSONRPC.Block do
       hash: hash,
       logs_bloom: Map.get(elixir, "logsBloom", "0x0"),
       miner_hash: miner_hash,
-      mix_hash: Map.get(elixir, "mixHash", "0x0"),
+      #mix_hash: Map.get(elixir, "mixHash", "0x0"),
       next_validator_hash: next_validator_hash,
       nonce: Map.get(elixir, "nonce", 0),
       num_txs: num_txs,
@@ -720,7 +720,7 @@ defmodule EthereumJSONRPC.Block do
   # hash format
   defp entry_to_elixir({key, _} = entry)
        when key in ~w(author extraData hash commitHash consensusHash evidenceHash nextValidatorHash validatorHash logsBloom miner mixHash nonce parentHash receiptsRoot sealFields sha3Uncles
-                     signature stateRoot step transactionsRoot uncles bitcoinMergedMiningCoinbaseTransaction bitcoinMergedMiningHeader bitcoinMergedMiningMerkleProof hashForMergedMining committedSeals committee pastCommittedSeals proposerSeal round),
+                     signature stateRoot step transactionsRoot uncles),
        do: entry
 
   defp entry_to_elixir({"timestamp" = key, timestamp}) do
