@@ -1345,6 +1345,26 @@ defmodule Explorer.Chain do
     end
   end
 
+  defp uns_search(string) do
+    if String.match?(string, ~r/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{1,}$/) do
+      url = "https://resolve.unstoppabledomains.com/domains/#{string}"
+      headers = [authorization: "Bearer sokyv15f8o98x89lx0igz5hj1pgd8d2r"]
+
+      case HTTPoison.get(url, headers, params: []) do
+        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+          {:ok, data} = Poison.decode(body)
+          data["meta"]["owner"]
+
+        {:error, %HTTPoison.Error{} = error} ->
+          string
+        _ ->
+          string
+      end
+    else
+      string
+    end
+  end
+
   defp prepare_search_term(string) do
     case Regex.scan(~r/[a-zA-Z0-9]+/, string) do
       [_ | _] = words ->
@@ -1486,13 +1506,15 @@ defmodule Explorer.Chain do
   end
 
   def joint_search(paging_options, offset, string) do
-    case prepare_search_term(string) do
+    uns_search_string = uns_search(string)
+
+    case prepare_search_term(uns_search_string) do
       {:some, term} ->
         tokens_query = search_token_query(term)
         contracts_query = search_contract_query(term)
-        tx_query = search_tx_query(string)
-        address_query = search_address_query(string)
-        block_query = search_block_query(string)
+        tx_query = search_tx_query(uns_search_string)
+        address_query = search_address_query(uns_search_string)
+        block_query = search_block_query(uns_search_string)
 
         basic_query =
           from(
