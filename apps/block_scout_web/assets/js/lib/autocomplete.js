@@ -47,7 +47,7 @@ const resultsListElement = (list, data) => {
   fetchTextAdData()
 }
 export const searchEngine = (query, record) => {
-  const unsAllowedDomains = ['.crypto', '.nft', '.wallet', '.blockchain', '.x', '.bitcoin', '.dao', '.888', '.zil']
+  const unsAllowedDomains = ['.crypto', '.nft', '.wallet', '.blockchain', '.x', '.bitcoin', '.dao', '.888', '.klever', '.hi']
   const regEx = new RegExp(unsAllowedDomains.join('|'))
   const queryLowerCase = query.toLowerCase()
   if (
