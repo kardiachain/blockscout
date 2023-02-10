@@ -1346,7 +1346,7 @@ defmodule Explorer.Chain do
   end
 
   defp uns_search(string) do
-    if String.match?(string, ~r/^([a-z0-9|-]+[a-z0-9]{1,}\.)*[a-z0-9|-]+[a-z0-9]{1,}\.[a-z0-9]{2,}$/) do
+    if String.match?(string, ~r/^([a-z0-9|-]+[a-z0-9]{1,}\.)*[a-z0-9|-]+[a-z0-9]{1,}\.[a-z0-9]{1,}$/) do
       url = "https://resolve.unstoppabledomains.com/domains/#{string}"
       headers = [authorization: "Bearer sokyv15f8o98x89lx0igz5hj1pgd8d2r"]
 
