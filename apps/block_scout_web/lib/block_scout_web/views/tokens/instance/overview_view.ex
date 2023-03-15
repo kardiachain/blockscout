@@ -12,7 +12,7 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
   import BlockScoutWeb.APIDocsView, only: [blockscout_url: 1, blockscout_url: 2]
 
   @tabs ["token-transfers", "metadata"]
-  @stub_image blockscout_url(false) + "/images/controller.svg"
+  @stub_image "/images/controller.svg"
 
   def token_name?(%Token{name: nil}), do: false
   def token_name?(%Token{name: _}), do: true
@@ -24,7 +24,7 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
   def total_supply?(%Token{total_supply: _}), do: true
 
   def media_src(instance, high_quality_media? \\ nil)
-  def media_src(nil, _), do: @stub_image
+  def media_src(nil, _), do: blockscout_url(false) <> @stub_image
 
   def media_src(instance, high_quality_media?) do
     result = get_media_src(instance.metadata, high_quality_media?)
