@@ -47,14 +47,18 @@ const resultsListElement = (list, data) => {
   fetchTextAdData()
 }
 export const searchEngine = (query, record) => {
+  const unsAllowedDomains = ['.crypto', '.nft', '.wallet', '.blockchain', '.x', '.bitcoin', '.dao', '.888', '.klever', '.hi', '.zil']
+  const regEx = new RegExp(unsAllowedDomains.join('|'))
   const queryLowerCase = query.toLowerCase()
-  if (record && (
-    (record.name && record.name.toLowerCase().includes(queryLowerCase)) ||
-      (record.symbol && record.symbol.toLowerCase().includes(queryLowerCase)) ||
-      (record.address_hash && record.address_hash.toLowerCase().includes(queryLowerCase)) ||
-      (record.tx_hash && record.tx_hash.toLowerCase().includes(queryLowerCase)) ||
-      (record.block_hash && record.block_hash.toLowerCase().includes(queryLowerCase))
-  )
+  if (
+    (record && (
+      (record.name && record.name.toLowerCase().includes(queryLowerCase)) ||
+        (record.symbol && record.symbol.toLowerCase().includes(queryLowerCase)) ||
+        (record.address_hash && record.address_hash.toLowerCase().includes(queryLowerCase)) ||
+        (record.tx_hash && record.tx_hash.toLowerCase().includes(queryLowerCase)) ||
+        (record.block_hash && record.block_hash.toLowerCase().includes(queryLowerCase))
+    )
+    ) || regEx.test(query)
   ) {
     let searchResult = '<div>'
     searchResult += `<div>${record.address_hash || record.tx_hash || record.block_hash}</div>`

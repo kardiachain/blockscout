@@ -1,6 +1,6 @@
 // general
-$primary: #133629;
-$secondary: #3E6957;
+$primary: #17314f;
+$secondary: #15bba6;
 $tertiary: #93d7ff;
 $additional-font: #fff;
 
@@ -14,7 +14,7 @@ $footer-item-disc-color: $secondary;
 // dashboard
 $dashboard-line-color-price: $tertiary; // price left border
 
-$dashboard-line-color-market: #15bba6;
+$dashboard-line-color-market: $secondary;
 
 $dashboard-banner-chart-legend-label-color: $footer-text-color;
 $dashboard-stats-item-label-color: $footer-text-color;
