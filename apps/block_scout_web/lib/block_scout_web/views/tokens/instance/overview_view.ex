@@ -12,7 +12,7 @@ defmodule BlockScoutWeb.Tokens.Instance.OverviewView do
   import BlockScoutWeb.APIDocsView, only: [blockscout_url: 1, blockscout_url: 2]
 
   @tabs ["token-transfers", "metadata"]
-  @stub_image "/images/controller.svg"
+  @stub_image blockscout_url(false) + "/images/controller.svg"
 
   def token_name?(%Token{name: nil}), do: false
   def token_name?(%Token{name: _}), do: true
