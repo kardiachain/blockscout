@@ -25,6 +25,7 @@ defmodule Indexer.Supervisor do
     Token,
     TokenBalance,
     TokenInstance,
+    MetadataReload,
     TokenTotalSupplyOnDemand,
     TokenUpdater,
     UncleBlock
@@ -122,6 +123,8 @@ defmodule Indexer.Supervisor do
       {Token.Supervisor, [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
       {TokenInstance.Supervisor,
        [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
+      {MetadataReload.Supervisor,
+        [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
       {ContractCode.Supervisor, [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
       {TokenBalance.Supervisor, [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},
       {TokenUpdater.Supervisor, [[json_rpc_named_arguments: json_rpc_named_arguments, memory_monitor: memory_monitor]]},

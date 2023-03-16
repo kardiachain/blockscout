@@ -4623,6 +4623,47 @@ defmodule Explorer.Chain do
     Repo.stream_reduce(distinct_query, initial, reducer)
   end
 
+  @spec stream_exist_token_instances(
+          initial :: accumulator,
+          reducer :: (entry :: map(), accumulator -> accumulator)
+        ) :: {:ok, accumulator}
+        when accumulator: term()
+  def stream_exist_token_instances(initial, reducer) when is_function(reducer, 2) do
+    nft_tokens =
+      from(
+        token in Token,
+        where: token.type == ^"ERC-721" or token.type == ^"ERC-1155",
+        select: token.contract_address_hash
+      )
+
+    query =
+      from(
+        token_transfer in TokenTransfer,
+        inner_join: token in subquery(nft_tokens),
+        on: token.contract_address_hash == token_transfer.token_contract_address_hash,
+        left_join: instance in Instance,
+        on:
+          token_transfer.token_contract_address_hash == instance.token_contract_address_hash and
+          (token_transfer.token_id == instance.token_id or
+           fragment("? @> ARRAY[?::decimal]", token_transfer.token_ids, instance.token_id)),
+        where:
+          not is_nil(instance.metadata) and (not is_nil(token_transfer.token_id) or not is_nil(token_transfer.token_ids)),
+        select: %{
+          contract_address_hash: token_transfer.token_contract_address_hash,
+          token_id: token_transfer.token_id,
+          token_ids: token_transfer.token_ids
+        }
+      )
+
+    distinct_query =
+      from(
+        q in subquery(query),
+        distinct: [q.contract_address_hash, q.token_id, q.token_ids]
+      )
+
+    Repo.stream_reduce(distinct_query, initial, reducer)
+  end
+
   @doc """
   Streams a list of token contract addresses that have been cataloged.
   """
