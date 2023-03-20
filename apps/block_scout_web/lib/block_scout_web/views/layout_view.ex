@@ -1,11 +1,9 @@
 defmodule BlockScoutWeb.LayoutView do
   use BlockScoutWeb, :view
 
-  alias Explorer.{Chain, CustomContractsHelpers}
+  alias Explorer.Chain
   alias Plug.Conn
   alias Poison.Parser
-
-  import BlockScoutWeb.AddressView, only: [from_address_hash: 1]
 
   @default_other_networks [
     %{
@@ -229,11 +227,12 @@ defmodule BlockScoutWeb.LayoutView do
     end
   end
 
-  def external_apps_list do
-    if Application.get_env(:block_scout_web, :external_apps) do
+  def apps_list do
+    apps = Application.get_env(:block_scout_web, :apps)
+
+    if apps do
       try do
-        :block_scout_web
-        |> Application.get_env(:external_apps)
+        apps
         |> Parser.parse!(%{keys: :atoms!})
       rescue
         _ ->
@@ -257,7 +256,7 @@ defmodule BlockScoutWeb.LayoutView do
     if Mix.env() == :test do
       "/auth/auth0"
     else
-      Application.get_env(:block_scout_web, BlockScoutWeb.Endpoint)[:url][:path] <> "auth/auth0"
+      Application.get_env(:block_scout_web, BlockScoutWeb.Endpoint)[:url][:path] <> "/auth/auth0"
     end
   end
 

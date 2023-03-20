@@ -33,8 +33,7 @@ defmodule BlockScoutWeb.TransactionTokenTransferController do
               [from_address: :names] => :optional,
               [to_address: :names] => :optional,
               from_address: :required,
-              to_address: :required,
-              token: :required
+              to_address: :required
             }
           ],
           paging_options(params)
@@ -77,7 +76,7 @@ defmodule BlockScoutWeb.TransactionTokenTransferController do
         TransactionController.set_not_found_view(conn, transaction_hash_string)
 
       :error ->
-        TransactionController.set_invalid_view(conn, transaction_hash_string)
+        unprocessable_entity(conn)
 
       {:error, :not_found} ->
         TransactionController.set_not_found_view(conn, transaction_hash_string)
@@ -125,7 +124,7 @@ defmodule BlockScoutWeb.TransactionTokenTransferController do
         TransactionController.set_not_found_view(conn, transaction_hash_string)
 
       :error ->
-        TransactionController.set_invalid_view(conn, transaction_hash_string)
+        unprocessable_entity(conn)
 
       {:error, :not_found} ->
         TransactionController.set_not_found_view(conn, transaction_hash_string)

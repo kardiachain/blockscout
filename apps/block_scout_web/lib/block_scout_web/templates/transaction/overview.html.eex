@@ -192,6 +192,29 @@
               </dd>
             </dl>
           <% end %>
+          <!-- Transaction Action -->
+          <% %{transaction_actions: transaction_actions} = transaction_actions(@transaction) %>
+          <%= if not Enum.empty?(transaction_actions) do %>
+            <dl class="row">
+              <dt class="col-sm-3 col-lg-2 text-muted">
+                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                  text: gettext("Highlighted events of the transaction.") %>
+                <%= gettext "Transaction Action" %>
+                <p id="actions-list-scroll-note"><%= gettext "Scroll to see more" %></p>
+              </dt>
+              <dd class="col-sm-9 col-lg-10 actions-list-mobile-container">
+                <div class="mCustomScrollbar" style="max-height:100px;width:90%">
+                  <% transaction_actions_indexed = Enum.with_index(transaction_actions) %>
+                  <% transaction_actions_length = Enum.count(transaction_actions) %>
+                  <%= for {action, i} <- transaction_actions_indexed do %>
+                    <% action_assigns = Map.put(assigns, :action, action) %>
+                    <% action_assigns = Map.put(action_assigns, :isLast, (i == transaction_actions_length - 1)) %>
+                    <%= render BlockScoutWeb.TransactionView, "_actions.html", action_assigns %>
+                  <% end %>
+                </div>
+              </dd>
+            </dl>
+          <% end %>
           <!-- From -->
           <dl class="row">
             <dt class="col-sm-3 col-lg-2 text-muted">
@@ -203,7 +226,7 @@
               <%= render BlockScoutWeb.AddressView, "_labels.html", tags: @from_tags %>
               <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
                 additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
-                clipboard_text: from_address_hash,
+                clipboard_text: Address.checksum(from_address_hash),
                 aria_label: gettext("Copy From Address"),
                 title: gettext("Copy From Address") %>
             </dd>
@@ -230,7 +253,7 @@
                   &nbsp;<%= gettext("created") %>]
                   <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
                     additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
-                    clipboard_text: recipient_address_hash,
+                    clipboard_text: Address.checksum(recipient_address_hash),
                     aria_label: gettext("Copy To Address"),
                     title: gettext("Copy To Address") %>
                 <% recipient_address_hash -> %>
@@ -238,7 +261,7 @@
                   <%= render BlockScoutWeb.AddressView, "_labels.html", tags: @to_tags %>
                   <%= render BlockScoutWeb.CommonComponentsView, "_btn_copy.html",
                     additional_classes: ["btn-copy-icon-small", "btn-copy-icon-custom", "btn-copy-icon-no-borders"],
-                    clipboard_text: recipient_address_hash,
+                    clipboard_text: Address.checksum(recipient_address_hash),
                     aria_label: gettext("Copy To Address"),
                     title: gettext("Copy To Address") %>
                 <% true -> %>

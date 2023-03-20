@@ -8,7 +8,9 @@ import Config
 # General application configuration
 config :explorer,
   ecto_repos: [Explorer.Repo, Explorer.Repo.Account],
-  token_functions_reader_max_retries: 3
+  token_functions_reader_max_retries: 3,
+  # for not fully indexed blockchains
+  decode_not_a_contract_calls: System.get_env("DECODE_NOT_A_CONTRACT_CALLS") == "true"
 
 config :explorer, Explorer.Counters.AverageBlockTime,
   enabled: true,
@@ -54,6 +56,26 @@ config :explorer, Explorer.Counters.AddressTokenUsdSum,
   enabled: true,
   enable_consolidation: true
 
+config :explorer, Explorer.Chain.Cache.ContractsCounter,
+  enabled: true,
+  enable_consolidation: true,
+  update_interval_in_seconds: 30 * 60
+
+config :explorer, Explorer.Chain.Cache.NewContractsCounter,
+  enabled: true,
+  enable_consolidation: true,
+  update_interval_in_seconds: 30 * 60
+
+config :explorer, Explorer.Chain.Cache.VerifiedContractsCounter,
+  enabled: true,
+  enable_consolidation: true,
+  update_interval_in_seconds: 30 * 60
+
+config :explorer, Explorer.Chain.Cache.NewVerifiedContractsCounter,
+  enabled: true,
+  enable_consolidation: true,
+  update_interval_in_seconds: 30 * 60
+
 config :explorer, Explorer.Chain.Cache.TokenExchangeRate,
   enabled: true,
   enable_consolidation: true
@@ -82,10 +104,18 @@ config :explorer, Explorer.Counters.BlockPriorityFeeCounter,
   enabled: true,
   enable_consolidation: true
 
+config :explorer, Explorer.TokenTransferTokenIdMigration.Supervisor, enabled: true
+
+config :explorer, Explorer.Chain.Fetcher.CheckBytecodeMatchingOnDemand, enabled: true
+
+config :explorer, Explorer.Chain.Fetcher.FetchValidatorInfoOnDemand, enabled: true
+
 config :explorer, Explorer.Chain.Cache.GasUsage,
   enabled: System.get_env("CACHE_ENABLE_TOTAL_GAS_USAGE_COUNTER") == "true"
 
 config :explorer, Explorer.Integrations.EctoLogger, query_time_ms_threshold: :timer.seconds(2)
+
+config :explorer, Explorer.Tags.AddressTag.Cataloger, enabled: true
 
 config :explorer, Explorer.Chain.Cache.MinMissingBlockNumber, enabled: System.get_env("DISABLE_WRITE_API") != "true"
 

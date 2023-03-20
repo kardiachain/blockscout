@@ -1,7 +1,12 @@
 import { Socket } from 'phoenix'
 import { locale } from './locale'
 
-let websocketRootUrl = process.env.SOCKET_ROOT
+const networkParhObj = document.getElementById('network-path')
+let websocketRootUrl
+if (networkParhObj) {
+  // @ts-ignore
+  websocketRootUrl = networkParhObj.value
+}
 if (!websocketRootUrl) {
   websocketRootUrl = ''
 }
@@ -26,6 +31,7 @@ export default socket
  * Returns a Channel instance.
  */
 export function subscribeChannel (topic) {
+  // @ts-ignore
   const channel = socket.channels.find(channel => channel.topic === topic)
 
   if (channel) {

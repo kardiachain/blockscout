@@ -8,7 +8,7 @@ defmodule Indexer.Fetcher.CoinBalanceOnDemand do
   """
 
   use GenServer
-  use Indexer.Fetcher
+  use Indexer.Fetcher, restart: :permanent
 
   import Ecto.Query, only: [from: 2]
   import EthereumJSONRPC, only: [integer_to_quantity: 1]
@@ -233,7 +233,8 @@ defmodule Indexer.Fetcher.CoinBalanceOnDemand do
   defp stale_balance_window(block_number) do
     case AverageBlockTime.average_block_time() do
       {:error, :disabled} ->
-        {:error, :no_average_block_time}
+        fallback_treshold_in_blocks = Application.get_env(:indexer, __MODULE__)[:fallback_treshold_in_blocks]
+        block_number - fallback_treshold_in_blocks
 
       duration ->
         average_block_time =
