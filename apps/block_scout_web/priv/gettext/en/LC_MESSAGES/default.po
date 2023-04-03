@@ -1630,7 +1630,7 @@ msgstr ""
 #: lib/block_scout_web/templates/layout/_footer.html.eex:52
 #, elixir-autogen, elixir-format
 msgid "Main Networks"
-msgstr ""
+msgstr "Networks en"
 
 #: lib/block_scout_web/templates/chain/show.html.eex:52
 #: lib/block_scout_web/templates/layout/app.html.eex:50
