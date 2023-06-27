@@ -1,4 +1,4 @@
-defmodule Explorer.Repo.Migrations.CreateBlockSecondDegreeRelations do
+defmodule Explorer.Repo.Migrations.AlterBlockFields do
   use Ecto.Migration
 
   def up do
