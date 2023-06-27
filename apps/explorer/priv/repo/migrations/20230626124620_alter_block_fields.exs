@@ -7,7 +7,7 @@ defmodule Explorer.Repo.Migrations.AlterBlockFields do
       add(:commit_hash, :bytea, null: true)
       add(:validator_hash, :bytea, null: true)
       add(:next_validator_hash, :bytea, null: true)
-      add(:transaction_root, :bytea, null: true)
+      add(:transactions_root, :bytea, null: true)
     end
   end
 
@@ -17,7 +17,7 @@ defmodule Explorer.Repo.Migrations.AlterBlockFields do
       remove(:commit_hash)
       remove(:validator_hash)
       remove(:next_validator_hash)
-      remove(:transaction_root)
+      remove(:transactions_root)
     end
   end
 end
