@@ -13,16 +13,5 @@
         <% end %>
       </div>
     </div>
-
-    <% other_explorers = other_explorers() %>
-    <% col_size = if Enum.empty?(other_explorers), do: 3, else: 2 %>
-    <% version = version() %>
-
-    <%= unless ignore_version?(version) do %>
-      <% release_link = release_link(version) %>
-      <div>
-        <%= gettext("Version") %>: <%= release_link %>
-      </div>
-    <% end %>
   </div>
 </footer>
