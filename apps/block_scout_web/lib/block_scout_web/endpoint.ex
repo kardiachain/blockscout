@@ -7,6 +7,7 @@ defmodule BlockScoutWeb.Endpoint do
   end
 
   socket("/socket", BlockScoutWeb.UserSocket, websocket: [timeout: 45_000])
+  socket("/socket/v2", BlockScoutWeb.UserSocketV2, websocket: [timeout: 45_000])
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -42,7 +43,6 @@ defmodule BlockScoutWeb.Endpoint do
   end
 
   plug(Plug.RequestId)
-  plug(Plug.Logger)
 
   plug(
     Plug.Parsers,
@@ -65,7 +65,9 @@ defmodule BlockScoutWeb.Endpoint do
     store: BlockScoutWeb.Plug.RedisCookie,
     key: "_explorer_key",
     signing_salt: "iC2ksJHS",
-    same_site: "Lax"
+    same_site: "Lax",
+    http_only: false,
+    domain: Application.compile_env(:block_scout_web, :cookie_domain)
   )
 
   use SpandexPhoenix

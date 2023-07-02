@@ -3,6 +3,7 @@ defmodule BlockScoutWeb.Account.AuthController do
 
   alias BlockScoutWeb.Models.UserFromAuth
   alias Explorer.Account
+  alias Explorer.Repo.ConfigHelper
   alias Plug.CSRFProtection
 
   plug(Ueberauth)
@@ -32,14 +33,19 @@ defmodule BlockScoutWeb.Account.AuthController do
     |> redirect(to: root())
   end
 
-  def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
+  def callback(%{assigns: %{ueberauth_auth: auth}} = conn, params) do
     case UserFromAuth.find_or_create(auth) do
+      {:ok, %{email_verified: false} = user} ->
+        conn
+        |> put_session(:current_user, user)
+        |> redirect(to: root())
+
       {:ok, user} ->
         CSRFProtection.get_csrf_token()
 
         conn
         |> put_session(:current_user, user)
-        |> redirect(to: root())
+        |> redirect(to: redirect_path(params["path"]))
 
       {:error, reason} ->
         conn
@@ -59,7 +65,9 @@ defmodule BlockScoutWeb.Account.AuthController do
 
   def current_user(%{private: %{plug_session: %{"current_user" => _}}} = conn) do
     if Account.enabled?() do
-      get_session(conn, :current_user)
+      conn
+      |> get_session(:current_user)
+      |> check_email_verification()
     else
       nil
     end
@@ -67,7 +75,25 @@ defmodule BlockScoutWeb.Account.AuthController do
 
   def current_user(_), do: nil
 
+  defp check_email_verification(%{email_verified: true} = session), do: session
+  defp check_email_verification(_), do: nil
+
   defp root do
-    System.get_env("NETWORK_PATH") || "/"
+    ConfigHelper.network_path()
   end
+
+  defp redirect_path(path) when is_binary(path) do
+    case URI.parse(path) do
+      %URI{path: "/" <> path} ->
+        "/" <> path
+
+      %URI{path: path} when is_binary(path) ->
+        "/" <> path
+
+      _ ->
+        root()
+    end
+  end
+
+  defp redirect_path(_), do: root()
 end

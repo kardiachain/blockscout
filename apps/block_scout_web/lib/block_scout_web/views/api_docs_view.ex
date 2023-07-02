@@ -42,49 +42,38 @@ defmodule BlockScoutWeb.APIDocsView do
     scheme = Keyword.get(url_params, :scheme, "http")
 
     if host != "localhost" do
-      "#{scheme}#{host}"
+      "#{scheme}://#{host}"
     else
       port = Application.get_env(:block_scout_web, BlockScoutWeb.Endpoint)[:http][:port]
-      "#{scheme}#{host}:#{to_string(port)}"
+      "#{scheme}://#{host}:#{to_string(port)}"
     end
   end
 
-  def blockscout_url(set_path, is_api) when set_path == true do
+  def blockscout_url(set_path) when set_path == true do
     url_params = Application.get_env(:block_scout_web, BlockScoutWeb.Endpoint)[:url]
     host = url_params[:host]
 
-    path =
-      if is_api do
-        url_params[:api_path]
-      else
-        url_params[:path]
-      end
+    path = url_params[:path]
 
     scheme = Keyword.get(url_params, :scheme, "http")
 
     if host != "localhost" do
-      "#{scheme}#{host}#{path}"
+      "#{scheme}://#{host}#{path}"
     else
       port = Application.get_env(:block_scout_web, BlockScoutWeb.Endpoint)[:http][:port]
-      "#{scheme}#{host}:#{to_string(port)}"
+      "#{scheme}://#{host}:#{to_string(port)}"
     end
   end
 
   def api_url do
-    is_api = true
-    set_path = true
-
-    set_path
-    |> blockscout_url(is_api)
+    true
+    |> blockscout_url()
     |> Path.join("api")
   end
 
   def eth_rpc_api_url do
-    is_api = true
-    set_path = true
-
-    set_path
-    |> blockscout_url(is_api)
+    true
+    |> blockscout_url()
     |> Path.join("api/eth-rpc")
   end
 end

@@ -28,7 +28,6 @@
     <div class="col-md-7 col-lg-8 d-flex flex-column pr-2 pr-sm-2 pr-md-0">
       <span>
       <div class="text-truncate d-flex">
-	<b>Hash&nbsp;</b>
         <%= render "_link.html", transaction_hash: @transaction.hash, data_test: "address_hash_link" %>
         <% method_name = Transaction.get_method_name(@transaction) %>
         <%= if method_name do %>
@@ -41,16 +40,16 @@
       </div>
       </span>
       <span>
-        <b>From&nbsp;</b><%= @transaction |> BlockScoutWeb.AddressView.address_partial_selector(:from, assigns[:current_address]) |> BlockScoutWeb.RenderHelpers.render_partial() %>
+        <%= @transaction |> BlockScoutWeb.AddressView.address_partial_selector(:from, assigns[:current_address]) |> BlockScoutWeb.RenderHelper.render_partial() %>
         &rarr;
-        <b>&nbsp;To&nbsp;</b><%= @transaction |> BlockScoutWeb.AddressView.address_partial_selector(:to, assigns[:current_address]) |> BlockScoutWeb.RenderHelpers.render_partial() %>
+        <%= @transaction |> BlockScoutWeb.AddressView.address_partial_selector(:to, assigns[:current_address]) |> BlockScoutWeb.RenderHelper.render_partial() %>
       </span>
       <span class="d-flex flex-md-row flex-column mt-3 mt-md-0">
         <span class="tile-title">
-          <b>Value&nbsp;</b><%= value(@transaction, include_label: false) %> <%= Explorer.coin_name() %>
+          <%= value(@transaction, include_label: false) %> <%= Explorer.coin_name() %>
         </span>
         <span class="ml-0 ml-md-1 text-nowrap">
-          <b>Fee&nbsp;</b><%= formatted_fee(@transaction, denomination: :ether, include_label: false) %> <%= gettext "TX Fee" %>
+          <%= formatted_fee(@transaction, denomination: :ether, include_label: false) %> <%= gettext "TX Fee" %>
         </span>
       </span>
 
@@ -79,7 +78,7 @@
     <!-- Block info -->
     <div class="col-md-3 col-lg-2 d-flex flex-row flex-md-column flex-nowrap justify-content-center text-md-right mt-3 mt-md-0 tile-bottom">
       <span class="mr-2 mr-md-0 order-1">
-        <%= @transaction |> block_number() |> BlockScoutWeb.RenderHelpers.render_partial() %>
+        <%= @transaction |> block_number() |> BlockScoutWeb.RenderHelper.render_partial() %>
       </span>
       <span class="mr-2 mr-md-0 order-2" in-tile data-from-now="<%= block_timestamp(@transaction) %>"></span>
       <%= if from_or_to_address?(@transaction, assigns[:current_address]) do %>

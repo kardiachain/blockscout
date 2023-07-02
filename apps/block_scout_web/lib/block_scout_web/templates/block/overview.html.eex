@@ -90,7 +90,7 @@
             </dd>
           </dl>
           <!-- Miner/Validator -->
-          <%= if System.get_env("HIDE_BLOCK_MINER") !== "true" do %>
+          <%= if !Application.get_env(:block_scout_web, :hide_block_miner) do %>
             <dl class="row">
               <dt class="col-sm-3 col-lg-2 text-muted">
                 <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
@@ -151,10 +151,25 @@
               </dd>
             </dl>
           <% end %>
-          <!-- Remove difficulty -->
-
+          <!-- Difficulty -->
+          <dl class="row">
+            <dt class="col-sm-3 col-lg-2 text-muted">
+              <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+              text: gettext("Block difficulty for miner, used to calibrate block generation time (Note: constant in POA based networks).") %>
+              <%= gettext("Difficulty") %>
+            </dt>
+            <dd class="col-sm-9 col-lg-10"><%= @block.difficulty |> Decimal.to_integer() |> BlockScoutWeb.Cldr.Number.to_string! %></dd>
+          </dl>
           <%= if block_type(@block) == "Block" do %>
-            <!-- longnd - Remove total Difficulty -->
+            <!-- Total Difficulty -->
+            <dl class="row">
+              <dt class="col-sm-3 col-lg-2 text-muted">
+                <%= render BlockScoutWeb.CommonComponentsView, "_i_tooltip_2.html",
+                text: gettext("Total difficulty of the chain until this block.") %>
+                <%= gettext("Total Difficulty") %>
+              </dt>
+              <dd class="col-sm-9 col-lg-10"><%= @block.total_difficulty |> Decimal.to_integer() |> BlockScoutWeb.Cldr.Number.to_string! %></dd>
+            </dl>
             <!-- Gas Used -->
             <dl class="row">
               <dt class="col-sm-3 col-lg-2 text-muted">
