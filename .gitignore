@@ -60,3 +60,4 @@ dump.rdb
 .vscode
 
 **.dec**
+/docker-compose/postgres-data/

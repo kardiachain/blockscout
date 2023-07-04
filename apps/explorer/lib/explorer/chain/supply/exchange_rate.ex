@@ -1,11 +1,10 @@
 defmodule Explorer.Chain.Supply.ExchangeRate do
   @moduledoc """
-  Defines the supply API for calculating supply for coins from exchange_rate.
+  Defines the supply API for calculating supply for coins from exchange_rate..
   """
 
   use Explorer.Chain.Supply
 
-  alias Explorer.ExchangeRates.Token
   alias Explorer.Market
 
   def circulating do
@@ -17,6 +16,6 @@ defmodule Explorer.Chain.Supply.ExchangeRate do
   end
 
   def exchange_rate do
-    Market.get_exchange_rate(Explorer.coin()) || Token.null()
+    Market.get_coin_exchange_rate()
   end
 end

@@ -2,15 +2,12 @@ defmodule Explorer.Chain.Address.TokenBalance do
   @moduledoc """
   Represents a token balance from an address.
 
-  In this table we can see all token balances that a specific addreses had acording to the block
+  In this table we can see all token balances that a specific addresses had according to the block
   numbers. If you want to show only the last balance from an address, consider querying against
   `Address.CurrentTokenBalance` instead.
   """
 
   use Explorer.Schema
-
-  import Ecto.Changeset
-  import Ecto.Query, only: [from: 2]
 
   alias Explorer.Chain
   alias Explorer.Chain.Address.TokenBalance
@@ -23,7 +20,7 @@ defmodule Explorer.Chain.Address.TokenBalance do
    *  `token_contract_address_hash` - The contract address hash foreign key.
    *  `block_number` - The block's number that the transfer took place.
    *  `value` - The value that's represents the balance.
-   *  `token_id` - The token_id of the transferred token (applicable for KRC-1155 and KRC-721 tokens)
+   *  `token_id` - The token_id of the transferred token (applicable for ERC-1155 and ERC-721 tokens)
    *  `token_type` - The type of the token
   """
   @type t :: %__MODULE__{
@@ -80,7 +77,7 @@ defmodule Explorer.Chain.Address.TokenBalance do
   Builds an `Ecto.Query` to fetch the unfetched token balances.
 
   Unfetched token balances are the ones that have the column `value_fetched_at` nil or the value is null. This query also
-  ignores the burn_address for tokens KRC-721 since the most tokens KRC-721 don't allow get the
+  ignores the burn_address for tokens ERC-721 since the most tokens ERC-721 don't allow get the
   balance for burn_address.
   """
   def unfetched_token_balances do
@@ -89,8 +86,36 @@ defmodule Explorer.Chain.Address.TokenBalance do
       join: t in Token,
       on: tb.token_contract_address_hash == t.contract_address_hash,
       where:
-        ((tb.address_hash != ^@burn_address_hash and t.type != "ERC-721") or t.type == "ERC-20" or t.type == "ERC-1155") and
+        ((tb.address_hash != ^@burn_address_hash and t.type == "ERC-721") or t.type == "ERC-20" or t.type == "ERC-1155") and
           (is_nil(tb.value_fetched_at) or is_nil(tb.value))
+    )
+  end
+
+  @doc """
+  Builds an `Ecto.Query` to fetch the token balance of the given token contract hash of the given address in the given block.
+  """
+  def fetch_token_balance(address_hash, token_contract_address_hash, block_number, token_id \\ nil)
+
+  def fetch_token_balance(address_hash, token_contract_address_hash, block_number, nil) do
+    from(
+      tb in TokenBalance,
+      where: tb.address_hash == ^address_hash,
+      where: tb.token_contract_address_hash == ^token_contract_address_hash,
+      where: tb.block_number <= ^block_number,
+      limit: ^1,
+      order_by: [desc: :block_number]
+    )
+  end
+
+  def fetch_token_balance(address_hash, token_contract_address_hash, block_number, token_id) do
+    from(
+      tb in TokenBalance,
+      where: tb.address_hash == ^address_hash,
+      where: tb.token_contract_address_hash == ^token_contract_address_hash,
+      where: tb.token_id == ^token_id,
+      where: tb.block_number <= ^block_number,
+      limit: ^1,
+      order_by: [desc: :block_number]
     )
   end
 end
