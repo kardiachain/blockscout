@@ -3,7 +3,7 @@ defmodule Explorer.Repo.Migrations.AddAppHash do
 
   def change do
     alter table(:blocks) do
-      add(:app_hash, :bytea)
+      add_if_not_exists(:app_hash, :bytea)
     end
   end
 end
