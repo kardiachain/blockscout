@@ -135,8 +135,8 @@ defmodule EthereumJSONRPC.Receipts do
 
     with {:ok, responses} <- json_rpc(requests, json_rpc_named_arguments),
          {:ok, receipts} <- reduce_responses(responses, id_to_transaction_params) do
-
       elixir_receipts = to_elixir(receipts)
+
       elixir_logs = elixir_to_logs(elixir_receipts)
       receipts = elixir_to_params(elixir_receipts)
       logs = Logs.elixir_to_params(elixir_logs)
@@ -217,7 +217,6 @@ defmodule EthereumJSONRPC.Receipts do
       method: "eth_getTransactionReceipt",
       params: [transaction_hash]
     })
-
   end
 
   defp response_to_receipt(%{id: id, result: nil}, id_to_transaction_params) do
@@ -241,6 +240,7 @@ defmodule EthereumJSONRPC.Receipts do
   defp reduce_responses(responses, id_to_transaction_params)
        when is_list(responses) and is_map(id_to_transaction_params) do
     responses
+    |> EthereumJSONRPC.sanitize_responses(id_to_transaction_params)
     |> Stream.map(&response_to_receipt(&1, id_to_transaction_params))
     |> Enum.reduce({:ok, []}, &reduce_receipt(&1, &2))
   end

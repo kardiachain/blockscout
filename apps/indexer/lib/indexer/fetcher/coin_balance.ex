@@ -4,7 +4,7 @@ defmodule Indexer.Fetcher.CoinBalance do
   `fetched_coin_balance_block_number` to value at max `t:Explorer.Chain.Address.CoinBalance.t/0` `block_number` for the given `t:Explorer.Chain.Address.t/` `hash`.
   """
 
-  use Indexer.Fetcher
+  use Indexer.Fetcher, restart: :permanent
   use Spandex.Decorators
 
   require Logger
@@ -20,13 +20,8 @@ defmodule Indexer.Fetcher.CoinBalance do
 
   @behaviour BufferedTask
 
-  @defaults [
-    flush_interval: :timer.seconds(3),
-    max_batch_size: 500,
-    max_concurrency: 4,
-    task_supervisor: Indexer.Fetcher.CoinBalance.TaskSupervisor,
-    metadata: [fetcher: :coin_balance]
-  ]
+  @default_max_batch_size 500
+  @default_max_concurrency 4
 
   @doc """
   Asynchronously fetches balances for each address `hash` at the `block_number`.
@@ -56,7 +51,7 @@ defmodule Indexer.Fetcher.CoinBalance do
     end
 
     merged_init_options =
-      @defaults
+      defaults()
       |> Keyword.merge(mergeable_init_options)
       |> Keyword.put(:state, state)
 
@@ -66,11 +61,14 @@ defmodule Indexer.Fetcher.CoinBalance do
   @impl BufferedTask
   def init(initial, reducer, _) do
     {:ok, final} =
-      Chain.stream_unfetched_balances(initial, fn address_fields, acc ->
-        address_fields
-        |> entry()
-        |> reducer.(acc)
-      end)
+      Chain.stream_unfetched_balances(
+        initial,
+        fn address_fields, acc ->
+          address_fields
+          |> entry()
+          |> reducer.(acc)
+        end
+      )
 
     final
   end
@@ -263,5 +261,15 @@ defmodule Indexer.Fetcher.CoinBalance do
         nil
       end
     end)
+  end
+
+  defp defaults do
+    [
+      flush_interval: :timer.seconds(3),
+      max_batch_size: Application.get_env(:indexer, __MODULE__)[:batch_size] || @default_max_batch_size,
+      max_concurrency: Application.get_env(:indexer, __MODULE__)[:concurrency] || @default_max_concurrency,
+      task_supervisor: Indexer.Fetcher.CoinBalance.TaskSupervisor,
+      metadata: [fetcher: :coin_balance]
+    ]
   end
 end

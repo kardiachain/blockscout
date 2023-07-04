@@ -39,7 +39,7 @@ defmodule Indexer.TokenBalances do
   * `address_hash` - The address_hash that we want to know the balance.
   * `block_number` - The block number that the address_hash has the balance.
   * `token_type` - type of the token that balance belongs to
-  * `token_id` - token id for KRC-1155 tokens
+  * `token_id` - token id for ERC-1155 tokens
   """
   def fetch_token_balances_from_blockchain([]), do: {:ok, []}
 
@@ -87,7 +87,13 @@ defmodule Indexer.TokenBalances do
     |> unfetched_token_balances(fetched_token_balances)
     |> schedule_token_balances
 
-    {:ok, fetched_token_balances}
+    failed_token_balances =
+      requested_token_balances
+      |> MapSet.new()
+      |> MapSet.difference(MapSet.new(fetched_token_balances))
+      |> MapSet.to_list()
+
+    {:ok, %{fetched_token_balances: fetched_token_balances, failed_token_balances: failed_token_balances}}
   end
 
   def to_address_current_token_balances(address_token_balances) when is_list(address_token_balances) do
