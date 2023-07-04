@@ -1,4 +1,4 @@
-defmodule Explorer.Repo.Migrations.AddAppHash do
+defmodule Explorer.Repo.Migrations.AddBlockFields do
   use Ecto.Migration
 
   def change do
