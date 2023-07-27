@@ -31,6 +31,10 @@ This command uses `docker-compose-no-build-geth.yml`, which build the explorer i
 - [smart-contract-verifier](https://github.com/blockscout/blockscout-rs/) service, which will be available at port 8043 on localhost or private ip
 - and the BlockScout explorer at http://<explorer_ip>:4000
 
+## Config for `envs/common-blockscout.env`  
+```
+    CHAIN_ID=7331  ### for testnet
+```
 ## Configs for different Ethereum clients
 
 Also, the repo contains built-in configs for different clients without need to build the image
