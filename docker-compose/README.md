@@ -14,7 +14,8 @@ Runs BlockScout locally in Docker container with usage [docker-compose](https://
    POSTGRES_USER: <USERNAME>
    POSTGRES_PASSWORD: <PASSSWORD>
 ```
-then run postgres db container:  
+then run postgres db container:
+
 ```bash
 docker-compose -f docker-compose-postgres.yaml up -d
 ```
