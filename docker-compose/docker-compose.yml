@@ -23,7 +23,14 @@ services:
         CACHE_ADDRESS_WITH_BALANCES_UPDATE_INTERVAL: ""
         ADMIN_PANEL_ENABLED: ""
         RELEASE_VERSION: 6.0.0
-
+    volumes:
+      - ./logs/:/app/logs/
+      
+  smart-contract-verifier:
+    extends:
+      file: ./services/docker-compose-smart-contract-verifier.yml
+      service: smart-contract-verifier
+  
   visualizer:
     extends:
       file: ./services/visualizer.yml
