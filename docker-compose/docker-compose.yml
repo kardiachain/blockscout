@@ -5,20 +5,8 @@ services:
     extends:
       file: ./services/redis.yml
       service: redis_db
-
-  db-init:
-    extends:
-      file: ./services/db.yml
-      service: db-init
-
-  db:
-    extends:
-      file: ./services/db.yml
-      service: db
-
   backend:
     depends_on:
-      - db
       - redis_db
     extends:
       file: ./services/backend.yml
@@ -35,13 +23,6 @@ services:
         CACHE_ADDRESS_WITH_BALANCES_UPDATE_INTERVAL: ""
         ADMIN_PANEL_ENABLED: ""
         RELEASE_VERSION: 6.0.0
-    links:
-      - db:database
-    environment:
-        ETHEREUM_JSONRPC_HTTP_URL: http://host.docker.internal:8545/
-        ETHEREUM_JSONRPC_TRACE_URL: http://host.docker.internal:8545/
-        ETHEREUM_JSONRPC_WS_URL: ws://host.docker.internal:8545/
-        CHAIN_ID: '1337'
 
   visualizer:
     extends:
@@ -53,37 +34,16 @@ services:
       file: ./services/sig-provider.yml
       service: sig-provider
 
-  frontend:
-    depends_on:
-      - backend
-    extends:
-      file: ./services/frontend.yml
-      service: frontend
-
-  stats-db-init:
-    extends:
-      file: ./services/stats.yml
-      service: stats-db-init
-
-  stats-db:
-    depends_on:
-      - backend
-    extends:
-      file: ./services/stats.yml
-      service: stats-db
-
   stats:
-    depends_on:
-      - stats-db
     extends:
-      file: ./services/stats.yml
+      file: ./services/stats-backend.yml
       service: stats
 
-  proxy:
-    depends_on:
-      - backend
-      - frontend
-      - stats
-    extends:
-      file: ./services/nginx.yml
-      service: proxy
+  #proxy:
+  #  depends_on:
+  #    - backend
+  #    - frontend
+  #    - stats
+  #  extends:
+  #    file: ./services/nginx.yml
+  #    service: proxy
