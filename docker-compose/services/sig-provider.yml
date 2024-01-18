@@ -7,3 +7,5 @@ services:
     platform: linux/amd64
     restart: always
     container_name: 'sig-provider'
+    ports:
+      - 8151:8050
