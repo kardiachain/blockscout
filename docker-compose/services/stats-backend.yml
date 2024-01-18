@@ -11,6 +11,8 @@ services:
       - 'host.docker.internal:host-gateway'
     env_file:
       -  ../envs/common-stats.env
+    ports:
+      - 8153:8050
     environment:
       - STATS__DB_URL=postgres://postgres:${POSTGRES_PASS}@${POSTGRES_HOST}:5432/stats
       - STATS__BLOCKSCOUT_DB_URL=${STATS__BLOCKSCOUT_DB_URL}
