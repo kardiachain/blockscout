@@ -12,8 +12,6 @@ services:
       - 'host.docker.internal:host-gateway'
     env_file:
       -  ../envs/common-blockscout.env
-    volumes:
-      - ./logs/:/app/logs/
     environment:
         ETHEREUM_JSONRPC_VARIANT: 'geth'
         BLOCK_TRANSFORMER: 'base'
