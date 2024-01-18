@@ -7,5 +7,7 @@ services:
     platform: linux/amd64
     restart: always
     container_name: 'visualizer'
+    ports:
+      - 8152:8050
     env_file:
       -  ../envs/common-visualizer.env
