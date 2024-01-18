@@ -28,7 +28,7 @@ services:
       
   smart-contract-verifier:
     extends:
-      file: ./services/docker-compose-smart-contract-verifier.yml
+      file: ./services/smart-contract-verifier.yml
       service: smart-contract-verifier
   
   visualizer:
