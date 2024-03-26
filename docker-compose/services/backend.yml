@@ -3,6 +3,18 @@ version: '3.9'
 services:
   backend:
     image: blockscout/${DOCKER_REPO:-blockscout}:${DOCKER_TAG:-latest}
+    build:
+      context: ..
+      dockerfile: ../docker/Dockerfile
+      args:
+        CACHE_EXCHANGE_RATES_PERIOD: ""
+        API_V1_READ_METHODS_DISABLED: "false"
+        DISABLE_WEBAPP: "false"
+        API_V1_WRITE_METHODS_DISABLED: "false"
+        CACHE_TOTAL_GAS_USAGE_COUNTER_ENABLED: ""
+        CACHE_ADDRESS_WITH_BALANCES_UPDATE_INTERVAL: ""
+        ADMIN_PANEL_ENABLED: ""
+        RELEASE_VERSION: 6.3.3
     pull_policy: always
     restart: always
     stop_grace_period: 5m
@@ -11,6 +23,6 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     env_file:
-      -  ../envs/common-blockscout.env
+      -  ../envs/u2u.env
     volumes:
       - ./logs/:/app/logs/
