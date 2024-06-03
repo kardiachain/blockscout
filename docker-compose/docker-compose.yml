@@ -38,7 +38,7 @@ services:
       file: ./services/visualizer.yml
       service: visualizer
     ports:
-      - 8052:8052
+      - 8152:8050
 
   sig-provider:
     extends:
@@ -49,6 +49,8 @@ services:
     extends:
       file: ./services/stats-backend.yml
       service: stats
+    ports:
+      - 8153:8050
 
 #
 #  user-ops-indexer:
