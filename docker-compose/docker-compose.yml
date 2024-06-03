@@ -37,6 +37,8 @@ services:
     extends:
       file: ./services/visualizer.yml
       service: visualizer
+    ports:
+      - 8052:8052
 
   sig-provider:
     extends:
