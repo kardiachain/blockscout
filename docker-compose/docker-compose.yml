@@ -25,6 +25,8 @@ services:
         RELEASE_VERSION: 6.6.0
     volumes:
       - ./logs/:/app/logs/
+    ports:
+      - 4000:4000
 
   smart-contract-verifier:
     extends:
