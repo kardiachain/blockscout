@@ -27,7 +27,11 @@ services:
       - ./logs/:/app/logs/
     ports:
       - 4000:4000
-
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 300m
+        
   smart-contract-verifier:
     extends:
       file: ./services/smart-contract-verifier.yml
